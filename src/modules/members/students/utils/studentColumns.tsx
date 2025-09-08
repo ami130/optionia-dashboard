@@ -61,15 +61,16 @@ const useStudentColumns = (): ColumnsType<any> => {
       title: "Full Name",
       dataIndex: "first_name",
       align: "left",
-      width: "200px",
+      width: 230,
       render: (_: any, record: any) =>
         `${record?.first_name} ${record?.last_name}`,
     },
     {
       key: "2",
-      title: "User ID",
+      title: "UserID",
       dataIndex: "user",
       align: "center",
+      width: 120,
       sorter: (a, b) => a.user?.username?.localeCompare(b.user?.username || ""),
       render: (user) => (user?.username ? user.username : "-"),
     },
@@ -95,7 +96,7 @@ const useStudentColumns = (): ColumnsType<any> => {
       title: "Session",
       dataIndex: "current_session",
       align: "center",
-
+      width: 100,
       render: (current_session) =>
         current_session ? current_session?.name : "-",
     },
@@ -104,6 +105,7 @@ const useStudentColumns = (): ColumnsType<any> => {
       title: "Shift",
       dataIndex: "current_shift",
       align: "center",
+      width: 100,
       render: (current_shift) => (current_shift ? current_shift?.name : "-"),
     },
 
@@ -112,6 +114,7 @@ const useStudentColumns = (): ColumnsType<any> => {
       title: "Phone",
       dataIndex: "contact_phone_number",
       align: "center",
+      width: 150,
       render: (phone_number) => (phone_number ? phone_number : "-"),
     },
     {
@@ -119,6 +122,7 @@ const useStudentColumns = (): ColumnsType<any> => {
       title: "Active",
       dataIndex: "is_active",
       align: "center",
+      width: 100,
       render: (is_active) =>
         is_active ? (
           <Tag color="green">Active</Tag>
@@ -131,7 +135,7 @@ const useStudentColumns = (): ColumnsType<any> => {
       title: "Admission Status",
       dataIndex: "current_admission_status",
       align: "center",
-      width: 120,
+      width: 130,
       render: (status: string) => {
         const color = statusColors[status] || "default";
         return (

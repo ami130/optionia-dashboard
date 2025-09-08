@@ -69,7 +69,7 @@ const useAdmitColumns = (): ColumnsType<any> => {
     },
     {
       key: "2",
-      title: "User Name",
+      title: "User ID",
       dataIndex: "student",
       align: "center",
       sorter: (a, b) =>

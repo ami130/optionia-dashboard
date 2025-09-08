@@ -113,7 +113,7 @@ const useVendorColumns = (): ColumnsType<any> => {
             }}
           >
             <FaEye />
-            View
+            
           </Button>
 
           {/* <ViewButton to={`student-view/1`} /> */}

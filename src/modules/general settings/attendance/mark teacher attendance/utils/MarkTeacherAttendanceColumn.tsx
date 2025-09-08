@@ -220,7 +220,7 @@ const useMarkTeacherAttendanceColumns = ({
     },
     {
       key: "1",
-      title: "User Name",
+      title: "User ID",
       align: "center" as const,
       render: (_: any, record: any) =>
         record?.teacher

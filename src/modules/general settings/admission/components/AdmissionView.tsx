@@ -333,7 +333,7 @@ const AdmissionView = () => {
           <Col {...summaryCardColSpan}>
             <Card className="summary-card" hoverable>
               <Statistic
-                title="User Name"
+                title="User ID"
                 value={student?.user?.username}
                 prefix={<IdcardOutlined />}
                 valueStyle={{ fontSize: screens.xs ? 14 : 16 }}

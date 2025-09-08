@@ -49,7 +49,8 @@ const useLeaveColumns = (): ColumnsType<any> => {
       key: "1",
       title: "Student Name",
       dataIndex: "admission",
-      align: "center",
+      align: "left",
+      width: 200,
       render: (title) =>
         title
           ? title?.student?.first_name + " " + title?.student?.last_name
@@ -57,7 +58,7 @@ const useLeaveColumns = (): ColumnsType<any> => {
     },
     {
       key: "3",
-      title: "Session Name",
+      title: "Session",
       dataIndex: "admission",
       align: "center",
       render: (title) => (title ? title?.session?.name : "-"),
@@ -102,6 +103,7 @@ const useLeaveColumns = (): ColumnsType<any> => {
       title: "Start Date",
       dataIndex: "start_date",
       align: "center",
+      width: 150,
       render: (date) =>
         date
           ? new Intl.DateTimeFormat("en-GB", {
@@ -116,6 +118,7 @@ const useLeaveColumns = (): ColumnsType<any> => {
       title: "End Date",
       dataIndex: "end_date",
       align: "center",
+      width: 150,
       render: (date) =>
         date
           ? new Intl.DateTimeFormat("en-GB", {
@@ -138,6 +141,7 @@ const useLeaveColumns = (): ColumnsType<any> => {
       title: "Status",
       dataIndex: "is_approved",
       align: "center",
+      width: 100,
       render: (isApproved: boolean) =>
         isApproved ? (
           <Tag color="green">Approved</Tag>

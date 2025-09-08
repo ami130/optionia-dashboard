@@ -306,57 +306,6 @@ export const ExpenseTracking = () => {
           </Card>
         </Col>
 
-        {/* Category Breakdown */}
-        {/* <Col xs={24} lg={8}>
-          <Card
-            title="Monthly Breakdown"
-            className="bg-white/60 backdrop-blur-sm border-blue-100 mb-6"
-          >
-            {monthlyExpenses.map((item, index) => (
-              <div key={index} className="mb-4">
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="font-medium">{item.category}</span>
-                  <span>৳{item.amount.toLocaleString()}</span>
-                </div>
-                <Progress
-                  percent={item.percentage}
-                  strokeColor={{
-                    "0%": "#3b82f6",
-                    "100%": "#6366f1",
-                  }}
-                  showInfo={false}
-                />
-                <div className="text-xs text-gray-500 mt-1">
-                  {item.percentage}% of total
-                </div>
-                {index < monthlyExpenses.length - 1 && (
-                  <Divider className="my-3" />
-                )}
-              </div>
-            ))}
-          </Card>
-          
-          <Card
-            title="Quick Actions"
-            className="bg-white/60 backdrop-blur-sm border-blue-100"
-          >
-            <Space direction="vertical" className="w-full">
-              <Button
-                type="primary"
-                icon={<FileTextOutlined />}
-                className="w-full bg-gradient-to-r from-green-600 to-emerald-600"
-              >
-                Record Expense
-              </Button>
-              <Button icon={<DownloadOutlined />} className="w-full">
-                Export Report
-              </Button>
-              <Button icon={<PieChartOutlined />} className="w-full">
-                View Analytics
-              </Button>
-            </Space>
-          </Card>
-        </Col> */}
       </Row>
     </div>
   );

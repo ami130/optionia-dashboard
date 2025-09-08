@@ -31,7 +31,7 @@ const useAttendanceReportColumns = (data: any[] = []): ColumnsType<any> => {
       render: (_, __, index) => index + 1,
     },
     {
-      title: "Student Id",
+      title: "UserId",
       dataIndex: "username",
       key: "username",
       align: "center",

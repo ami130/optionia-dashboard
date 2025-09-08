@@ -187,7 +187,6 @@ const useVendorInvoiceColumns = (): ColumnsType<any> => {
             }}
           >
             <FaEye />
-            View
           </Button>
           <Button
             title="Invoice"

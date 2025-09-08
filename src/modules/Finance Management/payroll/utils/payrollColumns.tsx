@@ -82,7 +82,6 @@ const usePayrollColumns = (): ColumnsType<any> => {
   }, [singleFeeForm, pdfTitle]); // ✅ Removed pdfUrl!
 
   const handleForm = (id: number) => {
-
     setPdfTitle(`${id} `);
     getCollectFeeForm(id);
   };
@@ -98,7 +97,8 @@ const usePayrollColumns = (): ColumnsType<any> => {
       key: "1",
       title: "Full Name",
       dataIndex: "employee",
-      align: "center",
+      align: "left",
+      width: 200,
       render: (employee, record) => {
         if (employee) {
           return `${employee?.first_name} ${employee?.last_name}`;
@@ -118,6 +118,7 @@ const usePayrollColumns = (): ColumnsType<any> => {
       title: "Period Date",
       dataIndex: "period_start",
       align: "center",
+      width: 200,
       render: (_, record) =>
         record
           ? dayjs(record?.period_start).format("DD MMM YY") +
@@ -128,9 +129,10 @@ const usePayrollColumns = (): ColumnsType<any> => {
     },
     {
       key: "2",
-      title: "Department Name",
+      title: "Department",
       dataIndex: "employee",
       align: "center",
+      width: 120,
       render: (employee) =>
         employee?.department?.name ? employee.department.name : "Teacher",
       sorter: (a, b) => {
@@ -144,7 +146,8 @@ const usePayrollColumns = (): ColumnsType<any> => {
       title: "Gross Salary",
       dataIndex: "gross_salary",
       align: "center",
-      render: (gross_salary) => `৳${gross_salary.toFixed(2)}`,
+      width: 150,
+      render: (gross_salary) => `৳ ${gross_salary.toFixed(2)}`,
       sorter: (a, b) => a.gross_salary - b.gross_salary, // Sort by gross salary (numeric)
     },
     {
@@ -152,29 +155,31 @@ const usePayrollColumns = (): ColumnsType<any> => {
       title: "Net Salary",
       dataIndex: "net_salary",
       align: "center",
+      width: 150,
       render: (net_salary) => `৳${net_salary.toFixed(2)}`,
       sorter: (a, b) => a.net_salary - b.net_salary, // Sort by net salary (numeric)
     },
     {
       key: "5",
-      title: "Paid Amount",
+      title: "Paid",
       dataIndex: "paid_Amount",
       align: "center",
-      render: (paid_Amount) => `৳${paid_Amount.toFixed(2)}`,
+      render: (paid_Amount) => `৳ ${paid_Amount.toFixed(2)}`,
       sorter: (a, b) => a.paid_Amount - b.paid_Amount, // Sort by paid amount (numeric)
     },
     {
       key: "6",
-      title: "Due Amount",
+      title: "Due",
       dataIndex: "due_Amount",
       align: "center",
-      render: (due_Amount) => `৳${due_Amount.toFixed(2)}`,
+      render: (due_Amount) => `৳ ${due_Amount.toFixed(2)}`,
       sorter: (a, b) => a.due_Amount - b.due_Amount, // Sort by due amount (numeric)
     },
     {
       key: "9",
       title: "Status",
       dataIndex: "status",
+      width: 120,
       align: "center",
       render: (status: string) => {
         let color = "default";

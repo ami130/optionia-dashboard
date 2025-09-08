@@ -87,13 +87,15 @@ const useResultsColumns = (): ColumnsType<any> => {
       title: "Exam Name",
       dataIndex: "exam",
       align: "center",
+      width: 120,
       render: (title) => (title ? title.name : "-"),
     },
     {
       key: "2",
       title: "Student Name",
       dataIndex: "admission",
-      align: "center",
+      align: "left",
+      width: 200,
       render: (title) =>
         title ? title.student.first_name + " " + title.student.last_name : "-",
     },
@@ -109,6 +111,7 @@ const useResultsColumns = (): ColumnsType<any> => {
       title: "Roll No.",
       dataIndex: "admission",
       align: "center",
+      width: 170,
       render: (title) => (title ? title.roll : "-"),
     },
 
@@ -119,12 +122,12 @@ const useResultsColumns = (): ColumnsType<any> => {
       align: "center",
       render: (title) => (title ? title : "-"),
     },
-
     {
       key: "6",
       title: "Contribution Marks",
       dataIndex: "contribution_marks",
       align: "center",
+      width: 150,
       render: (title) => (title ? title : "-"),
     },
     {
@@ -132,6 +135,7 @@ const useResultsColumns = (): ColumnsType<any> => {
       title: "Total Marks",
       dataIndex: "total_marks",
       align: "center",
+      width: 100,
       render: (title) => (title ? title : "-"),
     },
     {
@@ -139,6 +143,7 @@ const useResultsColumns = (): ColumnsType<any> => {
       title: "Status",
       dataIndex: "is_passed",
       align: "center",
+      width: 120,
       render: (title) =>
         title ? <Tag color="green">PASS</Tag> : <Tag color="red">FAIL</Tag>,
     },

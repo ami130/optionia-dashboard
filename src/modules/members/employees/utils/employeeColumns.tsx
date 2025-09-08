@@ -65,15 +65,17 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       key: "1",
       title: "Full Name",
       dataIndex: "first_name",
-      align: "center",
+      width: 200,
+      align: "left",
       render: (_: any, record: any) =>
         `${record?.first_name} ${record?.last_name}`,
     },
     {
       key: "2",
-      title: "User Name",
+      title: "UserID",
       dataIndex: "user",
       align: "center",
+      width: 100,
       sorter: (a, b) => a.user?.username?.localeCompare(b.user?.username || ""),
       render: (user) => (user ? user.username : "-"),
     },
@@ -81,6 +83,7 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       key: "33",
       title: "Working Hour",
       dataIndex: "schedule",
+      width: 170,
       align: "center",
       render: (schedule) =>
         schedule ? (
@@ -98,6 +101,7 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       title: "Phone",
       dataIndex: "phone_number",
       align: "center",
+      width: 130,
       render: (phone_number) => (phone_number ? phone_number : "-"),
     },
     {
@@ -105,6 +109,7 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       title: "Position",
       dataIndex: "position",
       align: "center",
+      width: 150,
       render: (position) => (position ? position : "-"),
     },
     {
@@ -112,6 +117,7 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       title: "Base Salary",
       dataIndex: "base_salary",
       align: "center",
+      width: 100,
       render: (Base_salary) => (Base_salary ? Base_salary : "-"),
     },
     {
@@ -119,6 +125,7 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       title: "Department",
       dataIndex: ["department", "name"],
       align: "center",
+      width: 150,
       showSorterTooltip: { target: "full-header" },
       filters: departmentFilters.length > 0 ? departmentFilters : undefined,
       onFilter: (value, record) => record?.department?.name === value,
@@ -130,16 +137,19 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       title: "Hire Date",
       dataIndex: "hire_date",
       align: "center",
+      width: 150,
       sorter: (a, b) =>
         new Date(a.hire_date || 0).getTime() -
         new Date(b.hire_date || 0).getTime(),
-      render: (hire_date) => (hire_date ? hire_date : "-"),
+      render: (hire_date) =>
+        hire_date ? dayjs(hire_date).format("DD MMM YYYY") : "-",
     },
     {
       key: "8",
       title: "Active",
       dataIndex: "is_active",
       align: "center",
+      width: 100,
       render: (is_active) =>
         is_active ? (
           <Tag color="green">Active</Tag>

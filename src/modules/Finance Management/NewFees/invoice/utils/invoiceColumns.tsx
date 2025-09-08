@@ -69,20 +69,22 @@ const useInvoiceColumns = (): ColumnsType<any> => {
       title: "Invoice Number",
       dataIndex: "invoice_number",
       key: "invoice_number",
+      width: 150,
       align: "center",
     },
     {
       key: "4",
-      title: "Student ID",
+      title: "UserID",
       dataIndex: "admission",
       align: "center",
       render: (title) => (title ? title?.student?.user?.username : "-"),
     },
     {
       key: "1",
-      title: "Student Name sd",
+      title: "Student Name",
       dataIndex: "admission",
-      align: "center",
+      align: "left",
+      width: 200,
       render: (admission) => (
         <Link
           to={`/admission/admission-view/${admission?.id}`}
@@ -178,7 +180,7 @@ const useInvoiceColumns = (): ColumnsType<any> => {
               border: "1px solid #3892E3",
             }}
           >
-            <FaEye /> View
+            <FaEye /> 
           </Button>
 
           <Button

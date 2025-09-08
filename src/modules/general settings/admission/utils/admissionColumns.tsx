@@ -97,7 +97,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "Name",
       dataIndex: "student",
       align: "left",
-      width: "180px",
+      width: 180,
       render: (title) =>
         title ? title?.first_name + " " + title?.last_name : "-",
     },
@@ -106,6 +106,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "User",
       dataIndex: "student",
       align: "center",
+      width: 100,
       sorter: (a, b) =>
         a.student?.user?.username?.localeCompare(
           b.student?.user?.username || ""
@@ -139,6 +140,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "Class",
       dataIndex: "grade_level",
       align: "center",
+      width: 100,
       render: (title) => (title ? capitalize(title) : "-"),
     },
     {
@@ -146,6 +148,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "Shift",
       dataIndex: "shift",
       align: "center",
+      width: 100,
       render: (title) => (title && title?.name ? capitalize(title?.name) : "-"),
     },
     {
@@ -153,6 +156,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "FeeType",
       dataIndex: "fee_type",
       align: "center",
+      width: 110,
       sorter: (a, b) => (a.fee_type || "").localeCompare(b.fee_type || ""),
       render: (fee_type) => (fee_type ? capitalize(fee_type) : "-"),
     },
@@ -161,6 +165,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "OneTime",
       dataIndex: "one_time_fee",
       align: "center",
+      width: 110,
       render: (title) => (title ? title : 0),
     },
     {
@@ -168,6 +173,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "Monthly",
       dataIndex: "monthly_fee",
       align: "center",
+      width: 100,
       render: (title) => (title ? title : 0),
     },
 
@@ -176,6 +182,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "Due",
       dataIndex: "due_amount",
       align: "center",
+      width: 100,
       render: (title) =>
         title ? <span className="text-red-500">{title}</span> : 0,
     },
@@ -184,7 +191,9 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "Paid",
       dataIndex: "total_paid_amount",
       align: "center",
-      render: (title) => (title ? title : 0),
+      width: 100,
+      render: (title) =>
+        title ? <span className="text-green-500">{title}</span> : 0,
     },
     {
       key: "999",
@@ -194,9 +203,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       render: (status: string) => {
         const color = statusColors[status] || "default";
         return (
-          <p
-            style={{ backgroundColor: color, color: "white" }}
-          >
+          <p style={{ backgroundColor: color, color: "white" }}>
             {capitalize(status)}
           </p>
         );

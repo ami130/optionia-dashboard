@@ -52,24 +52,17 @@ const useNoticeColumns = (): ColumnsType<any> => {
       key: "1",
       title: "Title",
       dataIndex: "title",
-      align: "center",
+      align: "left",
+      width: 400,
       sorter: (a, b) => (a.title || "").localeCompare(b.title || ""),
       render: (title) => (title ? title : "-"),
     },
-    // {
-    //   key: "2",
-    //   title: "Description",
-    //   dataIndex: "description",
-    //   align: "center",
-    //   sorter: (a, b) =>
-    //     (a.description || "").localeCompare(b.description || ""),
-    //   render: (description) => (description ? description : "-"),
-    // },
     {
       key: "3",
       title: "Category",
       dataIndex: "category",
       align: "center",
+      width: 130,
       sorter: (a, b) => (a.category || "").localeCompare(b.category || ""),
       render: (category) => (category ? category : "-"),
     },
@@ -78,6 +71,7 @@ const useNoticeColumns = (): ColumnsType<any> => {
       title: "Target Audience",
       dataIndex: "target_audience",
       align: "center",
+      width: 200,
       sorter: (a, b) =>
         (a.target_audience || "").localeCompare(b.target_audience || ""),
       render: (audience) => (audience ? audience : "-"),
@@ -87,6 +81,7 @@ const useNoticeColumns = (): ColumnsType<any> => {
       title: "Published Status",
       dataIndex: "is_published",
       align: "center",
+      width: 180,
       sorter: (a, b) => Number(b.is_published) - Number(a.is_published),
       render: (is_published) =>
         is_published ? (
@@ -100,18 +95,20 @@ const useNoticeColumns = (): ColumnsType<any> => {
       title: "Publish Date",
       dataIndex: "publish_date",
       align: "center",
+      width: 150,
       sorter: (a, b) =>
         dayjs(a.publish_date || 0).unix() - dayjs(b.publish_date || 0).unix(),
-      render: (date) => (date ? dayjs(date).format("YYYY-MM-DD") : "-"),
+      render: (date) => (date ? dayjs(date).format("DD MMM YYYY") : "-"),
     },
     {
       key: "7",
       title: "Expiry Date",
       dataIndex: "expiry_date",
       align: "center",
+      width: 150,
       sorter: (a, b) =>
         dayjs(a.expiry_date || 0).unix() - dayjs(b.expiry_date || 0).unix(),
-      render: (date) => (date ? dayjs(date).format("YYYY-MM-DD") : "-"),
+      render: (date) => (date ? dayjs(date).format("DD MMM YYYY") : "-"),
     },
     {
       key: "8",

@@ -71,6 +71,7 @@ const useCashColumns = (): ColumnsType<any> => {
       title: "Account Type",
       dataIndex: "account",
       align: "center",
+      width: 150,
       render: (title) => (title ? capitalize(title?.account_type) : "-"),
     },
     {
@@ -78,6 +79,7 @@ const useCashColumns = (): ColumnsType<any> => {
       title: "Payment Method",
       dataIndex: "payment_method",
       align: "center",
+      width: 150,
       render: (method: string) => {
         const lowerMethod = method?.toLowerCase();
         let color: string;
@@ -108,6 +110,7 @@ const useCashColumns = (): ColumnsType<any> => {
       title: "Entry Type",
       dataIndex: "entry_type",
       align: "center",
+      width: 150,
       render: (title) => (title ? capitalize(title) : "-"),
     },
 
@@ -116,14 +119,15 @@ const useCashColumns = (): ColumnsType<any> => {
       title: "Amount",
       dataIndex: "amount",
       align: "center",
+      width: 100,
       render: (amount: number) => {
         const isPositive = Number(amount) > 0;
         const color = isPositive ? "green" : "red";
 
         return (
-          <Tag color={color}>
+          <span style={{ color }}>
             {amount !== null && amount !== undefined ? amount : "-"}
-          </Tag>
+          </span>
         );
       },
     },
@@ -133,6 +137,7 @@ const useCashColumns = (): ColumnsType<any> => {
       title: "Date",
       dataIndex: "date",
       align: "center",
+      width: 120,
       render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "-"),
     },
     {

@@ -56,15 +56,17 @@ const useTeacherColumns = (): ColumnsType<any> => {
       key: "1",
       title: "Full Name",
       dataIndex: "first_name",
+      width: 200,
       align: "left",
       render: (_: any, record: any) =>
         `${record?.first_name} ${record?.last_name}`,
     },
     {
       key: "2",
-      title: "User ID",
+      title: "UserID",
       dataIndex: "user",
       align: "center",
+      width: 100,
       sorter: (a, b) => a.user?.username?.localeCompare(b.user?.username || ""),
       render: (name) => (name ? name?.username : "-"),
     },
@@ -73,6 +75,7 @@ const useTeacherColumns = (): ColumnsType<any> => {
       title: "Working Hour",
       dataIndex: "schedule",
       align: "center",
+      width: 200,
       render: (schedule) =>
         schedule ? (
           <>
@@ -89,6 +92,7 @@ const useTeacherColumns = (): ColumnsType<any> => {
       title: "Phone",
       dataIndex: "phone_number",
       align: "center",
+      width: 150,
       render: (phone_number) => (phone_number ? phone_number : "-"),
     },
     {
@@ -107,6 +111,7 @@ const useTeacherColumns = (): ColumnsType<any> => {
       title: "Base Salary",
       dataIndex: "base_salary",
       align: "center",
+      width: 150,
       render: (base_salary) => (base_salary ? base_salary : "-"),
     },
 

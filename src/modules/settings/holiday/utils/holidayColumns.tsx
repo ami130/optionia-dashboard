@@ -150,7 +150,7 @@ const useHolidayColumns = (): ColumnsType<any> => {
               border: "1px solid #3892E3",
             }}
           >
-            <FaEye /> View
+            <FaEye /> 
           </Button>
 
           {deletePermission && (

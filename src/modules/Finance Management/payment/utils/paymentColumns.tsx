@@ -101,7 +101,8 @@ const usePaymentColumns = (): ColumnsType<any> => {
       key: "1",
       title: "Name",
       dataIndex: "payroll",
-      align: "center",
+      align: "left",
+      width: 200,
       render: (payroll) => {
         if (payroll?.employee) {
           return `${payroll?.employee?.first_name} ${payroll?.employee?.last_name}`;
@@ -117,6 +118,7 @@ const usePaymentColumns = (): ColumnsType<any> => {
       title: "Period Date",
       dataIndex: "payroll",
       align: "center",
+      width: 200,
       render: (_, record) =>
         record
           ? dayjs(record?.period_start).format("DD MMM YY") +
@@ -137,6 +139,7 @@ const usePaymentColumns = (): ColumnsType<any> => {
       title: "Attendance Days",
       dataIndex: "payroll",
       align: "center",
+      width: 150,
       render: (payroll) => (payroll ? payroll?.attendance_days : "-"),
     },
     {

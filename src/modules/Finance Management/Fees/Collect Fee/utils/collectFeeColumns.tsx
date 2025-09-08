@@ -76,7 +76,8 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       key: "1",
       title: "Name",
       dataIndex: "admission",
-      align: "center",
+      align: "left",
+      width: 150,
       render: (admission: any) =>
         admission ? (
           <Link
@@ -91,9 +92,10 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
     },
     {
       key: "4",
-      title: "User Name",
+      title: "UserID",
       dataIndex: "admission",
       align: "center",
+      width: 80,
       render: (title) => (title ? title.student?.user?.username : "-"),
     },
     {
@@ -101,6 +103,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       title: "Session",
       dataIndex: "admission",
       align: "center",
+      width: 80,
       render: (title) => (title ? title?.session?.name : "-"),
     },
     {
@@ -108,6 +111,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       title: "Phone",
       dataIndex: "admission",
       align: "center",
+      width: 120,
       render: (admission) => {
         const phone = admission?.student?.phone_number;
         return phone ? phone.replace(/^880/, "0") : "-";
@@ -118,6 +122,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       title: "Class",
       dataIndex: "admission",
       align: "center",
+      width: 80,
       render: (title) => (title ? title.grade_level : "-"),
     },
     {
@@ -125,6 +130,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       title: "Month",
       dataIndex: "month",
       align: "center",
+      width: 100,
       render: (month) => (month ? dayjs(month).format("MMMM") : "-"),
     },
     {
@@ -132,6 +138,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       title: "Amount",
       dataIndex: "total_paid",
       align: "center",
+      width: 80,
       render: (title) => (title ? title : "0"),
     },
     {
@@ -139,6 +146,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       title: "Net Amount",
       dataIndex: "net_amount",
       align: "center",
+      width: 100,
       render: (title) => (title ? title : "0"),
     },
     {
@@ -146,6 +154,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       title: "Discount",
       dataIndex: "total_discount",
       align: "center",
+      width: 80,
       render: (title) => (title ? title : "0"),
     },
     {
@@ -153,6 +162,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       title: "Payment Date",
       dataIndex: "payment_date",
       align: "center",
+      width: 120,
       render: (month) => (month ? dayjs(month).format("DD MMM YYYY") : "-"),
     },
     {
@@ -160,6 +170,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       title: "Due Amount",
       dataIndex: "total_due",
       align: "center",
+      width: 100,
       render: (amount) => (amount ? amount : "0"),
     },
     {
@@ -167,6 +178,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       title: "Total Amount",
       dataIndex: "total_amount",
       align: "center",
+      width: 120,
       render: (amount) => (amount ? amount : "0"),
     },
     {
@@ -174,6 +186,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       title: "Status",
       dataIndex: "status",
       align: "center",
+      width: 80,
       render: (status) => {
         if (!status) return <Tag color="cyan">-</Tag>;
         const value = String(status).toLowerCase();
