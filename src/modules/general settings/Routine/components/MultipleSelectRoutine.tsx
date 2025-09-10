@@ -1,7 +1,13 @@
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  LoadingOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { Button, Col, Form, Row, Select } from "antd";
 import { useGetTeacherQuery } from "../../../members/teachers/api/teachersEndPoints";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsEndPoints";
+import { useState } from "react";
+import { debounce } from "lodash";
 
 const daysOfWeek = [
   "Sunday",
@@ -18,9 +24,12 @@ const MultipleSelectRoutine = ({
 }: {
   specificClass: number;
 }) => {
+  const [search, setSearch] = useState("");
+
   const { data: teacherData } = useGetTeacherQuery({});
-  const { data: subjectData } = useGetSubjectsQuery({
+  const { data: subjectData, isFetching } = useGetSubjectsQuery({
     grade_level: specificClass,
+    search: search,
   });
 
   return (
@@ -126,7 +135,19 @@ const MultipleSelectRoutine = ({
                       { required: true, message: "Please select Subject!" },
                     ]}
                   >
-                    <Select placeholder="Select Subject" className="w-full">
+                    <Select
+                      placeholder="Select Subject"
+                      className="w-full"
+                      allowClear
+                      showSearch
+                      filterOption={false}
+                      optionFilterProp="children"
+                      onSearch={debounce(setSearch, 500)}
+                      loading={isFetching}
+                      notFoundContent={
+                        isFetching ? <LoadingOutlined /> : "No Client found"
+                      }
+                    >
                       {subjectData?.data?.results?.map((subject: any) => (
                         <Select.Option key={subject.id} value={subject.id}>
                           {subject?.name}
