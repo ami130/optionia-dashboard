@@ -29,7 +29,7 @@ export default {
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 
-# Patthoshala
+# Sobar-Bazar
 
 # restaurant-management-admin
 
@@ -40,3 +40,4 @@ export default {
 # code-canvas-creation-dashboard
 
 # school-management-system-dashboard
+# sobar-bazar-vendor

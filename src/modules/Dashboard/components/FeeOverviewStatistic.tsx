@@ -2,7 +2,6 @@ import { Card, DatePicker, Select } from "antd";
 import { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts";
 import dayjs from "dayjs";
-import { useGetClassesBigListQuery } from "../../general settings/classes/api/classesEndPoints";
 
 const { Option } = Select;
 
@@ -11,7 +10,6 @@ const FeeOverviewStatistic = ({
   filterParams,
   setFeeFilterParams,
 }: any) => {
-  const { data: gradeLevels } = useGetClassesBigListQuery<any>({});
   const feeCollectionChartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -196,26 +194,6 @@ const FeeOverviewStatistic = ({
                 />
               )}
 
-              {/* Grade/Class Selector */}
-              <Select
-                placeholder="Select Class"
-                className="w-48"
-                size="small"
-                value={filterParams.grade_level_id || undefined}
-                onChange={(val) =>
-                  setFeeFilterParams((prev: any) => ({
-                    ...prev,
-                    grade_level_id: val || undefined,
-                  }))
-                }
-                allowClear
-              >
-                {gradeLevels?.data?.map((cls: any) => (
-                  <Option key={cls.id} value={cls.id}>
-                    {cls.name}
-                  </Option>
-                ))}
-              </Select>
             </div>
           </div>
         }

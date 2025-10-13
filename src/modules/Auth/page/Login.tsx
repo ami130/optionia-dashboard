@@ -51,19 +51,19 @@ const Login: React.FC = () => {
     dispatch(clearMessage());
   };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 relative">
+    <div className="min-h-screen bg-gradient-to-br from-[#f0f1f1] to-[#a9f8dc] relative">
       {/* Main content container */}
       <div className="flex flex-col min-h-screen">
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-32 h-32 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+          <div className="absolute top-0 left-0 w-32 h-32 bg-[#8ce4c5] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#84f0ca] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#7ce6c1] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
         </div>
 
         {/* Centered login card */}
         <div className="flex-grow flex justify-center items-center px-4 py-8 z-10">
-          <Card className="shadow-2xl p-8 rounded-2xl bg-white/90 backdrop-blur-sm border border-white/20 w-full max-w-4xl transition-all duration-300 hover:shadow-3xl">
+          <Card className="shadow-2xl p-8 rounded-2xl bg-transparent backdrop-blur-sm border border-white/40 w-full max-w-4xl transition-all duration-300 hover:shadow-3xl">
             <Row gutter={[24, 24]} align="middle" justify="space-between">
               {/* Illustration Column */}
               <Col
@@ -127,7 +127,7 @@ const Login: React.FC = () => {
                         onFocus={handleOnFocus}
                         // prefix={<Iconify icon="ph:user" className="text-gray-400" />}
                         placeholder="Username"
-                        className="!py-3 !rounded-lg hover:!border-blue-400 focus:!border-blue-500 focus:!shadow-blue-200"
+                        className="!py-3 !rounded-lg hover:!border-[#58C59E] focus:!border-[#58C59E] focus:!shadow-blue-200"
                       />
                     </Form.Item>
 
@@ -145,13 +145,13 @@ const Login: React.FC = () => {
                         onFocus={handleOnFocus}
                         // prefix={<Iconify icon="ant-design:lock-outlined" className="text-gray-400" />}
                         placeholder="Password"
-                        className="!py-3 !rounded-lg hover:!border-blue-400 focus:!border-blue-500 focus:!shadow-blue-200"
+                        className="!py-3 !rounded-lg hover:!border-[#58C59E] focus:!border-[#58C59E] focus:!shadow-blue-200"
                       />
                     </Form.Item>
                     <br />
                     {/* <div className="flex justify-end items-center mb-6">
                       <Link to="/send-otp">
-                        <Typography.Link className="!text-gray-600 hover:!text-blue-500">
+                        <Typography.Link className="!text-gray-600 hover:!text-[#58C59E]">
                           Forgot Password?
                         </Typography.Link>
                       </Link>
@@ -163,7 +163,7 @@ const Login: React.FC = () => {
                         htmlType="submit"
                         block
                         loading={isLoading}
-                        className="!h-12 !rounded-lg !bg-gradient-to-r !from-blue-500 !to-indigo-600 hover:!from-blue-600 hover:!to-indigo-700 !border-none !text-white !font-medium !shadow-lg hover:!shadow-blue-500/30 transition-all duration-300"
+                        className="!h-12 !rounded-lg cursor-pointer !bg-gradient-to-r !from-[#58C59E] !to-[#308366] hover:!from-[#308366] hover:!to-[#58C59E] duration-300 hover:duration-300 !border-none !text-white !font-medium !shadow-lg hover:!shadow-[#58C59E]/30 transition-all "
                       >
                         {isLoading ? "Logging in..." : "Login"}
                       </Button>
@@ -191,9 +191,9 @@ const Login: React.FC = () => {
             <Typography.Link
               href="https://codecanvascreation.com"
               target="_blank"
-              className="!text-blue-600 hover:!text-blue-800 "
+              className="!text-[#58C59E]  "
             >
-              Code Canvas Creation
+              Sobar Bazar
             </Typography.Link>
           </Typography.Text>
         </div>

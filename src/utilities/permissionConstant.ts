@@ -19,6 +19,8 @@ export const actionNames: ActionNames = {
 };
 
 type ModuleNames = {
+  products: string;
+
   shift: string;
   gradelevel: string;
   student: string;
@@ -60,6 +62,7 @@ type ModuleNames = {
 
 export const moduleNames: ModuleNames = {
   financialentry: "financialentry",
+  products: "product",
   role: "role",
   rulesandregulations: "rulesandregulations",
   smsconfig: "smsconfig",

@@ -8,6 +8,12 @@ export const TagTypes = {
   ORDER: "Order",
   SERVICE: "Service",
 
+  //
+  PRODUCTS: "Products",
+  ORDERS: "Orders",
+  EARNING_REPORT: "Earning_Report",
+  PROFILE_SETTING: "Profile_Setting",
+
   // school
   INSTITUTE_PROFILE: "Institution_Profile",
   ROLE_PERMISSION: "Role_Permission",

@@ -12,79 +12,26 @@ import MatchOTP from "../modules/Auth/components/MatchOTP";
 import ForgotPassword from "../modules/Auth/components/ForgotPassword";
 import SecondLogin from "../modules/Auth/page/SecondLogin";
 import Verification from "../modules/Auth/components/Verification";
-import StudentsPage from "../modules/members/students/pages/StudentsPage";
-import StudentView from "../modules/members/students/components/StudentView";
-import ClassesPage from "../modules/general settings/classes/pages/ClassesPage";
-import SubjectsPage from "../modules/general settings/subjects/pages/SubjectsPage";
-import MarkStudentsAttendance from "../modules/general settings/attendance/mark student attendance/page/MarkStudentsAttendance";
-import MarkTeachersAttendance from "../modules/general settings/attendance/mark teacher attendance/page/MarkTeacherAttendancePage";
-import InstituteProfile from "../modules/settings/institute profile/page/InstituteProfile";
 import PrivateRouter from "./PrivateRouter";
 import RolePermissionPage from "../modules/settings/role & permission/page/RolePermissionPage";
 import ViewRolePermission from "../modules/settings/role & permission/components/ViewRolePermission";
-import TeacherPage from "../modules/members/teachers/pages/TeacherPage";
-import TeacherView from "../modules/members/teachers/components/TeacherView";
-import FeesPage from "../modules/Finance Management/Fees/fees/page/FeesPage";
-import FeesView from "../modules/Finance Management/Fees/fees/components/FeesView";
-import AdmissionPage from "../modules/general settings/admission/page/AdmissionPage";
-import AdmissionSessionPage from "../modules/general settings/admission session/page/AdmissionSessionPage";
-import CreateAdmission from "../modules/general settings/admission/components/CreateAdmission";
-import AdmissionView from "../modules/general settings/admission/components/AdmissionView";
-import UpdateAdmission from "../modules/general settings/admission/components/UpdateAdmission";
-import ViewStudentsAttendanceList from "../modules/general settings/attendance/mark student attendance/components/ViewStudentsAttendanceList";
-import DepartmentPage from "../modules/general settings/Department/page/DepartmentPage";
-import EmployeePage from "../modules/members/employees/pages/EmployeePage";
-import ViewSingleStudentsAttendanceList from "../modules/general settings/attendance/mark student attendance/components/ViewSingleStudentsAttendanceList";
-import SingleViewEmployee from "../modules/members/employees/components/SingleViewEmployee";
-import PayrollPage from "../modules/Finance Management/payroll/pages/PayrollPages";
-import ViewPayroll from "../modules/Finance Management/payroll/components/ViewPayroll";
-import PaymentPage from "../modules/Finance Management/payment/pages/PaymentPage";
-import ViewPayment from "../modules/Finance Management/payment/components/ViewPayment";
-import TuitionFeePaymentPage from "../modules/Finance Management/Tuition payment/pages/TuitionFeePaymentPage";
-import ViewEmployeeAttendanceList from "../modules/general settings/attendance/mark teacher attendance/components/ViewEmployeeAttendanceList";
-import ViewSingleEmployeeAttendance from "../modules/general settings/attendance/mark teacher attendance/components/ViewSingleEmployeeAttandance";
-import AdditionalFeesPage from "../modules/Finance Management/Fees/Additional Fee/page/AdditionalFeesPage";
-import CollectFeePage from "../modules/Finance Management/Fees/Collect Fee/page/CollectFeePage";
-import CreateCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/CreateCollectFee";
-import SingleCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/SingleCollectFee";
-import CreateStudent from "../modules/members/students/components/CreateStudent";
-import UpdateStudent from "../modules/members/students/components/UpdateStudent";
-import SectionPage from "../modules/general settings/Section/pages/SectionPage";
-import RoutinePages from "../modules/general settings/Routine/pages/RoutinePages";
-import CreateRoutine from "../modules/general settings/Routine/components/CreateRoutine";
-import ViewRoutine from "../modules/general settings/Routine/components/ViewRoutine";
-import UpdateRoutine from "../modules/general settings/Routine/components/UpdateRoutine";
-import NoticePage from "../modules/settings/notice/pages/NoticePage";
-import RulesPage from "../modules/settings/rules & regulations/pages/RulesPage";
-import AccountPage from "../modules/Finance Management/Accounts/account/pages/AccountPages";
-import TransactionPage from "../modules/Finance Management/Accounts/Transaction/pages/TransactionPage";
-import SmsPage from "../modules/settings/sms configuration/pages/SmsPage";
-import ShiftPage from "../modules/general settings/shift/page/ShiftPage";
-import CreateExam from "../modules/general settings/Exam/components/CreateExam";
-import ViewExam from "../modules/general settings/Exam/components/ViewExam";
-import UpdateExam from "../modules/general settings/Exam/components/UpdateExam";
-import ExamHallPage from "../modules/general settings/Exam/Exam-hall/page/ExamHall";
-import ExamReceiptsPage from "../modules/general settings/Exam/Exam-receipt/page/ExamReceiptsPage";
-import MarkExamPage from "../modules/general settings/Exam/mark-exam/page/MarkExamPage";
-import GradeMarkPage from "../modules/general settings/Exam/Grade/pages/GradeMark";
-import ResultsPage from "../modules/general settings/Exam/Result/pages/ResultsPage";
-import ResultView from "../modules/general settings/Exam/Result/components/ResultView";
-import ResultMigrationPage from "../modules/general settings/Exam/Result Migration/pages/ResultMigration";
-import LeavePage from "../modules/general settings/Leave/page/LeavePage";
+
 import WithPermission from "./withPermissionRouter";
-import ListOfResultMigration from "../modules/general settings/Exam/Result Migration/pages/ListOfResultMigration";
-import CashPage from "../modules/Finance Management/Accounts/cash management/pages/CashPage";
-import MigrationResultView from "../modules/general settings/Exam/Result Migration/Components/MigrationResultView";
-import NewFees from "../modules/Finance Management/NewFees/page/NewFees";
-import CreateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/CreateNewCollectFee";
-import UpdateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/UpdateNewCollectFee";
-import ClassManagement from "../modules/general settings/class management/page/ClassManagement";
-import AttendanceTab from "../modules/general settings/attendance/Tab/AttandenceTab";
-import ExamTab from "../modules/general settings/Exam/Tab/ExamTab";
-import HolidayPage from "../modules/settings/holiday/pages/HolidayPage";
-import TicketPage from "../modules/settings/ticket/pages/TicketPage";
-import TicketView from "../modules/settings/ticket/components/TicketView";
-import Message from "../modules/settings/ticket/components/Message";
+import ProductsPage from "../modules/Products/pages/ProductsPage";
+import CreateProduct from "../modules/Products/components/CreateProduct";
+import UpdateProduct from "../modules/Products/components/UpdateProduct";
+import ProductView from "../modules/Products/components/ProductView";
+import OrdersPage from "../modules/Orders/pages/OrdersPage";
+import CreateOrder from "../modules/Orders/components/CreateOrder";
+import UpdateOrder from "../modules/Orders/components/UpdateOrder";
+import EarningReportPage from "../modules/Earnings&Reports/pages/EarningReportPage";
+import CreateEarningReport from "../modules/Earnings&Reports/components/CreateEarningReport";
+import UpdateEarningReport from "../modules/Earnings&Reports/components/UpdateEarningReport";
+import EarningReportView from "../modules/Earnings&Reports/components/EarningReportView";
+import ProfileSettingPage from "../modules/Profile&Settings/pages/ProfileSettingPage";
+import CreateProfileSetting from "../modules/Profile&Settings/components/CreateProfileSetting";
+import UpdateProfileSetting from "../modules/Profile&Settings/components/UpdateProfileSetting";
+import ProfileSettingView from "../modules/Profile&Settings/components/ProfileSettingView";
 
 const router = createBrowserRouter([
   {
@@ -97,577 +44,114 @@ const router = createBrowserRouter([
         element: <Dashboard />,
       },
 
-      // students
+      // products
       {
-        path: "/students",
+        path: "/products",
         element: (
-          <WithPermission requiredPermission="student">
+          <WithPermission requiredPermission="products">
             <Accounts />
           </WithPermission>
         ),
         children: [
           {
-            path: "/students",
-            element: <StudentsPage />,
+            path: "/products",
+            element: <ProductsPage />,
           },
           {
             path: "create",
-            element: <CreateStudent />,
+            element: <CreateProduct />,
           },
           {
-            path: "update/:studentId",
-            element: <UpdateStudent />,
+            path: "update/:productId",
+            element: <UpdateProduct />,
           },
           {
-            path: "student-view/:studentId",
-            element: <StudentView />,
+            path: "product-view/:productId",
+            element: <ProductView />,
           },
         ],
-      },
-      // employees
-      {
-        path: "/employees",
-        element: (
-          <WithPermission requiredPermission="employee">
-            <Accounts />
-          </WithPermission>
-        ),
-        children: [
-          {
-            path: "",
-            element: <EmployeePage />,
-          },
-          {
-            path: "employee-view/:employeeId",
-            element: <SingleViewEmployee />,
-          },
-        ],
-      },
-      // teacher
-      {
-        path: "/teacher",
-        element: (
-          <WithPermission requiredPermission="teacher">
-            <Accounts />
-          </WithPermission>
-        ),
-        children: [
-          {
-            path: "",
-            element: <TeacherPage />,
-          },
-          {
-            path: "teacher-view/:teacherId",
-            element: <TeacherView />,
-          },
-        ],
-      },
-      // Department
-      {
-        path: "/department",
-        element: (
-          <WithPermission requiredPermission="department">
-            <DepartmentPage />
-          </WithPermission>
-        ),
-      },
-      // classes
-      {
-        path: "/classes",
-        element: (
-          <WithPermission requiredPermission="gradelevel">
-            <ClassesPage />
-          </WithPermission>
-        ),
-      },
-      {
-        path: "/class-management",
-        element: (
-          <WithPermission requiredPermission="gradelevel">
-            <ClassManagement />
-          </WithPermission>
-        ),
-      },
-      // subjects
-      {
-        path: "/subjects",
-        element: (
-          <WithPermission requiredPermission="classsubject">
-            <SubjectsPage />
-          </WithPermission>
-        ),
-      },
-      // Section
-      {
-        path: "/section",
-        element: (
-          <WithPermission requiredPermission="section">
-            <SectionPage />
-          </WithPermission>
-        ),
-      },
-      // shift
-      {
-        path: "/shift",
-        element: (
-          <WithPermission requiredPermission="shift">
-            <ShiftPage />
-          </WithPermission>
-        ),
       },
 
-      // Leave
+      // orders
       {
-        path: "/leave",
-        element: <LeavePage />,
-      },
-
-      // exam
-      {
-        path: "/exam",
+        path: "/orders",
         element: (
-          <WithPermission requiredPermission="exam">
+          <WithPermission requiredPermission="orders">
             <Accounts />
           </WithPermission>
         ),
         children: [
           {
-            path: "",
-            element: <ExamTab />,
+            path: "/orders",
+            element: <OrdersPage />,
           },
           {
             path: "create",
-            element: <CreateExam />,
+            element: <CreateOrder />,
           },
           {
-            path: ":examId",
-            element: <UpdateExam />,
+            path: "update/:orderId",
+            element: <UpdateOrder />,
           },
           {
-            path: "view/:examId",
-            element: <ViewExam />,
+            path: "product-view/:productId",
+            element: <ProductView />,
           },
         ],
       },
 
-      // exam Hall
+      // earning-report
       {
-        path: "/exam-hall",
+        path: "/earning-report",
         element: (
-          <WithPermission requiredPermission="examhall">
+          <WithPermission requiredPermission="orders">
             <Accounts />
           </WithPermission>
         ),
         children: [
           {
-            path: "",
-            element: <ExamHallPage />,
+            path: "/earning-report",
+            element: <EarningReportPage />,
           },
           {
             path: "create",
-            element: <CreateExam />,
+            element: <CreateEarningReport />,
           },
           {
-            path: ":examId",
-            element: <UpdateExam />,
+            path: "update/:orderId",
+            element: <UpdateEarningReport />,
           },
           {
-            path: "view/:examId",
-            element: <ViewExam />,
+            path: "product-view/:productId",
+            element: <EarningReportView />,
           },
         ],
       },
-      // mark exam
-      {
-        path: "/mark-exam",
-        element: (
-          <WithPermission requiredPermission="exammark">
-            <MarkExamPage />
-          </WithPermission>
-        ),
-      },
-      // exam Receipts
-      {
-        path: "/exam-receipts",
-        element: (
-          <WithPermission requiredPermission="examhallreceipt">
-            <ExamReceiptsPage />
-          </WithPermission>
-        ),
-      },
-      // Grade Mark
-      {
-        path: "/grade-mark",
-        element: (
-          <WithPermission requiredPermission="gradescale">
-            <GradeMarkPage />
-          </WithPermission>
-        ),
-      },
 
-      // Result Migration
-
+      // profile-setting
       {
-        path: "/result-migration",
+        path: "/profile-setting",
         element: (
-          <WithPermission requiredPermission="exam">
+          <WithPermission requiredPermission="orders">
             <Accounts />
           </WithPermission>
         ),
         children: [
           {
-            path: "",
-            element: <ResultMigrationPage />,
+            path: "/profile-setting",
+            element: <ProfileSettingPage />,
           },
           {
-            path: "list",
-            element: <ListOfResultMigration />,
-          },
-
-          {
-            path: "view/:roleId",
-            element: <MigrationResultView />,
-          },
-        ],
-      },
-
-      // {
-      //   path: "/result-migration",
-      //   element: (
-      //     <WithPermission requiredPermission="exam">
-      //       <ResultMigrationPage />
-      //     </WithPermission>
-      //   ),
-      //   children: [
-      //     {
-      //       path: "list",
-      //       element: <ListOfResultMigration />,
-      //     },
-      //     {
-      //       path: "/result-migration/:roleId",
-      //       element: <MigrationResultView />,
-      //     },
-      //   ],
-      // },
-      // {
-      //   path: "/result-migration/list",
-      //   element: (
-      //     <WithPermission requiredPermission="exam">
-      //       <ListOfResultMigration />
-      //     </WithPermission>
-      //   ),
-      // },
-
-      // exam Result
-      {
-        path: "/exam-result",
-        element: (
-          <WithPermission requiredPermission="studentresult">
-            <Accounts />
-          </WithPermission>
-        ),
-        children: [
-          {
-            path: "",
-            element: <ResultsPage />,
+            path: "create",
+            element: <CreateProfileSetting />,
           },
           {
-            path: "view/:resultId",
-            element: <ResultView />,
-          },
-        ],
-      },
-
-      // routine
-      {
-        path: "/routine",
-        element: (
-          <WithPermission requiredPermission="routine">
-            <Accounts />
-          </WithPermission>
-        ),
-        children: [
-          {
-            path: "",
-            element: <RoutinePages />,
+            path: "update/:orderId",
+            element: <UpdateProfileSetting />,
           },
           {
-            path: "/routine/create-routine",
-            element: <CreateRoutine />,
-          },
-          {
-            path: "/routine/view/:routineID",
-            element: <ViewRoutine />,
-          },
-          {
-            path: "/routine/update/:routineID",
-            element: <UpdateRoutine />,
-          },
-        ],
-      },
-
-      // admission
-      {
-        path: "/admission",
-        element: (
-          <WithPermission requiredPermission="admission">
-            <Accounts />
-          </WithPermission>
-        ),
-        children: [
-          {
-            path: "",
-            element: <AdmissionPage />,
-          },
-          {
-            path: "/admission/create-admission",
-            element: <CreateAdmission />,
-          },
-          {
-            path: "/admission/admission-view/:admissionId",
-            element: <AdmissionView />,
-          },
-          {
-            path: "/admission/:admissionId",
-            element: <UpdateAdmission />,
-          },
-        ],
-      },
-      // admission session
-      {
-        path: "/admission-session",
-        element: (
-          <WithPermission requiredPermission="admissionsession">
-            <AdmissionSessionPage />
-          </WithPermission>
-        ),
-      },
-      // Fees
-      {
-        path: "/fees",
-        element: (
-          <WithPermission requiredPermission="feestructure">
-            <Accounts />
-          </WithPermission>
-        ),
-        children: [
-          {
-            path: "",
-            element: <FeesPage />,
-          },
-
-          {
-            path: "view/:feesId",
-            element: <FeesView />,
-          },
-        ],
-      },
-
-      // New Fees
-      {
-        path: "/finance",
-        element: (
-          <WithPermission requiredPermission="feestructure">
-            <Accounts />
-          </WithPermission>
-        ),
-        children: [
-          {
-            path: "",
-            element: <NewFees />,
-          },
-
-          {
-            path: "view/:feesId",
-            element: <FeesView />,
-          },
-          {
-            path: "payment-view/:paymentId",
-            element: <ViewPayment />,
-          },
-          {
-            path: "payroll-view/:payrollId",
-            element: <ViewPayroll />,
-          },
-        ],
-      },
-
-      // collect fee
-
-      {
-        path: "/new-collect-fee",
-        element: <CreateCollectFee />,
-      },
-      // CreateCollectFee
-
-      {
-        path: "/collect-fee",
-        element: (
-          <WithPermission requiredPermission="fees">
-            <Accounts />
-          </WithPermission>
-        ),
-        children: [
-          {
-            path: "",
-            element: <CreateNewCollectFee />,
-          },
-          {
-            path: "list",
-            element: <CollectFeePage />,
-          },
-          {
-            path: ":collectFeeId",
-            element: <UpdateNewCollectFee />,
-          },
-          {
-            path: "view/:collectFeeId",
-            element: <SingleCollectFee />,
-          },
-        ],
-      },
-
-      // Tuition Fees
-      {
-        path: "/additional-fee",
-        element: (
-          <WithPermission requiredPermission="admissionfeestructure">
-            <Accounts />
-          </WithPermission>
-        ),
-        children: [
-          {
-            path: "",
-            element: <AdditionalFeesPage />,
-          },
-
-          {
-            path: "fees-view/:feesId",
-            element: <FeesView />,
-          },
-        ],
-      },
-
-      // Tuition Fees Payment
-      {
-        path: "/tuition-fees-payment",
-        element: <Accounts />,
-        children: [
-          {
-            path: "",
-            element: <TuitionFeePaymentPage />,
-          },
-
-          {
-            path: "fees-view/:feesId",
-            element: <FeesView />,
-          },
-        ],
-      },
-
-      // attendance
-      {
-        path: "/attendance",
-        element: <Accounts />,
-        children: [
-          {
-            path: "",
-            element: <AttendanceTab />,
-          },
-          {
-            path: "mark-student-attendance",
-            element: <MarkStudentsAttendance />,
-          },
-          {
-            path: "mark-student-attendance-list",
-            element: <ViewStudentsAttendanceList />,
-          },
-          {
-            path: "mark-student-attendance-list/:attendanceId",
-            element: <ViewSingleStudentsAttendanceList />,
-          },
-          {
-            path: "mark-employee-attendance",
-            element: <MarkTeachersAttendance />,
-          },
-          {
-            path: "mark-employee-attendance-list",
-            element: <ViewEmployeeAttendanceList />,
-          },
-          {
-            path: "mark-employee-attendance-list/:attendanceId",
-            element: <ViewSingleEmployeeAttendance />,
-          },
-        ],
-      },
-      // institution profile
-      {
-        path: "/institute-profile",
-        element: (
-          <WithPermission requiredPermission="institution">
-            <InstituteProfile />
-          </WithPermission>
-        ),
-      },
-      // Notice
-      {
-        path: "/notice",
-        element: (
-          <WithPermission requiredPermission="noticeboard">
-            <NoticePage />
-          </WithPermission>
-        ),
-      },
-      {
-        path: "/holiday",
-        element: (
-          <WithPermission requiredPermission="noticeboard">
-            <HolidayPage />
-          </WithPermission>
-        ),
-      },
-      // Rules
-      {
-        path: "/rules",
-        element: (
-          <WithPermission requiredPermission="rulesandregulations">
-            <RulesPage />
-          </WithPermission>
-        ),
-      },
-      // SMS
-      {
-        path: "/sms",
-        element: (
-          <WithPermission requiredPermission="smsconfig">
-            <SmsPage />
-          </WithPermission>
-        ),
-      },
-      {
-        path: "/message",
-        element: (
-          <WithPermission requiredPermission="smsconfig">
-            <Message />
-          </WithPermission>
-        ),
-      },
-      // Ticket
-      {
-        path: "/ticket",
-        element: (
-          <WithPermission requiredPermission="smsconfig">
-            <Accounts />
-          </WithPermission>
-        ),
-        children: [
-          {
-            path: "",
-            element: <TicketPage />,
-          },
-          {
-            path: "view/:ticketID",
-            element: <TicketView />,
+            path: "product-view/:productId",
+            element: <ProfileSettingView />,
           },
         ],
       },
@@ -692,61 +176,10 @@ const router = createBrowserRouter([
         ],
       },
 
-      // payment
-      {
-        path: "/payment",
-        element: (
-          <WithPermission requiredPermission="payment">
-            <Accounts />
-          </WithPermission>
-        ),
-        children: [
-          {
-            path: "",
-            element: <PaymentPage />,
-          },
-          {
-            path: "payment-view/:paymentId",
-            element: <ViewPayment />,
-          },
-        ],
-      },
-
-      // payroll
-      {
-        path: "/payroll",
-        element: (
-          <WithPermission requiredPermission="payroll">
-            <Accounts />
-          </WithPermission>
-        ),
-        children: [
-          {
-            path: "",
-            element: <PayrollPage />,
-          },
-          {
-            path: "payroll-view/:payrollId",
-            element: <ViewPayroll />,
-          },
-        ],
-      },
       {
         path: "/account",
         element: <Accounts />,
         children: [
-          {
-            path: "/account",
-            element: <AccountPage />,
-          },
-          {
-            path: "/account/transactions",
-            element: <TransactionPage />,
-          },
-          {
-            path: "/account/cash",
-            element: <CashPage />,
-          },
           {
             path: "balance-status",
             element: <BalanceStatus />,
