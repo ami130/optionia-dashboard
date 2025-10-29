@@ -156,7 +156,7 @@ const Verification: React.FC = () => {
                   className="form-field-body"
                 >
                   <Form.Item<LoginTypes>
-                    name="username"
+                    name="email"
                     rules={[{ required: true }]}
                   >
                     {/* <Input

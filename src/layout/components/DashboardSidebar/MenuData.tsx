@@ -7,78 +7,67 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { ThemesTypes } from "../../../app/features/themeSlice";
 import SidebarButtom from "./SidebarButtom";
-
-import { useGetDashboardDataQuery } from "../../../modules/Dashboard/api/dashoboardEndPoints";
 import { hasPermissionForModule } from "../../../utilities/permission";
 import { ItemType, MenuItemType } from "antd/es/menu/interface";
 import { LiaProductHunt } from "react-icons/lia";
 import { IoCartOutline } from "react-icons/io5";
 import { HiOutlineDocumentReport } from "react-icons/hi";
+import { useGetProfileQuery } from "../../../modules/Profile/api/profileEndpoint";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
     (state) => state.themes
   );
   const { pathname } = useLocation();
-  const { data: dashboardData } = useGetDashboardDataQuery({});
+  const { data: profileData } = useGetProfileQuery();
 
-  const permissions = dashboardData?.data?.permissions || [];
+  // const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const permissions =
+    profileData?.data?.roleModulePermissions ??
+    profileData?.data?.role?.roleModulePermissions ??
+    [];
 
   const iconStyle: React.CSSProperties | undefined = {
     marginRight: "8px",
     color: themes === "light" ? "#000000" : "#FFFFFF",
   };
 
-  // const settings = [
-  //   hasPermissionForModule(permissions, "routine") && {
-  //     key: "/routine",
-  //     label: <Link to="/routine">Routine</Link>,
-  //     icon: <IoCalendarOutline />,
-  //   },
-  //   hasPermissionForModule(permissions, "institution") && {
-  //     key: "/institute-profile",
-  //     label: <Link to="/institute-profile">Institute Profile</Link>,
-  //     icon: <BiSolidInstitution />,
-  //   },
+  const Optionia = [
+    {
+      key: "/website-info",
+      label: <Link to="/website-info">Website Info</Link>,
+      icon: <LiaProductHunt />,
+    },
+    {
+      key: "/pages",
+      label: <Link to="/pages">Pages</Link>,
+      icon: <LiaProductHunt />,
+    },
+    hasPermissionForModule(permissions, "users") && {
+      key: "/users",
+      label: <Link to="/users">Users</Link>,
+      icon: <LiaProductHunt />,
+    },
+    {
+      key: "role-permission",
+      label: "Role & Permission",
+      icon: <HiOutlineDocumentReport style={iconStyle} />,
+      children: [
+        hasPermissionForModule(permissions, "role") && {
+          key: "/role/list",
+          label: <Link to="/role/list">Role</Link>,
+          icon: <LiaProductHunt style={iconStyle} />,
+        },
+        hasPermissionForModule(permissions, "role") && {
+          key: "/role/module",
+          label: <Link to="/role/module">Module</Link>,
+          icon: <LiaProductHunt style={iconStyle} />,
+        },
+      ].filter(Boolean),
+    },
 
-  //   hasPermissionForModule(permissions, "role") && {
-  //     key: "/role-permission",
-  //     label: <Link to="/role-permission">Role & Permissions</Link>,
-  //     icon: <IoAccessibilityOutline />,
-  //   },
-  //   hasPermissionForModule(permissions, "noticeboard") && {
-  //     key: "/notice",
-  //     label: <Link to="/notice">Notice</Link>,
-  //     icon: <TfiAnnouncement />,
-  //   },
-  //   hasPermissionForModule(permissions, "noticeboard") && {
-  //     key: "/holiday",
-  //     label: <Link to="/holiday">Holiday / Events</Link>,
-  //     icon: <MdOutlineHolidayVillage />,
-  //   },
-  //   hasPermissionForModule(permissions, "rulesandregulations") && {
-  //     key: "/rules",
-  //     label: <Link to="/rules">Rules & Regulation</Link>,
-  //     icon: <BsFillFileRuledFill />,
-  //   },
-  //   hasPermissionForModule(permissions, "smsconfig") && {
-  //     key: "/sms",
-  //     label: <Link to="/sms">SMS Configuration</Link>,
-  //     icon: <FaCommentSms />,
-  //   },
-  //   hasPermissionForModule(permissions, "smsconfig") && {
-  //     key: "/ticket",
-  //     label: <Link to="/ticket">Ticket</Link>,
-  //     icon: <IoTicketOutline />,
-  //   },
-  //   // hasPermissionForModule(permissions, "smsconfig") && {
-  //   //   key: "/message",
-  //   //   label: <Link to="/message">Message</Link>,
-  //   //   icon: <FaCommentSms />,
-  //   // },
-  // ].filter(Boolean);
-
-  const product = [
+    // ---------------------------
     hasPermissionForModule(permissions, "student") && {
       key: "/products",
       label: <Link to="/products">Products</Link>,
@@ -134,7 +123,7 @@ const MenuData: React.FC = () => {
             mode="inline"
             theme={themes}
             selectedKeys={[pathname]}
-            items={product.filter(Boolean) as ItemType<MenuItemType>[]}
+            items={Optionia.filter(Boolean) as ItemType<MenuItemType>[]}
           />
         </div>
       </div>

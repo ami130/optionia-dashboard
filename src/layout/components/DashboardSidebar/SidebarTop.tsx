@@ -6,6 +6,7 @@ import { useGetDashboardDataQuery } from "../../../modules/Dashboard/api/dashobo
 
 const SidebarTop: React.FC = () => {
   const { data: dashboardData } = useGetDashboardDataQuery({});
+  console.log(dashboardData);
 
   // const [time, setTime] = useState(moment().format("LTS"));
 
@@ -23,7 +24,7 @@ const SidebarTop: React.FC = () => {
         {/* <h1 style={{ fontSize: "24px", fontFamily: "Arial" }}>{time .}</h1> */}
 
         <Image
-          src={dashboardData?.data?.institution?.logo || mainLogo}
+          src={mainLogo}
           preview={false}
           width={50}
           height={50}

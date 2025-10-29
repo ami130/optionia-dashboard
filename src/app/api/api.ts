@@ -23,7 +23,7 @@ const baseQuery: BaseQueryFn<
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.access;
     if (token) {
-      headers.set("Authorization", `JWT ${token}`);
+      headers.set("Authorization", `Bearer ${token}`);
     }
     return headers;
   },

@@ -9,8 +9,11 @@ export const TagTypes = {
   SERVICE: "Service",
 
   //
-  PRODUCTS: "Products",
-  ORDERS: "Orders",
+  PAGES: "Pages",
+  WEBSITE_INFO: "Website_Info",
+  MODULE: "Module",
+  ROLE: "Role",
+  USER: "User",
   EARNING_REPORT: "Earning_Report",
   PROFILE_SETTING: "Profile_Setting",
 

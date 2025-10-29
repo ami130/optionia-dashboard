@@ -46,6 +46,7 @@ const Table = <T extends object>({
         x: "max-content",
         y: total && total * 13 >= 650 ? 650 : undefined,
       }}
+      
       pagination={{
         total,
         showSizeChanger: true,

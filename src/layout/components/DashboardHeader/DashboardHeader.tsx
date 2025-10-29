@@ -1,10 +1,8 @@
 import {
-  Badge,
   Button,
   Flex,
   Image,
   Layout,
-  List,
   Popover,
   Space,
   Tooltip,
@@ -29,6 +27,8 @@ interface Props {
 const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
   const { themes, darkColor } = useSelector((state: RootState) => state.themes);
   const { data } = useGetProfileQuery();
+
+  console.log(data?.data?.username);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -65,7 +65,7 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
                 fontSize: "1.2rem",
               }}
             >
-              Hello, {data?.data?.username || "Education Hub"}
+              Hello, {data?.data?.username}
             </Typography.Text>
             <Typography.Text
               type="secondary"
@@ -84,7 +84,7 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
           />
         </Flex> */}
         <Flex align="center" justify="center" gap={20}>
-          <Badge count={17}>
+          {/* <Badge count={17}>
             <Popover
               content={
                 <List
@@ -101,7 +101,7 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
                 icon={<Iconify name="ant-design:bell-outlined" />}
               />
             </Popover>
-          </Badge>
+          </Badge> */}
 
           <Tooltip
             title={themes === "light" ? "Dark Mode" : "Light Mode"}

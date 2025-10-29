@@ -17,25 +17,22 @@ import RolePermissionPage from "../modules/settings/role & permission/page/RoleP
 import ViewRolePermission from "../modules/settings/role & permission/components/ViewRolePermission";
 
 import WithPermission from "./withPermissionRouter";
-import ProductsPage from "../modules/Products/pages/ProductsPage";
-import CreateProduct from "../modules/Products/components/CreateProduct";
-import UpdateProduct from "../modules/Products/components/UpdateProduct";
-import ProductView from "../modules/Products/components/ProductView";
-import OrdersPage from "../modules/Orders/pages/OrdersPage";
-import CreateOrder from "../modules/Orders/components/CreateOrder";
-import UpdateOrder from "../modules/Orders/components/UpdateOrder";
+
 import EarningReportPage from "../modules/Earnings&Reports/pages/EarningReportPage";
 import CreateEarningReport from "../modules/Earnings&Reports/components/CreateEarningReport";
 import UpdateEarningReport from "../modules/Earnings&Reports/components/UpdateEarningReport";
 import EarningReportView from "../modules/Earnings&Reports/components/EarningReportView";
-import ProfileSettingPage from "../modules/Profile&Settings/pages/ProfileSettingPage";
-import CreateProfileSetting from "../modules/Profile&Settings/components/CreateProfileSetting";
-import UpdateProfileSetting from "../modules/Profile&Settings/components/UpdateProfileSetting";
-import ProfileSettingView from "../modules/Profile&Settings/components/ProfileSettingView";
+import PagesPage from "../modules/Pages/pages/PagesPage";
+import CreatePages from "../modules/Pages/components/CreatePages";
+import WebsiteInfoPage from "../modules/website info/pages/WebsiteInfoPage";
+import ModulePage from "../modules/Role&Permission/Module/pages/ModulePage";
+import RolePage from "../modules/Role&Permission/Role/pages/RolePage";
+import UserPage from "../modules/User/pages/UserPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    // element: <DashboardLayout />,
     element: <PrivateRouter children={<DashboardLayout />} />,
     errorElement: <ErrorPage />,
     children: [
@@ -44,58 +41,76 @@ const router = createBrowserRouter([
         element: <Dashboard />,
       },
 
-      // products
+      // PAGES
       {
-        path: "/products",
+        path: "/pages",
+        element: <Accounts />,
+        children: [
+          {
+            path: "/pages",
+            element: <PagesPage />,
+          },
+          {
+            path: "create",
+            element: <CreatePages />,
+          },
+          // {
+          //   path: "update/:orderId",
+          //   element: <UpdateOrder />,
+          // },
+        ],
+      },
+
+      // PAGES
+      {
+        path: "/users",
         element: (
-          <WithPermission requiredPermission="products">
+          <WithPermission requiredPermission="student">
             <Accounts />
           </WithPermission>
         ),
         children: [
           {
-            path: "/products",
-            element: <ProductsPage />,
+            path: "/users",
+            element: <UserPage />,
           },
+
+          // {
+          //   path: "update/:orderId",
+          //   element: <UpdateOrder />,
+          // },
+        ],
+      },
+
+      // Website Info
+      {
+        path: "/website-info",
+        element: <Accounts />,
+        children: [
           {
-            path: "create",
-            element: <CreateProduct />,
-          },
-          {
-            path: "update/:productId",
-            element: <UpdateProduct />,
-          },
-          {
-            path: "product-view/:productId",
-            element: <ProductView />,
+            path: "/website-info",
+            element: <WebsiteInfoPage />,
           },
         ],
       },
 
-      // orders
+      // Role And Module
       {
-        path: "/orders",
+        path: "/role",
         element: (
-          <WithPermission requiredPermission="orders">
+          <WithPermission requiredPermission="role">
             <Accounts />
           </WithPermission>
         ),
+        // element: <Accounts />,
         children: [
           {
-            path: "/orders",
-            element: <OrdersPage />,
+            path: "/role/module",
+            element: <ModulePage />,
           },
           {
-            path: "create",
-            element: <CreateOrder />,
-          },
-          {
-            path: "update/:orderId",
-            element: <UpdateOrder />,
-          },
-          {
-            path: "product-view/:productId",
-            element: <ProductView />,
+            path: "/role/list",
+            element: <RolePage />,
           },
         ],
       },
@@ -104,7 +119,7 @@ const router = createBrowserRouter([
       {
         path: "/earning-report",
         element: (
-          <WithPermission requiredPermission="orders">
+          <WithPermission requiredPermission="student">
             <Accounts />
           </WithPermission>
         ),
@@ -124,34 +139,6 @@ const router = createBrowserRouter([
           {
             path: "product-view/:productId",
             element: <EarningReportView />,
-          },
-        ],
-      },
-
-      // profile-setting
-      {
-        path: "/profile-setting",
-        element: (
-          <WithPermission requiredPermission="orders">
-            <Accounts />
-          </WithPermission>
-        ),
-        children: [
-          {
-            path: "/profile-setting",
-            element: <ProfileSettingPage />,
-          },
-          {
-            path: "create",
-            element: <CreateProfileSetting />,
-          },
-          {
-            path: "update/:orderId",
-            element: <UpdateProfileSetting />,
-          },
-          {
-            path: "product-view/:productId",
-            element: <ProfileSettingView />,
           },
         ],
       },

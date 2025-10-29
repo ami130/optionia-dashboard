@@ -58,7 +58,7 @@ const Form = <T extends Store>({
           htmlType="submit"
           loading={isLoading}
           icon={<Iconify name="iconamoon:send-fill" />}
-          className="mt-5 w-52 h-14 font-bold"
+          className="mt-5 font-bold"
         >
           {buttonLabel}
         </Button>

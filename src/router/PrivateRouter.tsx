@@ -11,7 +11,7 @@ interface Props {
 const PrivateRouter: React.FC<Props> = ({ children }) => {
   useAuthChecked();
   const location = useLocation();
-  const { isLoading, isSuccess } = useGetProfileQuery();
+  const { data, isLoading, isSuccess } = useGetProfileQuery();
 
   if (isLoading) {
     return <Loader />;

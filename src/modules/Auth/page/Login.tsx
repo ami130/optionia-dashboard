@@ -27,21 +27,22 @@ const Login: React.FC = () => {
         ...values,
       }).unwrap();
       const { success, data } = response as any;
+
       dispatch(
         openNotification({
           type: "success",
           message: "You have successfully logged in.",
         })
       );
-      dispatch(loggedIn({ success, access: data?.access }));
+      dispatch(loggedIn({ success, access: data?.accessToken }));
       localStorage.setItem(
         TOKEN_NAME,
-        JSON.stringify({ success, access: data?.access })
+        JSON.stringify({ success, access: data?.accessToken })
       );
       window.location.href = from;
     } catch (error: any) {
       const errorRes = error?.data?.message
-        ? error?.data.message
+        ? error?.data?.message
         : "We're sorry, our system is currently unavailable.";
       dispatch(setMessage(errorRes));
     }
@@ -51,19 +52,19 @@ const Login: React.FC = () => {
     dispatch(clearMessage());
   };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f0f1f1] to-[#a9f8dc] relative">
+    <div className="min-h-screen bg-gradient-to-br from-[#bf98e867] to-[#b278f05f] relative">
       {/* Main content container */}
       <div className="flex flex-col min-h-screen">
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-32 h-32 bg-[#8ce4c5] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-          <div className="absolute top-0 right-0 w-32 h-32 bg-[#84f0ca] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#7ce6c1] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+          <div className="absolute top-0 left-0 w-32 h-32 bg-[#8b54c6c8] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#8d3de3] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#c49bef9c] rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
         </div>
 
         {/* Centered login card */}
         <div className="flex-grow flex justify-center items-center px-4 py-8 z-10">
-          <Card className="shadow-2xl p-8 rounded-2xl bg-transparent backdrop-blur-sm border border-white/40 w-full max-w-4xl transition-all duration-300 hover:shadow-3xl">
+          <Card className="shadow-2xl p-8 rounded-2xl bg-transparent backdrop-blur-sm border-0 w-full max-w-4xl transition-all duration-300 hover:shadow-3xl">
             <Row gutter={[24, 24]} align="middle" justify="space-between">
               {/* Illustration Column */}
               <Col
@@ -100,12 +101,7 @@ const Login: React.FC = () => {
                     alt="Logo"
                     className="w-40 mx-auto mb-2 transition-all duration-300 hover:scale-110"
                   />
-                  <Typography.Title
-                    level={3}
-                    className="!mb-1 !font-semibold !text-gray-800"
-                  >
-                    Welcome Back
-                  </Typography.Title>
+
                   <Typography.Text className="text-gray-500">
                     Login to access your dashboard
                   </Typography.Text>
@@ -114,11 +110,11 @@ const Login: React.FC = () => {
                 <div className="mt-6">
                   <Form onFinish={onFinish} layout="vertical" size="large">
                     <Form.Item
-                      name="username"
+                      name="email"
                       rules={[
                         {
                           required: true,
-                          message: "Please input your username!",
+                          message: "Please input your email!",
                         },
                       ]}
                       className="!mb-5"
@@ -126,8 +122,8 @@ const Login: React.FC = () => {
                       <Input
                         onFocus={handleOnFocus}
                         // prefix={<Iconify icon="ph:user" className="text-gray-400" />}
-                        placeholder="Username"
-                        className="!py-3 !rounded-lg hover:!border-[#58C59E] focus:!border-[#58C59E] focus:!shadow-blue-200"
+                        placeholder="email"
+                        className="!py-3 !rounded-lg hover:!border-[#8d3de3] focus:!border-[#8d3de3] focus:!shadow-blue-200"
                       />
                     </Form.Item>
 
@@ -145,7 +141,7 @@ const Login: React.FC = () => {
                         onFocus={handleOnFocus}
                         // prefix={<Iconify icon="ant-design:lock-outlined" className="text-gray-400" />}
                         placeholder="Password"
-                        className="!py-3 !rounded-lg hover:!border-[#58C59E] focus:!border-[#58C59E] focus:!shadow-blue-200"
+                        className="!py-3 !rounded-lg hover:!border-[#8d3de3] focus:!border-[#8d3de3] focus:!shadow-blue-200"
                       />
                     </Form.Item>
                     <br />
@@ -163,7 +159,7 @@ const Login: React.FC = () => {
                         htmlType="submit"
                         block
                         loading={isLoading}
-                        className="!h-12 !rounded-lg cursor-pointer !bg-gradient-to-r !from-[#58C59E] !to-[#308366] hover:!from-[#308366] hover:!to-[#58C59E] duration-300 hover:duration-300 !border-none !text-white !font-medium !shadow-lg hover:!shadow-[#58C59E]/30 transition-all "
+                        className="!h-12 !rounded-lg cursor-pointer !bg-gradient-to-r !from-[#bc9edc94] !to-[#8d3de3] hover:!from-[#7830c4] hover:!to-[#8d3de3] duration-300 hover:duration-300 !border-none !text-white !font-medium !shadow-lg hover:!shadow-[#58C59E]/30 transition-all ease-in-out"
                       >
                         {isLoading ? "Logging in..." : "Login"}
                       </Button>
@@ -193,7 +189,7 @@ const Login: React.FC = () => {
               target="_blank"
               className="!text-[#58C59E]  "
             >
-              Sobar Bazar
+              Parse Lab
             </Typography.Link>
           </Typography.Text>
         </div>
