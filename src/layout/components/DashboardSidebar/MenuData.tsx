@@ -50,6 +50,23 @@ const MenuData: React.FC = () => {
       icon: <LiaProductHunt />,
     },
     {
+      key: "blog",
+      label: "Blog",
+      icon: <HiOutlineDocumentReport style={iconStyle} />,
+      children: [
+        hasPermissionForModule(permissions, "category") && {
+          key: "/category",
+          label: <Link to="/category">Category</Link>,
+          icon: <LiaProductHunt style={iconStyle} />,
+        },
+        hasPermissionForModule(permissions, "tag") && {
+          key: "/tag",
+          label: <Link to="/tag">Tag</Link>,
+          icon: <LiaProductHunt style={iconStyle} />,
+        },
+      ].filter(Boolean),
+    },
+    {
       key: "role-permission",
       label: "Role & Permission",
       icon: <HiOutlineDocumentReport style={iconStyle} />,

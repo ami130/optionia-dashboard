@@ -45,7 +45,7 @@ function isOldCodenameArray(arr: any[]): arr is OldPermission[] {
  *
  * Returns true if the user has *any* permission for that module.
  */
-export const hasPermissionForModule = (permissions: any[] | undefined, moduleKey: string): boolean => {
+export const hasPermissionForModule = (permissions: any[] | undefined, moduleKey: any): boolean => {
   if (!permissions || !Array.isArray(permissions)) return false;
   const moduleSlug = normalize(moduleKey);
 

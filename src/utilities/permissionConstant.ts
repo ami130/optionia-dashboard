@@ -58,9 +58,15 @@ type ModuleNames = {
   vendor: string;
   vendorpayment: string;
   vendorinvoice: string;
+
+  category: string;
+  tag: string;
 };
 
 export const moduleNames: ModuleNames = {
+  category: "category",
+  tag: "tag",
+
   financialentry: "financialentry",
   products: "product",
   role: "role",

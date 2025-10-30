@@ -28,6 +28,9 @@ import WebsiteInfoPage from "../modules/website info/pages/WebsiteInfoPage";
 import ModulePage from "../modules/Role&Permission/Module/pages/ModulePage";
 import RolePage from "../modules/Role&Permission/Role/pages/RolePage";
 import UserPage from "../modules/User/pages/UserPage";
+import CategoriesPage from "../modules/Blogs/Categories/pages/CategoriesPage";
+import TagsPage from "../modules/Blogs/Tag/pages/TagsPage";
+import { moduleNames } from "../utilities/permissionConstant";
 
 const router = createBrowserRouter([
   {
@@ -61,11 +64,11 @@ const router = createBrowserRouter([
         ],
       },
 
-      // PAGES
+      // Users
       {
         path: "/users",
         element: (
-          <WithPermission requiredPermission="student">
+          <WithPermission requiredPermission="users">
             <Accounts />
           </WithPermission>
         ),
@@ -93,6 +96,45 @@ const router = createBrowserRouter([
           },
         ],
       },
+
+      // Categories
+      {
+        path: "/category",
+        element: (
+          <WithPermission requiredPermission="category">
+            <CategoriesPage />
+          </WithPermission>
+        ),
+      },
+
+      // Tags
+      {
+        path: "/tag",
+        element: (
+          <WithPermission requiredPermission={moduleNames.tag}>
+            <TagsPage />
+          </WithPermission>
+        ),
+      },
+      // {
+      //   path: "/blog",
+      //   element: <Accounts />,
+      //   // element: <Accounts />,
+      //   children: [
+      //     {
+      //       path: "/categories",
+      //       element: (
+      //         <WithPermission requiredPermission="category">
+      //           <Accounts />
+      //         </WithPermission>
+      //       ),
+      //     },
+      //     {
+      //       path: "/role/list",
+      //       element: <RolePage />,
+      //     },
+      //   ],
+      // },
 
       // Role And Module
       {
