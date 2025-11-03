@@ -31,6 +31,8 @@ import UserPage from "../modules/User/pages/UserPage";
 import CategoriesPage from "../modules/Blogs/Categories/pages/CategoriesPage";
 import TagsPage from "../modules/Blogs/Tag/pages/TagsPage";
 import { moduleNames } from "../utilities/permissionConstant";
+import BlogsPage from "../modules/Blogs/Blogs/pages/BlogsPage";
+import ViewBlogs from "../modules/Blogs/Blogs/components/ViewBlogs";
 
 const router = createBrowserRouter([
   {
@@ -115,6 +117,19 @@ const router = createBrowserRouter([
             <TagsPage />
           </WithPermission>
         ),
+      },
+      // Blogs
+      {
+        path: "/blog",
+        element: (
+          <WithPermission requiredPermission={moduleNames.blog}>
+            <BlogsPage />
+          </WithPermission>
+        ),
+      },
+      {
+        path: "/blog/:slug",
+        element: <ViewBlogs />,
       },
       // {
       //   path: "/blog",

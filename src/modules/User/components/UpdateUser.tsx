@@ -1,48 +1,86 @@
-import { Col, Input, Row, Form as AntForm, Select, message } from "antd";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Col, Input, Row, Form as AntForm, Select, Upload, Modal } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { Form } from "../../../common/CommonAnt";
 import { useUpdateUserMutation } from "../api/userEndPoints";
 import { useGetRoleQuery } from "../../Role&Permission/Role/api/roleEndPoints";
+import { baseUrl } from "../../../utilities/baseQuery";
 
 const { Option } = Select;
 
 const UpdateUser = ({ record }: { record: any }) => {
   const [form] = AntForm.useForm();
 
-  const [updateUser, { isLoading, isSuccess, isError, error }] =
-    useUpdateUserMutation();
+  const [fileList, setFileList] = useState<any[]>([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+
+  const [updateUser, { isLoading, isSuccess }] = useUpdateUserMutation();
   const { data: roleData, isLoading: isRoleLoading } = useGetRoleQuery({});
 
-  // ✅ Prefill user data
+  // Prefill form and fileList for profile image
   useEffect(() => {
     if (record) {
       form.setFieldsValue({
         username: record.username || "",
         email: record.email || "",
+        bio: record.bio || "",
+        linkedinProfile: record.linkedinProfile || "",
         roleId: record.role?.id || "",
+        password: "", // leave empty
       });
+
+      if (record.profileImage) {
+        setFileList([
+          {
+            uid: "-1",
+            name: "profileImage",
+            status: "done",
+            url: `${baseUrl}${record?.profileImage}`,
+          },
+        ]);
+      }
     }
   }, [record, form]);
 
-  // // ✅ Handle success / error feedback
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     message.success("User updated successfully!");
-  //   }
-  //   if (isError) {
-  //     const errMsg = (error as any)?.data?.message || "Failed to update user.";
-  //     message.error(errMsg);
-  //   }
-  // }, [isSuccess, isError]);
+  // Upload handlers
+  const handlePreview = async (file: any) => {
+    setPreviewImage(file.url || file.thumbUrl);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
 
-  // ✅ Submit handler
+  const handleCancel = () => setPreviewOpen(false);
+
+  const handleChange = ({ fileList }: any) => {
+    setFileList(fileList);
+  };
+
+  const getFileFromList = (fileList: any[]) => {
+    return fileList && fileList[0]?.originFileObj
+      ? fileList[0].originFileObj
+      : null;
+  };
+
+  // Submit handler
   const onFinish = async (values: any): Promise<void> => {
-    const payload = {
-      username: values.username,
-      email: values.email,
-      roleId: values.roleId,
-    };
-    await updateUser({ id: record?.id, data: payload });
+    const formData = new FormData();
+    formData.append("username", values.username);
+    formData.append("email", values.email);
+    if (values.password) formData.append("password", values.password);
+    formData.append("roleId", values.roleId);
+
+    if (values.bio) formData.append("bio", values.bio);
+    if (values.linkedinProfile)
+      formData.append("linkedinProfile", values.linkedinProfile);
+
+    const profileImageFile = getFileFromList(fileList);
+    if (profileImageFile) formData.append("profileImage", profileImageFile);
+
+    await updateUser({ id: record?.id, data: formData });
   };
 
   return (
@@ -79,6 +117,19 @@ const UpdateUser = ({ record }: { record: any }) => {
             </Form.Item>
           </Col>
 
+          {/* Password */}
+          <Col xs={24} sm={12}>
+            <Form.Item
+              name="password"
+              label="Password"
+              rules={[
+                { min: 6, message: "Password must be at least 6 characters" },
+              ]}
+            >
+              <Input.Password placeholder="Enter new password (optional)" />
+            </Form.Item>
+          </Col>
+
           {/* Role Dropdown */}
           <Col xs={24} sm={12}>
             <Form.Item
@@ -92,12 +143,75 @@ const UpdateUser = ({ record }: { record: any }) => {
                 allowClear
               >
                 {Array.isArray(roleData?.data) &&
-                  roleData?.data?.map((role: any) => (
+                  roleData?.data.map((role: any) => (
                     <Option key={role.id} value={role.id}>
                       {role.name}
                     </Option>
                   ))}
               </Select>
+            </Form.Item>
+          </Col>
+
+          {/* Bio */}
+          <Col xs={24} sm={12}>
+            <Form.Item
+              name="bio"
+              label="Bio"
+              rules={[
+                { max: 120, message: "Bio cannot exceed 120 characters" },
+              ]}
+            >
+              <Input.TextArea
+                placeholder="Enter short bio"
+                rows={3}
+                maxLength={120}
+              />
+            </Form.Item>
+          </Col>
+
+          {/* LinkedIn Profile */}
+          <Col xs={24} sm={12}>
+            <Form.Item
+              name="linkedinProfile"
+              label="LinkedIn Profile"
+              rules={[{ type: "url", message: "Enter a valid URL" }]}
+            >
+              <Input placeholder="https://www.linkedin.com/in/yourprofile" />
+            </Form.Item>
+          </Col>
+
+          {/* Profile Image */}
+          <Col xs={24} sm={12}>
+            <Form.Item name="profileImage" label="Profile Image">
+              <Upload
+                beforeUpload={() => false}
+                listType="picture-card"
+                fileList={fileList}
+                onPreview={handlePreview}
+                onChange={handleChange}
+                maxCount={1}
+                accept=".jpg,.jpeg,.png,.gif,.bmp,.svg,.webp"
+              >
+                {fileList.length >= 1 ? null : (
+                  <div>
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+                )}
+              </Upload>
+
+              <Modal
+                open={previewOpen}
+                title={previewTitle}
+                footer={null}
+                onCancel={handleCancel}
+              >
+                <img
+                  alt="preview"
+                  style={{ width: "100%" }}
+                  src={previewImage}
+                />
+              </Modal>
             </Form.Item>
           </Col>
         </Row>

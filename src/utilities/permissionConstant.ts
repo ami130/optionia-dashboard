@@ -61,11 +61,15 @@ type ModuleNames = {
 
   category: string;
   tag: string;
+  users: string;
+  blog: string;
 };
 
 export const moduleNames: ModuleNames = {
   category: "category",
   tag: "tag",
+  users: "users",
+  blog: "blog",
 
   financialentry: "financialentry",
   products: "product",

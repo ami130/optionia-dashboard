@@ -64,6 +64,11 @@ const MenuData: React.FC = () => {
           label: <Link to="/tag">Tag</Link>,
           icon: <LiaProductHunt style={iconStyle} />,
         },
+        hasPermissionForModule(permissions, "blog") && {
+          key: "/blog",
+          label: <Link to="/blog">Blog</Link>,
+          icon: <LiaProductHunt style={iconStyle} />,
+        },
       ].filter(Boolean),
     },
     {
@@ -98,11 +103,6 @@ const MenuData: React.FC = () => {
     hasPermissionForModule(permissions, "student") && {
       key: "/earning-report",
       label: <Link to="/earning-report">Earning / Report</Link>,
-      icon: <HiOutlineDocumentReport />,
-    },
-    hasPermissionForModule(permissions, "student") && {
-      key: "/profile-setting",
-      label: <Link to="/profile-setting">Profile Setting</Link>,
       icon: <HiOutlineDocumentReport />,
     },
   ].filter(Boolean);

@@ -16,6 +16,7 @@ export const TagTypes = {
   USER: "User",
   CATEGORIES: "Categories",
   TAG: "Tag",
+  BLOG: "Blog",
   EARNING_REPORT: "Earning_Report",
   PROFILE_SETTING: "Profile_Setting",
 

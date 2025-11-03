@@ -10,302 +10,242 @@ import {
   Space,
   Tag,
   Typography,
+  Upload,
+  Modal,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import BreadCrumb from "../../../common/BreadCrumb/BreadCrumb";
-import "../styles/Profile.css";
-import {
-  useChangePasswordMutation,
-  useGetProfileQuery,
-} from "../api/profileEndpoint";
-
-import Iconify from "../../../common/IconifyConfig/IconifyConfig";
+import { useGetProfileQuery } from "../api/profileEndpoint";
 import { avatar } from "../../../utilities/images";
-import UpdateTeacherProfile from "../components/UpdateTeacherProfile";
-import UpdateStudentProfile from "../components/UpdatedStudentsProfile";
-import UpdateEmployeeProfile from "../components/UpdatedEmpoyeeProfile";
-import { capitalize } from "../../../common/capitalize/Capitalize";
-import { PasswordTypes } from "../types/profileTypes";
-import { passwordValidator } from "../../../utilities/validator";
+import { baseUrl } from "../../../utilities/baseQuery";
+import { useUpdateUserMutation } from "../../User/api/userEndPoints";
+import { PlusOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
 
 const Profile: React.FC = () => {
-  const { data: profileData, isFetching } = useGetProfileQuery();
-  const [edit, setEdit] = useState<{ profile?: boolean; password?: boolean }>({
-    profile: false,
-    password: false,
-  });
+  const { data: profileData, isFetching, refetch } = useGetProfileQuery();
+  const [updateUser, { isLoading: updating }] = useUpdateUserMutation();
 
-  const { username, teacher, student, employee, role } =
-    profileData?.data || {};
+  const [editMode, setEditMode] = useState(false);
+  const [form] = Form.useForm();
+  const [fileList, setFileList] = useState<any[]>([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
 
-  console.log(profileData?.data);
-
-  const renderDescriptions = () => {
-    if (teacher) {
-      return [
-        {
-          key: "1",
-          label: capitalize("first name"),
-          children: capitalize(teacher.first_name || "-"),
-        },
-        {
-          key: "2",
-          label: capitalize("last name"),
-          children: capitalize(teacher.last_name || "-"),
-        },
-        {
-          key: "3",
-          label: capitalize("phone number"),
-          children: capitalize(teacher.phone_number || "-"),
-        },
-      ];
-    } else if (student) {
-      return [
-        {
-          key: "1",
-          label: capitalize("student id"),
-          children: capitalize(student.student_id || "-"),
-        },
-        {
-          key: "2",
-          label: capitalize("grade"),
-          children: capitalize(student.grade || "-"),
-        },
-        {
-          key: "3",
-          label: capitalize("email address"),
-          children: capitalize(student.email || "-"),
-        },
-      ];
-    } else if (employee) {
-      return [
-        {
-          key: "1",
-          label: capitalize("employee id"),
-          children: capitalize(employee.employee_id || "-"),
-        },
-        {
-          key: "2",
-          label: capitalize("department"),
-          children: capitalize(employee.department || "-"),
-        },
-        {
-          key: "3",
-          label: capitalize("email address"),
-          children: capitalize(employee.email || "-"),
-        },
-      ];
-    } else if (role?.name === "Admin") {
-      return [
-        {
-          key: "1",
-          label: capitalize("Institution Name"),
-          children: capitalize(role?.institution.name || "-"),
-        },
-        {
-          key: "2",
-          label: capitalize("code"),
-          children: capitalize(role?.institution.code || "-"),
-        },
-        {
-          key: "3",
-          label: capitalize("city"),
-          children: capitalize(role?.institution.city || "-"),
-        },
-        {
-          key: "4",
-          label: capitalize("contact email"),
-          children: capitalize(role?.institution.contact_email || "-"),
-        },
-      ];
-    }
-    return [];
-  };
-
-  const handleProfileUpdateSuccess = () => {
-    setEdit((prev) => ({ ...prev, profile: false }));
-  };
-
-  const [create, { isSuccess }] = useChangePasswordMutation();
-
-  const onFinish = (values: any): void => {
-    console.log(values);
-    create({
-      current_password: values.old_password,
-      new_password: values.new_password,
-    });
-  };
+  const user = profileData?.data || {};
+  const { id, username, email, profileImage, role, bio, linkedinProfile } =
+    user;
 
   useEffect(() => {
-    if (isSuccess) {
-      setEdit((prev) => ({ ...prev, password: false }));
+    if (user && !editMode) {
+      form.setFieldsValue({
+        username,
+        email,
+        bio,
+        linkedinProfile,
+      });
     }
-  }, [isSuccess]);
+    if (user.profileImage) {
+      setFileList([
+        {
+          uid: "-1",
+          name: "profileImage",
+          status: "done",
+          url: `${baseUrl}${user?.profileImage}`,
+        },
+      ]);
+    }
+  }, [user, editMode]);
+
+  // 📷 Upload handlers
+  const handlePreview = async (file: any) => {
+    setPreviewImage(file.url || file.thumbUrl);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
+  const handleCancel = () => setPreviewOpen(false);
+  const handleChange = ({ fileList }: any) => setFileList(fileList);
+
+  const getFileFromList = (fileList: any[]) =>
+    fileList[0]?.originFileObj || null;
+
+  // 🧩 Submit Update Profile
+  const handleUpdateProfile = async (values: any) => {
+    const formData = new FormData();
+
+    if (values.bio) formData.append("bio", values.bio);
+    if (values.linkedinProfile)
+      formData.append("linkedinProfile", values.linkedinProfile);
+
+    const profileFile = getFileFromList(fileList);
+    if (profileFile) formData.append("profileImage", profileFile);
+
+    await updateUser({ id, data: formData });
+    setEditMode(false);
+    refetch();
+  };
 
   return (
-    <React.Fragment>
-      <Typography.Text strong className="profile-title">
-        Profile
-      </Typography.Text>
+    <>
+      <Typography.Title level={3}>Profile</Typography.Title>
       <BreadCrumb />
-
       <br />
 
-      <Row gutter={[10, 10]}>
-        <Col span={24} lg={6}>
+      <Row gutter={[16, 16]}>
+        {/* Left Side — Profile Card */}
+        <Col xs={24} md={8} lg={6}>
           <Card loading={isFetching}>
             <Space
               direction="vertical"
               style={{ width: "100%", textAlign: "center" }}
+              size="middle"
             >
               <Image
-                src={avatar}
+                src={profileImage ? baseUrl + profileImage : avatar}
                 preview={false}
                 alt="Profile picture"
-                id="profile-picture"
+                width={120}
+                height={120}
+                style={{ borderRadius: "50%", objectFit: "cover" }}
               />
-              <Typography.Text strong style={{ fontSize: "2rem" }}>
+              <Typography.Title level={4} style={{ marginBottom: 0 }}>
                 {username}
-              </Typography.Text>
-              {/* <Typography.Text type="secondary">{email}</Typography.Text> */}
-              <Tag color="success" bordered>
-                Active
-              </Tag>
+              </Typography.Title>
+              <Typography.Text type="secondary">{email}</Typography.Text>
+              <Tag color="green">{role?.name || "User"}</Tag>
 
-              <Button
-                onClick={() =>
-                  setEdit((prev) => ({ ...prev, password: !prev.password }))
-                }
-                style={{ fontSize: "11px", textDecoration: "underline" }}
-                size="small"
-                type="link"
-              >
-                {edit.password ? "Cancel Password Change" : "Change Password"}
-              </Button>
+              <Space>
+                <Button
+                  type="primary"
+                  onClick={() => setEditMode((prev) => !prev)}
+                >
+                  {editMode ? "Cancel" : "Edit Profile"}
+                </Button>
+              </Space>
             </Space>
           </Card>
         </Col>
-        <Col span={24} lg={18}>
+
+        {/* Right Side — Details / Edit / Password */}
+        <Col xs={24} md={16} lg={18}>
           <Card
-            title={
-              <>
-                {!edit.password && (
-                  <Typography.Text>
-                    {edit.profile ? "Edit Profile" : "Profile"}
-                  </Typography.Text>
-                )}
-                {edit.password && (
-                  <Typography.Text>Change Password</Typography.Text>
-                )}
-              </>
-            }
+            title={editMode ? "Edit Profile" : "Profile Details"}
             loading={isFetching}
-            extra={
-              role?.name !== "Admin" && (
-                <Space>
-                  {!edit.profile && !edit.password ? (
-                    <Button
-                      onClick={() => setEdit({ profile: true })}
-                      type="link"
-                      icon={<Iconify name="mage:edit" />}
-                    >
-                      Edit profile
-                    </Button>
-                  ) : (
-                    <Button
-                      type="link"
-                      danger
-                      icon={<Iconify name="iconoir:cancel" />}
-                      onClick={() =>
-                        setEdit({ profile: false, password: false })
-                      }
-                    >
-                      Cancel
-                    </Button>
-                  )}
-                </Space>
-              )
-            }
           >
-            {!edit.profile && !edit.password && (
-              <Descriptions
-                bordered
-                column={1}
-                layout="horizontal"
-                className="profile-description"
-                items={renderDescriptions()}
-              />
-            )}
-
-            {edit.profile && teacher && (
-              <UpdateTeacherProfile
-                data={profileData?.data}
-                onSubmitSuccess={handleProfileUpdateSuccess}
-              />
-            )}
-
-            {edit.profile && student && (
-              <UpdateStudentProfile
-                data={profileData?.data}
-                onSubmitSuccess={handleProfileUpdateSuccess}
-              />
-            )}
-            {edit.profile && student && (
-              <UpdateEmployeeProfile
-                data={profileData?.data}
-                onSubmitSuccess={handleProfileUpdateSuccess}
-              />
-            )}
-
-            {edit.password && (
+            {!editMode ? (
+              <>
+                <Descriptions bordered column={1}>
+                  <Descriptions.Item label="Username">
+                    {username || "-"}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Email">
+                    {email || "-"}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Role">
+                    {role?.name || "-"}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Bio">
+                    {bio || "-"}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="LinkedIn Profile">
+                    {linkedinProfile ? (
+                      <a
+                        href={linkedinProfile}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {linkedinProfile}
+                      </a>
+                    ) : (
+                      "-"
+                    )}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Created At">
+                    {dayjs(user.createdAt).format("DD MMM YYYY")}
+                  </Descriptions.Item>
+                </Descriptions>
+              </>
+            ) : (
               <Form
-                // form={form}
                 layout="vertical"
-                onFinish={onFinish}
+                form={form}
+                onFinish={handleUpdateProfile}
+                initialValues={{ username, email, bio, linkedinProfile }}
               >
-                <Form.Item<PasswordTypes>
-                  label="Current Password"
-                  name="old_password"
-                  rules={[{ validator: passwordValidator }]}
-                >
-                  <Input.Password placeholder="**********" />
-                </Form.Item>
+                <Row gutter={[16, 16]}>
+                  {role?.slug !== "admin" && (
+                    <Col xs={12}>
+                      <Form.Item label="New Password" name="password">
+                        <Input.Password placeholder="********" />
+                      </Form.Item>
+                    </Col>
+                  )}
 
-                <Form.Item<PasswordTypes>
-                  label="New Password"
-                  name="new_password"
-                  rules={[{ validator: passwordValidator }]}
-                >
-                  <Input.Password placeholder="New Password" />
-                </Form.Item>
+                  <Col xs={24} sm={12}>
+                    <Form.Item
+                      label="LinkedIn Profile"
+                      name="linkedinProfile"
+                      rules={[{ type: "url", message: "Enter valid URL" }]}
+                    >
+                      <Input placeholder="https://linkedin.com/in/yourprofile" />
+                    </Form.Item>
+                  </Col>
 
-                <Form.Item
-                  label="Confirm New Password"
-                  name="confirm_password"
-                  dependencies={["new_password"]}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please confirm your new password",
-                    },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (!value || getFieldValue("new_password") === value) {
-                          return Promise.resolve();
-                        }
-                        return Promise.reject(
-                          new Error("The two passwords do not match!")
-                        );
-                      },
-                    }),
-                  ]}
-                >
-                  <Input.Password placeholder="Confirm New Password" />
-                </Form.Item>
+                  <Col xs={24} sm={12}>
+                    <Form.Item label="Bio" name="bio">
+                      <Input.TextArea
+                        placeholder="Write a short bio..."
+                        rows={3}
+                        maxLength={120}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={12}>
+                    <Form.Item label="Profile Image" name="profileImage">
+                      <Upload
+                        beforeUpload={() => false}
+                        listType="picture-card"
+                        fileList={fileList}
+                        onPreview={handlePreview}
+                        onChange={handleChange}
+                        maxCount={1}
+                        accept=".jpg,.jpeg,.png"
+                      >
+                        {fileList.length >= 1 ? null : (
+                          <div>
+                            <PlusOutlined />
+                            <div style={{ marginTop: 8 }}>Upload</div>
+                          </div>
+                        )}
+                      </Upload>
+
+                      <Modal
+                        open={previewOpen}
+                        title={previewTitle}
+                        footer={null}
+                        onCancel={handleCancel}
+                      >
+                        <img
+                          alt="preview"
+                          style={{ width: "100%" }}
+                          src={previewImage}
+                        />
+                      </Modal>
+                    </Form.Item>
+                  </Col>
+                </Row>
 
                 <Form.Item>
-                  <Button type="primary" htmlType="submit">
-                    Change
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={updating}
+                    block
+                  >
+                    Save Changes
                   </Button>
                 </Form.Item>
               </Form>
@@ -313,7 +253,7 @@ const Profile: React.FC = () => {
           </Card>
         </Col>
       </Row>
-    </React.Fragment>
+    </>
   );
 };
 

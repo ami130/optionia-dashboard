@@ -35,7 +35,7 @@ const profileEndpoint = api.injectEndpoints({
 });
 
 export const {
-  useGetProfileQuery,
+    useGetProfileQuery,
   useUpdateProfileMutation,
   useChangePasswordMutation,
 } = profileEndpoint;
