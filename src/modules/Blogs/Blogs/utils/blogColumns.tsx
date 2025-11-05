@@ -7,6 +7,7 @@ import { usePermission } from "../../../../app/utils/usePermissions";
 import { moduleNames } from "../../../../utilities/permissionConstant";
 import ViewBlogs from "../components/ViewBlogs";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
+import UpdateBlog from "../components/UpdateBlog";
 
 const useBlogColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -76,7 +77,7 @@ const useBlogColumns = (): ColumnsType<any> => {
                 dispatch(
                   showModal({
                     title: "Update Blog",
-                    content: "<ViewBlogs id={record?.id} />,",
+                    content: <UpdateBlog record={record} />,
                   })
                 )
               }

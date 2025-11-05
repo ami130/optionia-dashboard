@@ -20,6 +20,8 @@ const UpdateUser = ({ record }: { record: any }) => {
   const { data: roleData, isLoading: isRoleLoading } = useGetRoleQuery({});
 
   // Prefill form and fileList for profile image
+  console.log("first", record?.role?.slug);
+
   useEffect(() => {
     if (record) {
       form.setFieldsValue({
@@ -118,17 +120,19 @@ const UpdateUser = ({ record }: { record: any }) => {
           </Col>
 
           {/* Password */}
-          <Col xs={24} sm={12}>
-            <Form.Item
-              name="password"
-              label="Password"
-              rules={[
-                { min: 6, message: "Password must be at least 6 characters" },
-              ]}
-            >
-              <Input.Password placeholder="Enter new password (optional)" />
-            </Form.Item>
-          </Col>
+          {record?.role?.slug !== "admin" && (
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="password"
+                label="Password"
+                rules={[
+                  { min: 6, message: "Password must be at least 6 characters" },
+                ]}
+              >
+                <Input.Password placeholder="Enter new password (optional)" />
+              </Form.Item>
+            </Col>
+          )}
 
           {/* Role Dropdown */}
           <Col xs={24} sm={12}>

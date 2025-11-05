@@ -13,169 +13,234 @@ import {
   Space,
   Breadcrumb,
   Button,
+  Collapse,
+  Badge,
+  Tooltip,
+  Grid,
 } from "antd";
 import {
   CalendarOutlined,
   UserOutlined,
   ClockCircleOutlined,
   EyeOutlined,
-  ShareAltOutlined,
   TagOutlined,
   FolderOutlined,
+  InfoCircleOutlined,
+  SearchOutlined,
+  ReadOutlined,
+  FileTextOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { baseUrl } from "../../../../utilities/baseQuery";
 import { CSSProperties } from "react";
 
 const { Title, Paragraph, Text } = Typography;
+const { Panel } = Collapse;
+const { useBreakpoint } = Grid;
 
 export default function ViewBlogs() {
   const { slug } = useParams<{ slug: string }>();
   const { data: blogData, isLoading, error } = useGetSingleBlogQuery(slug);
+  const screens = useBreakpoint();
 
-  // Properly typed CSS Styles
+  // Enhanced CSS Styles with better responsive design
   const styles: { [key: string]: CSSProperties } = {
     container: {
       minHeight: "100vh",
-      backgroundColor: "#f9fafb",
+      backgroundColor: "#f8fafc",
+      background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
     },
     header: {
-      backgroundColor: "white",
-      borderBottom: "1px solid #e5e7eb",
+      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      color: "white",
+      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
     },
     headerInner: {
-      maxWidth: "1200px",
+      maxWidth: "1400px",
       margin: "0 auto",
-      padding: "24px 16px",
+      padding: screens.xs ? "20px 16px" : "32px 24px",
     },
     mainContainer: {
-      maxWidth: "1200px",
+      maxWidth: "1400px",
       margin: "0 auto",
-      padding: "32px 16px",
+      padding: screens.xs ? "20px 12px" : "40px 20px",
     },
     loadingContainer: {
       minHeight: "100vh",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
+      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
     },
     errorContainer: {
       minHeight: "100vh",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
+      padding: "20px",
     },
     featuredBadge: {
       position: "absolute",
       top: "16px",
       right: "16px",
+      zIndex: 10,
     },
     imageContainer: {
       position: "relative",
-      height: "320px",
-    },
-    mobileImageContainer: {
-      position: "relative",
-      height: "200px",
+      height: screens.xs ? "250px" : screens.md ? "400px" : "500px",
+      borderRadius: screens.xs ? "0" : "12px 12px 0 0",
+      overflow: "hidden",
     },
     metaContainer: {
       display: "flex",
       flexWrap: "wrap",
       alignItems: "center",
-      gap: "16px",
+      gap: screens.xs ? "12px" : "20px",
       color: "#6b7280",
       marginBottom: "24px",
+      padding: screens.xs ? "16px 0" : "24px 0",
     },
     tagsContainer: {
       marginBottom: "24px",
+      display: "flex",
+      flexWrap: "wrap",
+      gap: "8px",
     },
     blogContent: {
       lineHeight: 1.8,
       color: "#374151",
-      fontSize: "16px",
+      fontSize: screens.xs ? "15px" : "16px",
+      maxWidth: "100%",
+      overflowWrap: "break-word",
     },
     blogContentHeading: {
       marginTop: "1.5em",
       marginBottom: "0.5em",
       color: "#1f2937",
+      fontWeight: 600,
     },
     blogContentParagraph: {
       marginBottom: "1.2em",
-    },
-    blogContentImage: {
-      borderRadius: "8px",
-      margin: "1.5em 0",
-      maxWidth: "100%",
-      height: "auto",
-    },
-    blogContentBlockquote: {
-      borderLeft: "4px solid #3b82f6",
-      paddingLeft: "1em",
-      margin: "1.5em 0",
-      fontStyle: "italic",
-      color: "#6b7280",
-    },
-    blogContentList: {
-      margin: "1em 0",
-      paddingLeft: "1.5em",
-    },
-    blogContentListItem: {
-      marginBottom: "0.5em",
-    },
-    blogContentLink: {
-      color: "#3b82f6",
-      textDecoration: "none",
-    },
-    blogContentTable: {
-      width: "100%",
-      borderCollapse: "collapse",
-      margin: "1.5em 0",
-    },
-    blogContentTableCell: {
-      border: "1px solid #e5e7eb",
-      padding: "0.75em",
-      textAlign: "left",
-    },
-    blogContentTableHeader: {
-      backgroundColor: "#f9fafb",
-      fontWeight: 600,
+      textAlign: "justify",
     },
     authorCard: {
       textAlign: "center",
+      padding: screens.xs ? "16px" : "24px",
     },
     metaItem: {
       display: "flex",
       justifyContent: "space-between",
+      alignItems: "center",
       width: "100%",
+      padding: "8px 0",
+      borderBottom: "1px solid #f1f5f9",
     },
     footerActions: {
       display: "flex",
-      flexDirection: "column",
-      gap: "16px",
-    },
-    footerActionsDesktop: {
-      display: "flex",
+      flexDirection: screens.xs ? "column" : "row",
       justifyContent: "space-between",
+      alignItems: screens.xs ? "stretch" : "center",
+      gap: "16px",
+      padding: screens.xs ? "16px" : "24px",
+      background: "#f8fafc",
+      borderRadius: "12px",
+      marginTop: "32px",
+    },
+    seoSection: {
+      background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
+      border: "1px solid #e2e8f0",
+      borderRadius: "12px",
+      padding: "20px",
+      marginBottom: "20px",
+    },
+    seoScore: {
+      display: "flex",
       alignItems: "center",
-      width: "100%",
+      gap: "12px",
+      marginBottom: "16px",
+      padding: "16px",
+      background: "white",
+      borderRadius: "8px",
+      boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+    },
+    socialShare: {
+      display: "flex",
+      gap: "8px",
+      flexWrap: "wrap",
+    },
+    sidebarCard: {
+      borderRadius: "12px",
+      boxShadow:
+        "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      border: "none",
+      overflow: "hidden",
+    },
+    mainContentCard: {
+      borderRadius: "12px",
+      boxShadow:
+        "0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      border: "none",
+      overflow: "hidden",
+      background: "white",
+    },
+    gradientText: {
+      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+      backgroundClip: "text",
+    },
+    statCard: {
+      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      color: "white",
+      borderRadius: "12px",
+      padding: "20px",
+      textAlign: "center",
     },
   };
 
   if (isLoading)
     return (
       <div style={styles.loadingContainer}>
-        <Spin size="large" tip="Loading blog..." />
+        <Space direction="vertical" size="large" align="center">
+          <Spin size="large" />
+          <Text style={{ color: "white", fontSize: "18px" }}>
+            Loading Blog Content...
+          </Text>
+        </Space>
       </div>
     );
 
   if (error)
     return (
       <div style={styles.errorContainer}>
-        <Card style={{ textAlign: "center" }}>
-          <Title level={3} style={{ color: "#ff4d4f" }}>
-            Error loading blog
+        <Card
+          style={{
+            maxWidth: "500px",
+            textAlign: "center",
+            borderRadius: "16px",
+            boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <div
+            style={{ fontSize: "64px", color: "#ef4444", marginBottom: "16px" }}
+          >
+            ❌
+          </div>
+          <Title level={3} style={{ color: "#ef4444", marginBottom: "16px" }}>
+            Error Loading Blog
           </Title>
-          <Paragraph>Please try again later</Paragraph>
+          <Paragraph style={{ color: "#6b7280", marginBottom: "24px" }}>
+            We encountered an issue while loading the blog post. Please try
+            again later.
+          </Paragraph>
+          <Button
+            type="primary"
+            size="large"
+            onClick={() => window.location.reload()}
+            style={{ borderRadius: "8px" }}
+          >
+            Retry
+          </Button>
         </Card>
       </div>
     );
@@ -183,327 +248,493 @@ export default function ViewBlogs() {
   if (!blogData)
     return (
       <div style={styles.errorContainer}>
-        <Card style={{ textAlign: "center" }}>
-          <Title level={3}>Blog not found</Title>
-          <Paragraph>The blog you're looking for doesn't exist.</Paragraph>
+        <Card
+          style={{
+            maxWidth: "500px",
+            textAlign: "center",
+            borderRadius: "16px",
+            boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <div
+            style={{ fontSize: "64px", color: "#6b7280", marginBottom: "16px" }}
+          >
+            🔍
+          </div>
+          <Title level={3} style={{ marginBottom: "16px" }}>
+            Blog Not Found
+          </Title>
+          <Paragraph style={{ color: "#6b7280", marginBottom: "24px" }}>
+            The blog post you're looking for doesn't exist or may have been
+            moved.
+          </Paragraph>
+          <Button
+            type="primary"
+            size="large"
+            href="/blog"
+            style={{ borderRadius: "8px" }}
+          >
+            Back to Blog
+          </Button>
         </Card>
       </div>
     );
 
   const blog = blogData?.data || blogData;
+  const metaData =
+    typeof blog.metaData === "string"
+      ? JSON.parse(blog.metaData)
+      : blog.metaData;
+  const seoData = blogData?.data?.seo || {};
+  const openGraphData = blog.openGraph || seoData.openGraph || {};
+  const twitterData = blog.twitter || seoData.twitter || {};
 
-  // Helper function to convert style object to CSS string
-  const styleToCssString = (styleObj: CSSProperties): string => {
-    return Object.entries(styleObj)
-      .map(([key, value]) => {
-        const cssProperty = key.replace(
-          /[A-Z]/g,
-          (match) => `-${match.toLowerCase()}`
-        );
-        return `${cssProperty}:${value}`;
-      })
-      .join(";");
+  // Calculate SEO Score
+  const calculateSeoScore = () => {
+    let score = 0;
+    let maxScore = 0;
+
+    // Meta Title
+    maxScore += 20;
+    if (metaData?.metaTitle && metaData.metaTitle.length > 0) {
+      score += 10;
+      if (metaData.metaTitle.length >= 50 && metaData.metaTitle.length <= 60) {
+        score += 10;
+      }
+    }
+
+    // Meta Description
+    maxScore += 20;
+    if (metaData?.metaDescription && metaData.metaDescription.length > 0) {
+      score += 10;
+      if (
+        metaData.metaDescription.length >= 120 &&
+        metaData.metaDescription.length <= 160
+      ) {
+        score += 10;
+      }
+    }
+
+    // Content
+    maxScore += 20;
+    if (blog.content && blog.content.length > 300) {
+      score += 20;
+    }
+
+    // Images
+    maxScore += 10;
+    if (blog.thumbnailUrl) {
+      score += 10;
+    }
+
+    // Keywords
+    maxScore += 10;
+    if (metaData?.metaKeywords && metaData.metaKeywords.length > 0) {
+      score += 10;
+    }
+
+    // URL Structure
+    maxScore += 10;
+    if (blog.slug && blog.slug.length > 0) {
+      score += 10;
+    }
+
+    // Headings
+    maxScore += 10;
+    if (
+      blog.content &&
+      blog.content.includes("<h1") &&
+      blog.content.includes("<h2")
+    ) {
+      score += 10;
+    }
+
+    return Math.round((score / maxScore) * 100);
+  };
+
+  const seoScore = calculateSeoScore();
+
+  // Get SEO Status Color
+  const getSeoStatusColor = (score: number) => {
+    if (score >= 80) return "success";
+    if (score >= 60) return "warning";
+    return "error";
+  };
+
+  // Get SEO Status Text
+  const getSeoStatusText = (score: number) => {
+    if (score >= 80) return "Excellent";
+    if (score >= 60) return "Good";
+    if (score >= 40) return "Needs Improvement";
+    return "Poor";
+  };
+
+  // Share functionality
+  const shareOnSocialMedia = (platform: string) => {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(blog.title);
+    const text = encodeURIComponent(blog.subtitle || "");
+
+    const shareUrls = {
+      twitter: `https://twitter.com/intent/tweet?text=${title}&url=${url}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+    };
+
+    if (shareUrls[platform as keyof typeof shareUrls]) {
+      window.open(
+        shareUrls[platform as keyof typeof shareUrls],
+        "_blank",
+        "width=600,height=400"
+      );
+    }
   };
 
   return (
     <div style={styles.container}>
-      {/* Header Section */}
+      {/* Enhanced Header Section */}
       <div style={styles.header}>
         <div style={styles.headerInner}>
-          <Breadcrumb>
-            <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-            <Breadcrumb.Item href="/blog">Blog</Breadcrumb.Item>
+          <Breadcrumb
+            separator="›"
+            style={{ color: "rgba(255,255,255,0.8)", marginBottom: "16px" }}
+          >
             <Breadcrumb.Item>
-              {blog.category?.name || "Uncategorized"}
+              <a href="/" style={{ color: "rgba(255,255,255,0.9)" }}>
+                Home
+              </a>
             </Breadcrumb.Item>
-            <Breadcrumb.Item>{blog.title}</Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <a href="/blog" style={{ color: "rgba(255,255,255,0.9)" }}>
+                Blog
+              </a>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <span style={{ color: "white", fontWeight: 600 }}>
+                {blog.category?.name || "Uncategorized"}
+              </span>
+            </Breadcrumb.Item>
           </Breadcrumb>
+
+          <Tag
+            color="rgba(255,255,255,0.2)"
+            style={{
+              border: "1px solid rgba(255,255,255,0.3)",
+              color: "white",
+              marginBottom: "16px",
+              backdropFilter: "blur(10px)",
+            }}
+            icon={<FolderOutlined />}
+          >
+            {blog.category?.name || "Uncategorized"}
+          </Tag>
+
+          <Title
+            level={1}
+            style={{
+              color: "white",
+              marginBottom: "16px",
+              fontSize: screens.xs ? "28px" : screens.md ? "42px" : "48px",
+              lineHeight: 1.2,
+              textShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            }}
+          >
+            {blog.title}
+          </Title>
+
+          <Paragraph
+            style={{
+              color: "rgba(255,255,255,0.9)",
+              fontSize: screens.xs ? "16px" : "18px",
+              marginBottom: "24px",
+              lineHeight: 1.6,
+            }}
+          >
+            {blog.subtitle}
+          </Paragraph>
+
+          {/* Enhanced Meta Information */}
+          <div style={styles.metaContainer}>
+            <Space size="large" wrap>
+              <Space>
+                <Avatar
+                  size="small"
+                  icon={<UserOutlined />}
+                  src={blog.createdBy?.profileImage}
+                  style={{ border: "2px solid rgba(255,255,255,0.3)" }}
+                />
+                <Text style={{ color: "white" }}>
+                  {blog.createdBy?.username || "Admin"}
+                </Text>
+              </Space>
+
+              <Space>
+                <CalendarOutlined style={{ color: "rgba(255,255,255,0.8)" }} />
+                <Text style={{ color: "white" }}>
+                  {dayjs(blog.createdAt).format("MMM DD, YYYY")}
+                </Text>
+              </Space>
+
+              <Space>
+                <ClockCircleOutlined
+                  style={{ color: "rgba(255,255,255,0.8)" }}
+                />
+                <Text style={{ color: "white" }}>
+                  {blog.readingTime || 5} min read
+                </Text>
+              </Space>
+
+              <Space>
+                <ReadOutlined style={{ color: "rgba(255,255,255,0.8)" }} />
+                <Text style={{ color: "white" }}>
+                  {blog.wordCount || 0} words
+                </Text>
+              </Space>
+            </Space>
+          </div>
         </div>
       </div>
 
       <div style={styles.mainContainer}>
         <Row gutter={[32, 32]}>
           {/* Main Content */}
-          <Col xs={24} lg={18}>
-            <Card
-              bordered={false}
-              style={{ backgroundColor: "white" }}
-              cover={
-                blog.thumbnailUrl && (
-                  <div
-                    style={
-                      window.innerWidth < 768
-                        ? styles.mobileImageContainer
-                        : styles.imageContainer
+          <Col xs={24} lg={16} xl={17}>
+            <Card style={styles.mainContentCard}>
+              {/* Featured Image */}
+              {blog.thumbnailUrl && (
+                <div style={styles.imageContainer}>
+                  <Image
+                    src={baseUrl + blog.thumbnailUrl}
+                    alt={metaData?.metaImage?.alt || blog.title}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                    preview={{
+                      mask: (
+                        <Space>
+                          <EyeOutlined />
+                          Preview
+                        </Space>
+                      ),
+                    }}
+                    placeholder={
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          background:
+                            "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Spin size="large" />
+                      </div>
                     }
-                  >
-                    <Image
-                      src={baseUrl + blog.thumbnailUrl}
-                      alt={blog.metaData?.metaImage?.alt || blog.title}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                      preview={false}
-                      placeholder={
-                        <div
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            backgroundColor: "#e5e7eb",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Spin size="large" />
-                        </div>
-                      }
-                    />
-                  </div>
-                )
-              }
-            >
-              {/* Featured Badge */}
-              {blog.featured && (
-                <div style={styles.featuredBadge}>
-                  <Tag
-                    color="red"
-                    style={{ fontSize: "14px", fontWeight: 600 }}
-                  >
-                    Featured
-                  </Tag>
+                  />
+                  {blog.featured && (
+                    <div style={styles.featuredBadge}>
+                      <Badge.Ribbon
+                        text="Featured"
+                        color="red"
+                        style={{ fontSize: "12px", fontWeight: 600 }}
+                      >
+                        <div style={{ width: "50px", height: "50px" }}></div>
+                      </Badge.Ribbon>
+                    </div>
+                  )}
                 </div>
               )}
 
-              {/* Blog Header */}
-              <div style={{ marginBottom: "24px" }}>
-                <Tag
-                  color="blue"
-                  icon={<FolderOutlined />}
-                  style={{ marginBottom: "16px" }}
-                >
-                  {blog.category?.name || "Uncategorized"}
-                </Tag>
-
-                <Title
-                  level={1}
-                  style={{
-                    fontSize:
-                      window.innerWidth < 768
-                        ? "28px"
-                        : window.innerWidth < 1024
-                        ? "36px"
-                        : "48px",
-                    marginBottom: "16px",
-                    lineHeight: 1.2,
-                  }}
-                >
-                  {blog.title}
-                </Title>
-
-                <Paragraph
-                  style={{
-                    fontSize: "20px",
-                    color: "#6b7280",
-                    marginBottom: "24px",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {blog.subtitle}
-                </Paragraph>
-
-                {/* Meta Information */}
-                <div style={styles.metaContainer}>
-                  <Space>
-                    <Avatar
-                      size="small"
-                      icon={<UserOutlined />}
-                      src={blog.createdBy?.profileImage}
-                    />
-                    <Text style={{ color: "#6b7280" }}>
-                      {blog.createdBy?.username || "Admin"}
-                    </Text>
-                  </Space>
-
-                  <Space>
-                    <CalendarOutlined />
-                    <Text style={{ color: "#6b7280" }}>
-                      {dayjs(blog.createdAt).format("MMM DD, YYYY")}
-                    </Text>
-                  </Space>
-
-                  <Space>
-                    <ClockCircleOutlined />
-                    <Text style={{ color: "#6b7280" }}>
-                      {blog.readingTime || 5} min read
-                    </Text>
-                  </Space>
-
-                  <Space>
-                    <EyeOutlined />
-                    <Text style={{ color: "#6b7280" }}>
-                      {blog.wordCount || 0} words
-                    </Text>
-                  </Space>
-                </div>
-
+              {/* Blog Content */}
+              <div style={{ padding: screens.xs ? "20px" : "32px" }}>
                 {/* Tags */}
                 {blog.tags && blog.tags.length > 0 && (
                   <div style={styles.tagsContainer}>
                     <Space wrap>
                       <TagOutlined style={{ color: "#9ca3af" }} />
                       {blog.tags.map((tag: any) => (
-                        <Tag key={tag.id} color="default">
+                        <Tag
+                          key={tag.id}
+                          color="blue"
+                          style={{ borderRadius: "6px", fontWeight: 500 }}
+                        >
                           {tag.name}
                         </Tag>
                       ))}
                     </Space>
                   </div>
                 )}
-              </div>
 
-              <Divider />
+                <Divider />
 
-              {/* Blog Content */}
-              <div style={{ maxWidth: "none" }}>
-                <div
-                  style={styles.blogContent}
-                  dangerouslySetInnerHTML={{
-                    __html: blog.content?.replace(
-                      /<(\w+)([^>]*)>/g,
-                      (match: string, tag: string, attributes: string) => {
-                        const styleMap: { [key: string]: CSSProperties } = {
-                          h1: {
-                            ...styles.blogContentHeading,
-                            fontSize: "2em",
-                            fontWeight: 700,
-                          },
-                          h2: {
-                            ...styles.blogContentHeading,
-                            fontSize: "1.5em",
-                            fontWeight: 600,
-                          },
-                          h3: {
-                            ...styles.blogContentHeading,
-                            fontSize: "1.25em",
-                            fontWeight: 600,
-                          },
-                          h4: {
-                            ...styles.blogContentHeading,
-                            fontSize: "1.1em",
-                            fontWeight: 600,
-                          },
-                          h5: {
-                            ...styles.blogContentHeading,
-                            fontSize: "1em",
-                            fontWeight: 600,
-                          },
-                          h6: {
-                            ...styles.blogContentHeading,
-                            fontSize: "0.9em",
-                            fontWeight: 600,
-                          },
-                          p: styles.blogContentParagraph,
-                          blockquote: styles.blogContentBlockquote,
-                          ul: styles.blogContentList,
-                          ol: styles.blogContentList,
-                          li: styles.blogContentListItem,
-                          a: { ...styles.blogContentLink, cursor: "pointer" },
-                          table: styles.blogContentTable,
-                          th: {
-                            ...styles.blogContentTableCell,
-                            ...styles.blogContentTableHeader,
-                          },
-                          td: styles.blogContentTableCell,
-                        };
-
-                        if (styleMap[tag]) {
-                          return `<${tag} style="${styleToCssString(styleMap[tag])}"${attributes}>`;
-                        }
-                        return match;
-                      }
-                    ),
-                  }}
-                />
-              </div>
-
-              {/* Additional Images */}
-              {blog.image && blog.image.length > 1 && (
-                <div style={{ marginTop: "32px" }}>
-                  <Title level={4}>Gallery</Title>
-                  <Row gutter={[16, 16]} style={{ marginTop: "16px" }}>
-                    {blog.image.slice(1).map((img: any, index: number) => (
-                      <Col key={index} xs={12} md={8}>
-                        <Image
-                          src={img}
-                          alt={`${blog.title} - Image ${index + 2}`}
-                          style={{ borderRadius: "8px" }}
-                          preview={{
-                            mask: <EyeOutlined />,
-                          }}
-                        />
-                      </Col>
-                    ))}
-                  </Row>
+                {/* Blog Content */}
+                <div style={styles.blogContent}>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: blog.content || "<p>No content available.</p>",
+                    }}
+                  />
                 </div>
-              )}
 
-              {/* Blog Footer */}
-              <Divider />
+                {/* Additional Images Gallery */}
+                {blog.image && blog.image.length > 0 && blog.image[0] && (
+                  <div style={{ marginTop: "40px" }}>
+                    <Title
+                      level={3}
+                      style={{ marginBottom: "24px", ...styles.gradientText }}
+                    >
+                      📸 Image Gallery
+                    </Title>
+                    <Row gutter={[16, 16]}>
+                      {blog.image.map((img: any, index: number) => (
+                        <Col key={index} xs={12} md={8} lg={6}>
+                          <Card
+                            bodyStyle={{ padding: "8px" }}
+                            style={{ borderRadius: "8px" }}
+                            hoverable
+                          >
+                            <Image
+                              src={baseUrl + img}
+                              alt={`${blog.title} - Image ${index + 1}`}
+                              style={{
+                                width: "100%",
+                                height: "120px",
+                                objectFit: "cover",
+                                borderRadius: "6px",
+                              }}
+                              preview={{
+                                mask: <EyeOutlined />,
+                              }}
+                            />
+                          </Card>
+                        </Col>
+                      ))}
+                    </Row>
+                  </div>
+                )}
 
-              <div
-                style={
-                  window.innerWidth < 640
-                    ? styles.footerActions
-                    : styles.footerActionsDesktop
-                }
-              >
-                <Space>
-                  <Text strong>Share this article:</Text>
-                  <Button type="text" icon={<ShareAltOutlined />}>
-                    Share
-                  </Button>
-                </Space>
-
-                <div style={{ color: "#6b7280", fontSize: "14px" }}>
-                  Last updated: {dayjs(blog.updatedAt).format("DD MMM YYYY")}
+                {/* Blog Footer Actions */}
+                <div style={styles.footerActions}>
+                  <div style={{ textAlign: screens.xs ? "center" : "right" }}>
+                    <Text type="secondary" style={{ fontSize: "14px" }}>
+                      Last updated:{" "}
+                      {dayjs(blog.updatedAt).format("DD MMM YYYY")}
+                    </Text>
+                  </div>
                 </div>
               </div>
             </Card>
           </Col>
 
-          {/* Sidebar */}
-          <Col xs={24} lg={6}>
+          {/* Enhanced Sidebar */}
+          <Col xs={24} lg={8} xl={7}>
             <Space direction="vertical" size="large" style={{ width: "100%" }}>
+              {/* SEO Score Card */}
+              <Card
+                title={
+                  <Space>
+                    <SearchOutlined />
+                    SEO Analysis
+                  </Space>
+                }
+                size="default"
+                style={styles.sidebarCard}
+              >
+                <div style={styles.seoScore}>
+                  <Badge
+                    count={seoScore}
+                    showZero
+                    color={getSeoStatusColor(seoScore)}
+                    style={{
+                      fontSize: "20px",
+                      fontWeight: "bold",
+                      boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                    }}
+                  />
+                  <div>
+                    <Text strong style={{ fontSize: "16px" }}>
+                      {getSeoStatusText(seoScore)}
+                    </Text>
+                    <br />
+                    <Text type="secondary" style={{ fontSize: "12px" }}>
+                      Overall SEO Score
+                    </Text>
+                  </div>
+                </div>
+
+                <Collapse size="small" ghost>
+                  <Panel header="View SEO Details" key="1">
+                    <Space direction="vertical" style={{ width: "100%" }}>
+                      <div style={styles.metaItem}>
+                        <Text type="secondary">Meta Title:</Text>
+                        <Tooltip title={metaData?.metaTitle || "Not set"}>
+                          <InfoCircleOutlined />
+                        </Tooltip>
+                      </div>
+                      <div style={styles.metaItem}>
+                        <Text type="secondary">Meta Description:</Text>
+                        <Tooltip title={metaData?.metaDescription || "Not set"}>
+                          <InfoCircleOutlined />
+                        </Tooltip>
+                      </div>
+                      <div style={styles.metaItem}>
+                        <Text type="secondary">Keywords:</Text>
+                        <Text strong>
+                          {metaData?.metaKeywords?.length || 0}
+                        </Text>
+                      </div>
+                    </Space>
+                  </Panel>
+                </Collapse>
+              </Card>
+
               {/* Author Info */}
-              <Card title="About the Author" size="small">
+              <Card
+                title="👤 About the Author"
+                size="default"
+                style={styles.sidebarCard}
+              >
                 <div style={styles.authorCard}>
                   <Avatar
                     size={80}
                     icon={<UserOutlined />}
                     src={blog.createdBy?.profileImage}
-                    style={{ marginBottom: "16px" }}
+                    style={{
+                      marginBottom: "16px",
+                      border: "4px solid #e2e8f0",
+                      boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                    }}
                   />
                   <Title level={5} style={{ marginBottom: "8px" }}>
                     {blog.createdBy?.username || "Admin"}
                   </Title>
-                  <Paragraph type="secondary" style={{ marginBottom: 0 }}>
+                  <Paragraph type="secondary" style={{ marginBottom: "16px" }}>
                     {blog.createdBy?.email}
                   </Paragraph>
+                  <Tag color="blue" icon={<FileTextOutlined />}>
+                    {blog.authors?.length || 1} Article(s)
+                  </Tag>
                 </div>
               </Card>
 
-              {/* Blog Meta */}
-              <Card title="Article Details" size="small">
+              {/* Article Stats */}
+              <Card
+                title="📊 Article Statistics"
+                size="default"
+                style={styles.sidebarCard}
+              >
                 <Space direction="vertical" style={{ width: "100%" }}>
                   <div style={styles.metaItem}>
                     <Text type="secondary">Status:</Text>
                     <Tag
                       color={blog.status === "published" ? "green" : "orange"}
+                      style={{ borderRadius: "6px" }}
                     >
-                      {blog.status}
+                      {blog.status?.toUpperCase()}
                     </Tag>
                   </div>
 
@@ -521,37 +752,43 @@ export default function ViewBlogs() {
                     <Text type="secondary">Word Count:</Text>
                     <Text strong>{blog.wordCount}</Text>
                   </div>
+
+                  <div style={styles.metaItem}>
+                    <Text type="secondary">Reading Time:</Text>
+                    <Text strong>{blog.readingTime || 5} min</Text>
+                  </div>
                 </Space>
               </Card>
 
-              {/* SEO Meta Info */}
-              {blog.metaData && (
-                <Card title="SEO Information" size="small">
-                  <Space direction="vertical" style={{ width: "100%" }}>
-                    <div>
-                      <Text strong>Meta Title:</Text>
-                      <Paragraph
-                        type="secondary"
-                        ellipsis={{ rows: 2 }}
-                        style={{ marginBottom: "8px" }}
-                      >
-                        {blog.metaData.metaTitle}
-                      </Paragraph>
-                    </div>
-
-                    <div>
-                      <Text strong>Meta Description:</Text>
-                      <Paragraph
-                        type="secondary"
-                        ellipsis={{ rows: 3 }}
-                        style={{ marginBottom: 0 }}
-                      >
-                        {blog.metaData.metaDescription}
-                      </Paragraph>
-                    </div>
-                  </Space>
-                </Card>
-              )}
+              {/* Quick Stats */}
+              <div style={styles.statCard}>
+                <Title
+                  level={4}
+                  style={{ color: "white", marginBottom: "8px" }}
+                >
+                  📈 Quick Stats
+                </Title>
+                <Row gutter={[16, 16]} style={{ textAlign: "center" }}>
+                  <Col span={12}>
+                    <Text style={{ color: "white", fontSize: "12px" }}>
+                      WORDS
+                    </Text>
+                    <br />
+                    <Text strong style={{ color: "white", fontSize: "18px" }}>
+                      {blog.wordCount}
+                    </Text>
+                  </Col>
+                  <Col span={12}>
+                    <Text style={{ color: "white", fontSize: "12px" }}>
+                      READ TIME
+                    </Text>
+                    <br />
+                    <Text strong style={{ color: "white", fontSize: "18px" }}>
+                      {blog.readingTime || 5}m
+                    </Text>
+                  </Col>
+                </Row>
+              </div>
             </Space>
           </Col>
         </Row>
@@ -559,3 +796,10 @@ export default function ViewBlogs() {
     </div>
   );
 }
+
+// LinkedIn Icon Component
+const LinkedInOutlined = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+  </svg>
+);

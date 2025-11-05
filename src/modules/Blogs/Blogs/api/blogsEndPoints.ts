@@ -69,7 +69,7 @@ const blogsEndpoint = api.injectEndpoints({
     >({
       query: ({ id, data }) => ({
         url: `/blog/${id}`,
-        method: "PUT",
+        method: "PATCH",
         body: data,
       }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
