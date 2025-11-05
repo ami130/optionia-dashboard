@@ -1,10 +1,6 @@
 import { Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import ViewButton from "../../../common/CommonAnt/Button/ViewButton";
-
-import { useNavigate } from "react-router-dom";
-import { useGetDashboardDataQuery } from "../../Dashboard/api/dashoboardEndPoints";
-
 import DeleteButton from "../../../common/CommonAnt/Button/DeleteButton";
 import EditButton from "../../../common/CommonAnt/Button/EditButton";
 import { useDeletePagesMutation } from "../api/pagesEndPoints";
@@ -15,9 +11,7 @@ import UpdatePage from "../components/UpdatePage";
 
 const usePagesColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const { data: dashboardData } = useGetDashboardDataQuery({});
   const [deleteCartItem] = useDeletePagesMutation();
 
   const handleDelete = async (id: any) => {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Col, Input, Row, Form as AntForm, Select, Upload, Modal, Divider } from "antd";
+import { Col, Input, Row, Form as AntForm, Select, Upload, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Form } from "../../../common/CommonAnt";
 import { useCreateUserMutation } from "../api/userEndPoints";

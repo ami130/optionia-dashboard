@@ -5,20 +5,15 @@ import {
   Input,
   Row,
   Form as AntForm,
-  Button,
   message,
   Spin,
   Upload,
-  Tag,
   Modal,
   ColorPicker,
-  Tooltip,
   Select,
 } from "antd";
 import {
-  CloseOutlined,
   PlusOutlined,
-  InfoCircleOutlined,
   GlobalOutlined,
   PictureOutlined,
   UserOutlined,
@@ -594,7 +589,7 @@ export default function UpdateWebsiteInfo() {
                   <label className="block text-lg font-semibold text-gray-700 mb-3">
                     Meta Keywords
                   </label>
-                  
+
                   {/* Using Antd Select with tags mode - Much better UX */}
                   <AntForm.Item>
                     <Select
@@ -604,9 +599,9 @@ export default function UpdateWebsiteInfo() {
                       value={keywords}
                       onChange={setKeywords}
                       className="w-full rounded-lg"
-                      tokenSeparators={[',', ' ']}
-                      style={{ width: '100%' }}
-                      options={keywords.map(keyword => ({
+                      tokenSeparators={[",", " "]}
+                      style={{ width: "100%" }}
+                      options={keywords.map((keyword) => ({
                         value: keyword,
                         label: keyword,
                       }))}
@@ -640,4 +635,4 @@ export default function UpdateWebsiteInfo() {
       </Form>
     </div>
   );
-} 
+}

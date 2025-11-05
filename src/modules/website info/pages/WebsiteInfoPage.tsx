@@ -21,7 +21,7 @@ import {
   MailOutlined,
   EnvironmentOutlined,
   UserOutlined,
-  ShopOutlined,
+  
   IdcardOutlined,
   LinkOutlined,
   FacebookOutlined,

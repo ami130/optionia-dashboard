@@ -5,7 +5,6 @@ import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../app/features/modalSlice";
 import { usePermission } from "../../../../app/utils/usePermissions";
 import { moduleNames } from "../../../../utilities/permissionConstant";
-import ViewBlogs from "../components/ViewBlogs";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import UpdateBlog from "../components/UpdateBlog";
 

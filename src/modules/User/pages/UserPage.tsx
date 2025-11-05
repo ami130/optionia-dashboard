@@ -1,7 +1,6 @@
 import { useDispatch } from "react-redux";
 import { Button, Card, Row } from "antd";
 import useModulesColumns from "../utils/userColumns";
-import CreateModule from "../components/CreateUser";
 import { useAppSelector } from "../../../app/store";
 import { FilterState } from "../../../app/features/filterSlice";
 import { useGetUsersQuery } from "../api/userEndPoints";

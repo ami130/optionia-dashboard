@@ -67,7 +67,7 @@ export default function ViewPage({ id }: { id: number }) {
           </Title>
           <Divider className="border-gray-200" />
           <Row gutter={[24, 24]}>
-            {page.children.map((child: any, idx: number) => (
+            {page.children.map((child: any) => (
               <Col xs={24} sm={12} md={8} key={child.id}>
                 <Card
                   className={`p-5 border-l-8 border-${typeColors[child.type] || "gray"}-400 rounded-2xl hover:shadow-2xl transition-shadow duration-300 bg-gradient-to-r from-gray-50 to-white`}

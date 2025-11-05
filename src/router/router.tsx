@@ -17,11 +17,6 @@ import RolePermissionPage from "../modules/settings/role & permission/page/RoleP
 import ViewRolePermission from "../modules/settings/role & permission/components/ViewRolePermission";
 
 import WithPermission from "./withPermissionRouter";
-
-import EarningReportPage from "../modules/Earnings&Reports/pages/EarningReportPage";
-import CreateEarningReport from "../modules/Earnings&Reports/components/CreateEarningReport";
-import UpdateEarningReport from "../modules/Earnings&Reports/components/UpdateEarningReport";
-import EarningReportView from "../modules/Earnings&Reports/components/EarningReportView";
 import PagesPage from "../modules/Pages/pages/PagesPage";
 import CreatePages from "../modules/Pages/components/CreatePages";
 import WebsiteInfoPage from "../modules/website info/pages/WebsiteInfoPage";
@@ -168,34 +163,6 @@ const router = createBrowserRouter([
           {
             path: "/role/list",
             element: <RolePage />,
-          },
-        ],
-      },
-
-      // earning-report
-      {
-        path: "/earning-report",
-        element: (
-          <WithPermission requiredPermission="student">
-            <Accounts />
-          </WithPermission>
-        ),
-        children: [
-          {
-            path: "/earning-report",
-            element: <EarningReportPage />,
-          },
-          {
-            path: "create",
-            element: <CreateEarningReport />,
-          },
-          {
-            path: "update/:orderId",
-            element: <UpdateEarningReport />,
-          },
-          {
-            path: "product-view/:productId",
-            element: <EarningReportView />,
           },
         ],
       },
