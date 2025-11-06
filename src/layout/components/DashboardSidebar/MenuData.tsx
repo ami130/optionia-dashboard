@@ -76,12 +76,12 @@ const MenuData: React.FC = () => {
       label: "Role & Permission",
       icon: <HiOutlineDocumentReport style={iconStyle} />,
       children: [
-        hasPermissionForModule(permissions, "role") && {
+        hasPermissionForModule(permissions, "module") && {
           key: "/role/list",
           label: <Link to="/role/list">Role</Link>,
           icon: <LiaProductHunt style={iconStyle} />,
         },
-        hasPermissionForModule(permissions, "role") && {
+        hasPermissionForModule(permissions, "module") && {
           key: "/role/module",
           label: <Link to="/role/module">Module</Link>,
           icon: <LiaProductHunt style={iconStyle} />,

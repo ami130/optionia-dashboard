@@ -20,6 +20,7 @@ const CreatePages = () => {
   const onFinish = async (values: any): Promise<void> => {
     const payload = {
       ...values,
+      name: values.title,
       children:
         values.children?.map((child: any) => ({
           ...child,
@@ -167,10 +168,7 @@ const CreatePages = () => {
                       </span>
                     }
                   >
-                    <Input
-                      size="large"
-                      placeholder="Check out Optionia"
-                    />
+                    <Input size="large" placeholder="Check out Optionia" />
                   </Form.Item>
                 </Col>
               </Row>
