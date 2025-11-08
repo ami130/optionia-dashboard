@@ -84,7 +84,8 @@ const CreateBlog = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [isPublished, setIsPublished] = useState(false);
+  const [isPublished, setIsPublished] = useState(true);
+  const [isFeatured, setIsFeatured] = useState(true); // ✅ Added featured state
   const [isMetaTitleTouched, setIsMetaTitleTouched] = useState(false);
   const [isMetaDescriptionTouched, setIsMetaDescriptionTouched] =
     useState(false);
@@ -110,7 +111,8 @@ const CreateBlog = () => {
       form.resetFields();
       setThumbnailFileList([]);
       setGalleryFileList([]);
-      setIsPublished(false);
+      setIsPublished(true);
+      setIsFeatured(true); // ✅ Reset featured state
       setIsMetaTitleTouched(false);
       setIsMetaDescriptionTouched(false);
       setEditorContent("");
@@ -317,6 +319,10 @@ const CreateBlog = () => {
   const onFinish = async (values: any) => {
     const formData = new FormData();
 
+    console.log("🔍 DEBUG - Before FormData:");
+    console.log("isFeatured:", isFeatured, "type:", typeof isFeatured);
+    console.log("isPublished:", isPublished, "type:", typeof isPublished);
+
     // Enhanced content validation
     const textContent = editorContent?.replace(/<[^>]*>/g, "").trim();
     if (!textContent) {
@@ -348,19 +354,28 @@ const CreateBlog = () => {
     formData.append("content", editorContent);
     formData.append("readingTime", values.readingTime.toString());
     formData.append("wordCount", values.wordCount.toString());
-    formData.append("featured", values.featured ? "true" : "false");
+
+    // formData.append("featured", isFeatured ? "true" : "false");
+    // formData.append("status", isPublished ? "true" : "false");
+    // ✅ FIXED: Send as boolean values
+    formData.append("featured", isFeatured ? "1" : "0");
+    formData.append("status", isPublished.toString()); // boolean true/false
+
     formData.append("blogType", values.blogType);
-    formData.append("status", isPublished ? "published" : "draft");
 
     // IDs
     if (values.categoryId)
       formData.append("categoryId", values.categoryId.toString());
     if (values.authorIds && Array.isArray(values.authorIds)) {
-      formData.append("authorIds", JSON.stringify(values.authorIds));
+      values.authorIds.forEach((id: number) => {
+        formData.append("authorIds[]", id.toString());
+      });
     }
 
     if (values.tagIds && Array.isArray(values.tagIds)) {
-      formData.append("tagIds", JSON.stringify(values.tagIds));
+      values.tagIds.forEach((id: number) => {
+        formData.append("tagIds[]", id.toString());
+      });
     }
 
     if (blogPage) formData.append("pageId", blogPage.id.toString());
@@ -410,9 +425,10 @@ const CreateBlog = () => {
         isLoading={isLoading}
         isSuccess={isSuccess}
         initialValues={{
-          featured: false,
+          featured: true,
+          status: true,
           blogType: "Article",
-          readingTime: 5,
+          readingTime: 0,
           wordCount: 0,
         }}
         onValuesChange={(changedValues) => {
@@ -446,11 +462,7 @@ const CreateBlog = () => {
           </Col>
 
           <Col xs={24}>
-            <Form.Item
-              name="subtitle"
-              label="Subtitle"
-              rules={[{ required: true }]}
-            >
+            <Form.Item name="subtitle" label="Subtitle">
               <Input placeholder="Enter subtitle" />
             </Form.Item>
           </Col>
@@ -552,13 +564,23 @@ const CreateBlog = () => {
           </Col>
 
           <Col xs={24} sm={6}>
-            <Form.Item name="featured" label="Featured" valuePropName="checked">
-              <Switch />
+            <Form.Item label="Featured" name="featured">
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              >
+                <Switch
+                  checked={isFeatured}
+                  onChange={setIsFeatured}
+                  checkedChildren="Yes"
+                  unCheckedChildren="No"
+                />
+                <span>{isFeatured ? "Featured" : "Not Featured"}</span>
+              </div>
             </Form.Item>
           </Col>
 
           <Col xs={24} sm={6}>
-            <Form.Item name="status" label="Status">
+            <Form.Item label="Status" name="status">
               <div
                 style={{ display: "flex", alignItems: "center", gap: "8px" }}
               >
@@ -568,6 +590,7 @@ const CreateBlog = () => {
                   checkedChildren="Published"
                   unCheckedChildren="Draft"
                 />
+                <span>{isPublished ? "Published" : "Draft"}</span>
               </div>
             </Form.Item>
           </Col>

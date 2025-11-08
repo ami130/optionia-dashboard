@@ -289,7 +289,7 @@ export default function ViewBlogs() {
   const openGraphData = blog.openGraph || seoData.openGraph || {};
   const twitterData = blog.twitter || seoData.twitter || {};
 
-  console.log("blog", openGraphData, twitterData);
+  console.log("openGraphData", openGraphData, twitterData);
 
   // Calculate SEO Score
   const calculateSeoScore = () => {

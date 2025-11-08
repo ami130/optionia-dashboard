@@ -93,6 +93,7 @@ const UpdateBlog = ({ record }: { record: any }) => {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [isPublished, setIsPublished] = useState(false);
+  const [isFeatured, setIsFeatured] = useState(false); // ✅ ADDED: Featured state
   const [isMetaTitleTouched, setIsMetaTitleTouched] = useState(false);
   const [isMetaDescriptionTouched, setIsMetaDescriptionTouched] =
     useState(false);
@@ -269,6 +270,7 @@ const UpdateBlog = ({ record }: { record: any }) => {
         ]);
       }
 
+
       // Set form values
       form.setFieldsValue({
         title: record.title || "",
@@ -286,13 +288,15 @@ const UpdateBlog = ({ record }: { record: any }) => {
         metaDescription: metaData.metaDescription || "",
         metaKeywords: metaData.metaKeywords || [],
         canonicalUrl: metaData.canonicalUrl || "",
+        status: record.status ? "published" : "draft",
       });
 
       // Set editor content
       setEditorContent(record.content || "");
 
-      // Set published status
-      setIsPublished(record.status === "published");
+      // ✅ FIXED: Set both published and featured states
+      setIsPublished(record.status === "true" || record.status === "published");
+      setIsFeatured(record.featured === "true" || record.featured === "true");
     }
   }, [record, form, blogPage]);
 
@@ -353,97 +357,6 @@ const UpdateBlog = ({ record }: { record: any }) => {
     );
   };
 
-  // const onFinish = async (values: any) => {
-  //   const formData = new FormData();
-
-  //   // Enhanced content validation
-  //   const textContent = editorContent?.replace(/<[^>]*>/g, "").trim();
-  //   if (!textContent) {
-  //     form.setFields([
-  //       {
-  //         name: "content",
-  //         errors: ["Please enter blog content"],
-  //       },
-  //     ]);
-  //     setEditorError("Blog content is required");
-  //     return;
-  //   }
-
-  //   if (textContent.length < 50) {
-  //     form.setFields([
-  //       {
-  //         name: "content",
-  //         errors: ["Blog content should be at least 50 characters long"],
-  //       },
-  //     ]);
-  //     setEditorError("Blog content should be at least 50 characters long");
-  //     return;
-  //   }
-
-  //   // Basic info - EXACTLY like create form
-  //   formData.append("title", values.title);
-  //   formData.append("slug", slugify(values.slug || values.title));
-  //   formData.append("subtitle", values.subtitle);
-  //   formData.append("content", editorContent);
-  //   formData.append("readingTime", values.readingTime.toString());
-  //   formData.append("wordCount", values.wordCount.toString());
-  //   formData.append("featured", values.featured ? "true" : "false");
-  //   formData.append("blogType", values.blogType);
-  //   formData.append("status", isPublished ? "published" : "draft");
-
-  //   // IDs - EXACTLY like create form
-  //   if (values.categoryId) formData.append("categoryId", values.categoryId.toString());
-  //   if (values.pageId) formData.append("pageId", values.pageId.toString());
-
-  //   if (values.authorIds && Array.isArray(values.authorIds)) {
-  //     formData.append("authorIds", JSON.stringify(values.authorIds));
-  //   }
-
-  //   if (values.tagIds && Array.isArray(values.tagIds)) {
-  //     formData.append("tagIds", JSON.stringify(values.tagIds));
-  //   }
-
-  //   // Images - handle thumbnail (fieldname: 'thumbnail')
-  //   const thumbnailFile = thumbnailFileList.find(file => file.originFileObj)?.originFileObj;
-  //   if (thumbnailFile) {
-  //     formData.append("thumbnail", thumbnailFile); // Fieldname: 'thumbnail' like create
-  //   }
-
-  //   // Images - handle gallery images (fieldname: 'image' for multiple)
-  //   const newGalleryFiles = galleryFileList
-  //     .filter(file => file.originFileObj)
-  //     .map(file => file.originFileObj);
-
-  //   newGalleryFiles.forEach((file) => {
-  //     formData.append("image", file); // Fieldname: 'image' like create
-  //   });
-
-  //   // Add image index map for replacements
-  //   if (Object.keys(imageIndexMap).length > 0) {
-  //     formData.append("imageIndexMap", JSON.stringify(imageIndexMap));
-  //   }
-
-  //   // Meta data - EXACTLY like create form
-  //   const metaData = {
-  //     metaTitle: values.metaTitle,
-  //     metaDescription: values.metaDescription,
-  //     metaKeywords: values.metaKeywords || [],
-  //     canonicalUrl: values.canonicalUrl,
-  //   };
-  //   formData.append("metaData", JSON.stringify(metaData));
-
-  //   try {
-  //     await updateBlog({
-  //       id: record?.id,
-  //       data: formData
-  //     }).unwrap();
-
-  //     message.success('Blog updated successfully!');
-  //   } catch (error) {
-  //     message.error('Failed to update blog. Please try again.');
-  //   }
-  // };
-
   const onFinish = async (values: any) => {
     const formData = new FormData();
 
@@ -478,9 +391,12 @@ const UpdateBlog = ({ record }: { record: any }) => {
     formData.append("content", editorContent);
     formData.append("readingTime", values.readingTime.toString());
     formData.append("wordCount", values.wordCount.toString());
-    formData.append("featured", values.featured ? "true" : "false");
+
+    // ✅ FIXED: Use state variables for boolean fields
+    formData.append("featured", isFeatured.toString()); // boolean true/false
+    formData.append("status", isPublished.toString()); // boolean true/false
+
     formData.append("blogType", values.blogType);
-    formData.append("status", isPublished ? "published" : "draft");
 
     // IDs - EXACTLY like create form
     if (values.categoryId)
@@ -502,12 +418,13 @@ const UpdateBlog = ({ record }: { record: any }) => {
       });
     }
 
+    // ✅ FIXED: Use correct field names for file uploads
     // Images - handle thumbnail (fieldname: 'thumbnail')
     const thumbnailFile = thumbnailFileList.find(
       (file) => file.originFileObj
     )?.originFileObj;
     if (thumbnailFile) {
-      formData.append("thumbnailUrl", thumbnailFile); // Fieldname: 'thumbnail' like create
+      formData.append("thumbnail", thumbnailFile); // ✅ CORRECT: 'thumbnail' not 'thumbnailUrl'
     }
 
     // Images - handle gallery images (fieldname: 'image' for multiple)
@@ -604,23 +521,19 @@ const UpdateBlog = ({ record }: { record: any }) => {
           </Col>
 
           <Col xs={24} sm={12}>
-            <Form.Item name="title" label="Title" rules={[{ required: true }]}>
+            <Form.Item name="title" label="Title">
               <Input placeholder="Enter blog title" />
             </Form.Item>
           </Col>
 
           <Col xs={24} sm={12}>
-            <Form.Item name="slug" label="Slug" rules={[{ required: true }]}>
+            <Form.Item name="slug" label="Slug">
               <Input placeholder="Enter slug" />
             </Form.Item>
           </Col>
 
           <Col xs={24}>
-            <Form.Item
-              name="subtitle"
-              label="Subtitle"
-              rules={[{ required: true }]}
-            >
+            <Form.Item name="subtitle" label="Subtitle">
               <Input placeholder="Enter subtitle" />
             </Form.Item>
           </Col>
@@ -696,11 +609,7 @@ const UpdateBlog = ({ record }: { record: any }) => {
           </Col>
 
           <Col xs={24} sm={6}>
-            <Form.Item
-              name="readingTime"
-              label="Reading Time"
-              rules={[{ required: true }]}
-            >
+            <Form.Item name="readingTime" label="Reading Time">
               <InputNumber
                 min={1}
                 max={60}
@@ -721,14 +630,28 @@ const UpdateBlog = ({ record }: { record: any }) => {
             </Form.Item>
           </Col>
 
+          {/* ✅ FIXED: Featured - Use state variable like create form */}
           <Col xs={24} sm={6}>
-            <Form.Item name="featured" label="Featured" valuePropName="checked">
-              <Switch />
+            <Form.Item label="Featured" name="featured">
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              >
+                <Switch
+                  checked={isFeatured}
+                  onChange={setIsFeatured}
+                  checkedChildren="Yes"
+                  unCheckedChildren="No"
+                />
+                <Tag color={isFeatured ? "blue" : "default"}>
+                  {isFeatured ? "FEATURED" : "NOT FEATURED"}
+                </Tag>
+              </div>
             </Form.Item>
           </Col>
 
+          {/* ✅ FIXED: Status - Already correct, just keeping it consistent */}
           <Col xs={24} sm={6}>
-            <Form.Item name="status" label="Status">
+            <Form.Item label="Status" name="status">
               <div
                 style={{ display: "flex", alignItems: "center", gap: "8px" }}
               >
@@ -747,11 +670,7 @@ const UpdateBlog = ({ record }: { record: any }) => {
 
           {/* Categories and Tags */}
           <Col xs={24} sm={12}>
-            <Form.Item
-              name="categoryId"
-              label="Category"
-              rules={[{ required: true }]}
-            >
+            <Form.Item name="categoryId" label="Category">
               <Select
                 placeholder="Select category"
                 options={categoryOptions}
@@ -773,11 +692,7 @@ const UpdateBlog = ({ record }: { record: any }) => {
 
           {/* Authors and Blog Type */}
           <Col xs={24} sm={12}>
-            <Form.Item
-              name="authorIds"
-              label="Authors"
-              rules={[{ required: true }]}
-            >
+            <Form.Item name="authorIds" label="Authors">
               <Select
                 mode="multiple"
                 placeholder="Select authors"
@@ -830,7 +745,9 @@ const UpdateBlog = ({ record }: { record: any }) => {
                   </div>
                 )}
               </Upload>
-          Update User
+              <div style={{ fontSize: 12, color: "#666", marginTop: 8 }}>
+                Upload a new thumbnail to replace the current one
+              </div>
             </Form.Item>
           </Col>
 
@@ -986,10 +903,19 @@ const UpdateBlog = ({ record }: { record: any }) => {
                 <div>
                   <strong>Current Status:</strong>
                   <Tag
-                    color={record?.status === "published" ? "green" : "orange"}
+                    color={isPublished ? "green" : "orange"}
                     style={{ marginLeft: 8 }}
                   >
-                    {record?.status?.toUpperCase() || "DRAFT"}
+                    {isPublished ? "PUBLISHED" : "DRAFT"}
+                  </Tag>
+                </div>
+                <div>
+                  <strong>Featured:</strong>
+                  <Tag
+                    color={isFeatured ? "blue" : "default"}
+                    style={{ marginLeft: 8 }}
+                  >
+                    {isFeatured ? "FEATURED" : "NOT FEATURED"}
                   </Tag>
                 </div>
                 <div>
