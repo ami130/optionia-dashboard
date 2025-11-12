@@ -27,62 +27,7 @@ import { useGetTagsQuery } from "../../Tag/api/tagsEndPoints";
 import { useGetPagesQuery } from "../../../Pages/api/pagesEndPoints";
 import JoditEditor from "jodit-react";
 import { baseUrl } from "../../../../utilities/baseQuery";
-
-// Define comprehensive type for Jodit config
-interface JoditConfig {
-  // Basic settings
-  height: number;
-  minHeight: number;
-  maxHeight: number;
-  placeholder: string;
-  readonly: boolean;
-  toolbar: boolean;
-  toolbarButtonSize: "small" | "middle" | "large";
-
-  // Toolbar configuration
-  buttons: string[];
-  toolbarAdaptive: boolean;
-
-  // Behavior settings
-  enter: "div" | "br" | "p";
-  allowTabNavigation: boolean;
-  saveSelectionOnBlur: boolean;
-  preserveSelection: boolean;
-
-  // UI settings
-  showXPathInStatusbar: boolean;
-  showCharsCounter: boolean;
-  showWordsCounter: boolean;
-  showPlaceholder: boolean;
-
-  // Functionality
-  useSearch: boolean;
-  spellcheck: boolean;
-  iframe: boolean;
-  autofocus: boolean;
-  direction: "ltr" | "rtl";
-
-  // Performance
-  disablePlugins: string[];
-
-  // Styling
-  style?: {
-    [key: string]: string | number;
-  };
-
-  // Advanced features
-  uploader?: {
-    insertImageAsBase64URI: boolean;
-  };
-  link?: {
-    noFollowCheckbox?: boolean;
-    openInNewTabCheckbox?: boolean;
-  };
-  image?: {
-    editSrc?: boolean;
-    useImageEditor?: boolean;
-  };
-}
+import { defaultJoditConfig } from "../../../../config/joditConfig";
 
 const UpdateBlog = ({ record }: { record: any }) => {
   const [form] = AntForm.useForm();
@@ -117,126 +62,7 @@ const UpdateBlog = ({ record }: { record: any }) => {
       page.title?.toLowerCase().includes("blog")
   );
 
-  // Most Advanced Jodit configuration with all features
-  const editorConfig: JoditConfig = useMemo(
-    () => ({
-      // Basic editor settings
-      height: 600,
-      minHeight: 400,
-      maxHeight: 800,
-      placeholder:
-        "Write your amazing blog content here... Start with a captivating introduction!",
-      readonly: false,
-      toolbar: true,
-      toolbarButtonSize: "middle",
-
-      // Comprehensive toolbar buttons
-      buttons: [
-        "bold",
-        "italic",
-        "underline",
-        "strikethrough",
-        "|",
-        "ul",
-        "ol",
-        "|",
-        "outdent",
-        "indent",
-        "|",
-        "font",
-        "fontsize",
-        "brush",
-        "paragraph",
-        "|",
-        "left",
-        "center",
-        "right",
-        "justify",
-        "|",
-        "image",
-        "video",
-        "file",
-        "|",
-        "table",
-        "|",
-        "link",
-        "|",
-        "hr",
-        "blockquote",
-        "|",
-        "source",
-        "preview",
-        "|",
-        "cut",
-        "copy",
-        "paste",
-        "copyformat",
-        "|",
-        "superscript",
-        "subscript",
-        "|",
-        "symbols",
-        "|",
-        "undo",
-        "redo",
-        "|",
-        "fullsize",
-        "about",
-        "find",
-        "selectall",
-        "print",
-        "eraser",
-      ],
-
-      // Toolbar behavior
-      toolbarAdaptive: false,
-
-      // Editor behavior
-      enter: "p",
-      allowTabNavigation: true,
-      saveSelectionOnBlur: true,
-      preserveSelection: true,
-
-      // UI elements
-      showXPathInStatusbar: false,
-      showCharsCounter: true,
-      showWordsCounter: true,
-      showPlaceholder: true,
-
-      // Functionality
-      useSearch: true,
-      spellcheck: true,
-      iframe: false,
-      autofocus: false,
-      direction: "ltr",
-
-      // Performance optimization
-      disablePlugins: ["mobile", "speechRecognize"],
-
-      // Styling
-      style: {
-        fontSize: "16px",
-        lineHeight: "1.6",
-        fontFamily: "Arial, sans-serif",
-      },
-
-      // Advanced features configuration
-      uploader: {
-        insertImageAsBase64URI: true,
-      },
-
-      link: {
-        noFollowCheckbox: true,
-        openInNewTabCheckbox: true,
-      },
-
-      image: {
-        editSrc: true,
-        useImageEditor: true,
-      },
-    }),
-    []
-  );
+  const editorConfig = useMemo(() => defaultJoditConfig, []);
 
   useEffect(() => {
     if (record) {
@@ -269,7 +95,6 @@ const UpdateBlog = ({ record }: { record: any }) => {
           },
         ]);
       }
-
 
       // Set form values
       form.setFieldsValue({

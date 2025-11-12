@@ -10,8 +10,11 @@ import {
   Switch,
   InputNumber,
   Alert,
+  Button,
+  Card,
+  Space,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Form } from "../../../../common/CommonAnt";
 import { slugify } from "../../../../common/AutoGenerateSlug/AutoGenerateSlug";
 import { useCreateBlogMutation } from "../api/blogsEndPoints";
@@ -20,62 +23,12 @@ import { useGetUsersQuery } from "../../../User/api/userEndPoints";
 import { useGetTagsQuery } from "../../Tag/api/tagsEndPoints";
 import { useGetPagesQuery } from "../../../Pages/api/pagesEndPoints";
 import JoditEditor from "jodit-react";
-
-// Define comprehensive type for Jodit config
-interface JoditConfig {
-  // Basic settings
-  height: number;
-  minHeight: number;
-  maxHeight: number;
-  placeholder: string;
-  readonly: boolean;
-  toolbar: boolean;
-  toolbarButtonSize: "small" | "middle" | "large";
-
-  // Toolbar configuration
-  buttons: string[];
-  toolbarAdaptive: boolean;
-
-  // Behavior settings
-  enter: "div" | "br" | "p";
-  allowTabNavigation: boolean;
-  saveSelectionOnBlur: boolean;
-  preserveSelection: boolean;
-
-  // UI settings
-  showXPathInStatusbar: boolean;
-  showCharsCounter: boolean;
-  showWordsCounter: boolean;
-  showPlaceholder: boolean;
-
-  // Functionality
-  useSearch: boolean;
-  spellcheck: boolean;
-  iframe: boolean;
-  autofocus: boolean;
-  direction: "ltr" | "rtl";
-
-  // Performance
-  disablePlugins: string[];
-
-  // Styling
-  style?: {
-    [key: string]: string | number;
-  };
-
-  // Advanced features
-  uploader?: {
-    insertImageAsBase64URI: boolean;
-  };
-  link?: {
-    noFollowCheckbox?: boolean;
-    openInNewTabCheckbox?: boolean;
-  };
-  image?: {
-    editSrc?: boolean;
-    useImageEditor?: boolean;
-  };
-}
+import { BlogFAQItem } from "../types/blog.faq.types";
+import { blogTypeOptions } from "../types/blogsType";
+import {
+  defaultJoditConfig,
+  faqJoditConfig,
+} from "../../../../config/joditConfig";
 
 const CreateBlog = () => {
   const [form] = AntForm.useForm();
@@ -85,14 +38,19 @@ const CreateBlog = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [isPublished, setIsPublished] = useState(true);
-  const [isFeatured, setIsFeatured] = useState(true); // ✅ Added featured state
+  const [isFeatured, setIsFeatured] = useState(true);
   const [isMetaTitleTouched, setIsMetaTitleTouched] = useState(false);
   const [isMetaDescriptionTouched, setIsMetaDescriptionTouched] =
     useState(false);
   const [editorContent, setEditorContent] = useState("");
   const [editorError, setEditorError] = useState<string | null>(null);
 
+  // FAQ State
+  const [faqSectionTitle, setFaqSectionTitle] = useState("");
+  const [faqItems, setFaqItems] = useState<BlogFAQItem[]>([]);
+
   const editorRef = useRef<any>(null);
+  const faqEditorRefs = useRef<{ [key: string]: any }>({});
 
   const [createBlog, { isLoading, isSuccess }] = useCreateBlogMutation();
   const { data: categoryData } = useGetCategoriesQuery<any>({});
@@ -112,170 +70,52 @@ const CreateBlog = () => {
       setThumbnailFileList([]);
       setGalleryFileList([]);
       setIsPublished(true);
-      setIsFeatured(true); // ✅ Reset featured state
+      setIsFeatured(true);
       setIsMetaTitleTouched(false);
       setIsMetaDescriptionTouched(false);
       setEditorContent("");
       setEditorError(null);
+      // Reset FAQ state
+      setFaqSectionTitle("");
+      setFaqItems([]);
     }
     if (blogPage) form.setFieldsValue({ pageId: blogPage.id });
   }, [isSuccess, form, blogPage]);
 
+  // FAQ Functions
+  // FAQ Functions
+  const addFaqItem = () => {
+    const newFaqItem: BlogFAQItem = {
+      id: Date.now().toString(),
+      question: "",
+      answer: "",
+    };
+    setFaqItems([...faqItems, newFaqItem]);
+  };
+
+  const removeFaqItem = (id: string) => {
+    setFaqItems(faqItems.filter((item) => item.id !== id));
+    // Clean up the editor ref
+    if (faqEditorRefs.current[id]) {
+      delete faqEditorRefs.current[id];
+    }
+  };
+
+  const updateFaqItem = (
+    id: string,
+    field: keyof BlogFAQItem,
+    value: string
+  ) => {
+    setFaqItems(
+      faqItems.map((item) =>
+        item.id === id ? { ...item, [field]: value } : item
+      )
+    );
+  };
+
   // Most Advanced Jodit configuration with all features
-  const editorConfig: JoditConfig = useMemo(
-    () => ({
-      // Basic editor settings
-      height: 600,
-      minHeight: 400,
-      maxHeight: 800,
-      placeholder:
-        "Write your amazing blog content here... Start with a captivating introduction!",
-      readonly: false,
-      toolbar: true,
-      toolbarButtonSize: "middle",
-
-      // Comprehensive toolbar buttons
-      buttons: [
-        // Text formatting group
-        "bold",
-        "italic",
-        "underline",
-        "strikethrough",
-        "|",
-
-        // Lists group
-        "ul", // Unordered list (bullet points)
-        "ol", // Ordered list (numbered)
-        "|",
-
-        // Indentation
-        "outdent",
-        "indent",
-        "|",
-
-        // Font styling
-        "font",
-        "fontsize",
-        "brush",
-        "paragraph",
-        "|",
-
-        // Alignment
-        "left",
-        "center",
-        "right",
-        "justify",
-        "|",
-
-        // Media and embeds
-        "image",
-        "video",
-        "file",
-        "|",
-
-        // Tables
-        "table",
-        "|",
-
-        // Links
-        "link",
-        "|",
-
-        // Special formatting
-        "hr", // Horizontal line
-        "blockquote", // Quote/blockquote
-        "|",
-
-        // Code and formatting
-        "source", // Source code view
-        "preview", // Preview mode
-        "|",
-
-        // Advanced text operations
-        "cut",
-        "copy",
-        "paste",
-        "copyformat", // Copy formatting
-        "|",
-
-        // Text position
-        "superscript",
-        "subscript",
-        "|",
-
-        // Special characters and symbols
-        "symbols",
-        "|",
-
-        // Undo/redo
-        "undo",
-        "redo",
-        "|",
-
-        // Fullscreen and help
-        "fullsize",
-        "about",
-
-        // Additional advanced buttons
-        "find", // Find and replace
-        "selectall", // Select all
-        "print", // Print
-        "eraser", // Clear formatting
-      ],
-
-      // Toolbar behavior
-      toolbarAdaptive: false,
-
-      // Editor behavior
-      enter: "div", // Creates paragraphs for better SEO
-      allowTabNavigation: true,
-      saveSelectionOnBlur: true,
-      preserveSelection: true,
-
-      // UI elements
-      showXPathInStatusbar: false,
-      showCharsCounter: true,
-      showWordsCounter: true,
-      showPlaceholder: true,
-
-      // Functionality
-      useSearch: true,
-      spellcheck: true,
-      iframe: false,
-      autofocus: false,
-      direction: "ltr",
-
-      // Performance optimization
-      disablePlugins: [
-        "mobile",
-        "speechRecognize",
-        // Enable paste and clipboard for better UX
-      ],
-
-      // Styling
-      style: {
-        fontSize: "16px",
-        lineHeight: "1.6",
-        fontFamily: "Arial, sans-serif",
-      },
-
-      // Advanced features configuration
-      uploader: {
-        insertImageAsBase64URI: true, // Embed images as base64
-      },
-
-      link: {
-        noFollowCheckbox: true,
-        openInNewTabCheckbox: true,
-      },
-
-      image: {
-        editSrc: true,
-        useImageEditor: true,
-      },
-    }),
-    []
-  );
+  const editorConfig = useMemo(() => defaultJoditConfig, []);
+  const faqEditorConfig = useMemo(() => faqJoditConfig, []);
 
   // Enhanced editor handlers
   const handleEditorChange = (newContent: string) => {
@@ -306,6 +146,13 @@ const CreateBlog = () => {
 
   const handleEditorBlur = (newContent: string) => {
     setEditorContent(newContent);
+  };
+  const handleFaqAnswerChange = (id: string, newContent: string) => {
+    updateFaqItem(id, "answer", newContent);
+  };
+
+  const handleFaqAnswerBlur = (id: string, newContent: string) => {
+    updateFaqItem(id, "answer", newContent);
   };
 
   const handlePreview = async (file: any) => {
@@ -343,6 +190,8 @@ const CreateBlog = () => {
       return;
     }
 
+    console.log("editorContent", editorContent);
+
     // Basic info
     formData.append("title", values.title);
     formData.append("slug", slugify(values.slug || values.title));
@@ -351,11 +200,8 @@ const CreateBlog = () => {
     formData.append("readingTime", values.readingTime.toString());
     formData.append("wordCount", values.wordCount.toString());
 
-    // formData.append("featured", isFeatured ? "true" : "false");
-    // formData.append("status", isPublished ? "true" : "false");
-    // ✅ FIXED: Send as boolean values
     formData.append("featured", isFeatured ? "1" : "0");
-    formData.append("status", isPublished.toString()); // boolean true/false
+    formData.append("status", isPublished.toString());
 
     formData.append("blogType", values.blogType);
 
@@ -384,6 +230,18 @@ const CreateBlog = () => {
         file.originFileObj && formData.append(`image`, file.originFileObj)
     );
 
+    // FAQ Data
+    if (faqSectionTitle || faqItems.length > 0) {
+      const faqData = {
+        faqTitle: faqSectionTitle,
+        items: faqItems.filter(
+          (item) => item.question.trim() && item.answer.trim()
+        ),
+      };
+
+      formData.append("faqData", JSON.stringify(faqData));
+    }
+
     // Meta data
     const metaData = {
       metaTitle: values.metaTitle,
@@ -395,12 +253,6 @@ const CreateBlog = () => {
 
     await createBlog(formData);
   };
-
-  const blogTypeOptions = [
-    { value: "Article", label: "ARTICLE" },
-    { value: "NewsArticle", label: "NEWS ARTICLE" },
-    { value: "BlogPosting", label: "BLOG POSTING" },
-  ];
 
   // Transform API data
   const categoryOptions =
@@ -685,6 +537,141 @@ const CreateBlog = () => {
                 )}
               </Upload>
             </Form.Item>
+          </Col>
+
+          {/* FAQ Section - FIXED */}
+          <Col xs={24}>
+            <Card
+              title={
+                <h2 className="text-lg font-semibold mb-0">FAQ Section</h2>
+              }
+              extra={
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={addFaqItem}
+                >
+                  Add FAQ
+                </Button>
+              }
+            >
+              <Row gutter={[16, 16]}>
+                <Col xs={24}>
+                  <div className="ant-form-item">
+                    <label className="ant-form-item-label">
+                      FAQ Section Title
+                    </label>
+                    <div className="ant-form-item-control">
+                      <Input
+                        placeholder="Enter FAQ section title (e.g., Frequently Asked Questions)"
+                        value={faqSectionTitle}
+                        onChange={(e) => setFaqSectionTitle(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </Col>
+
+                {faqItems.map((faq, index) => (
+                  <Col xs={24} key={faq.id}>
+                    <Card
+                      size="small"
+                      title={`FAQ Item ${index + 1}`}
+                      extra={
+                        <Button
+                          type="text"
+                          danger
+                          icon={<DeleteOutlined />}
+                          onClick={() => removeFaqItem(faq.id)}
+                          disabled={faqItems.length === 1}
+                        >
+                          Remove
+                        </Button>
+                      }
+                    >
+                      <Space
+                        direction="vertical"
+                        style={{ width: "100%" }}
+                        size="middle"
+                      >
+                        {/* REMOVED Form.Item and used direct Input with proper state management */}
+                        <div className="ant-form-item">
+                          <label className="ant-form-item-label">
+                            Question{" "}
+                          </label>
+                          <div className="ant-form-item-control">
+                            <Input
+                              required
+                              placeholder="Enter question"
+                              value={faq.question}
+                              onChange={(e) =>
+                                updateFaqItem(
+                                  faq.id,
+                                  "question",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                        </div>
+
+                        <div className="ant-form-item">
+                          <label className="ant-form-item-label">Answer </label>
+                          <div
+                            style={{
+                              border: "1px solid #d9d9d9",
+                              borderRadius: "6px",
+                              overflow: "hidden",
+                              minHeight: "200px",
+                            }}
+                          >
+                            <JoditEditor
+                              ref={(el) => {
+                                if (el) {
+                                  faqEditorRefs.current[faq.id] = el;
+                                }
+                              }}
+                              value={faq.answer}
+                              config={faqEditorConfig}
+                              onBlur={(newContent) =>
+                                handleFaqAnswerBlur(faq.id, newContent)
+                              }
+                              onChange={(newContent) =>
+                                handleFaqAnswerChange(faq.id, newContent)
+                              }
+                              tabIndex={index + 2}
+                            />
+                          </div>
+                        </div>
+                      </Space>
+                    </Card>
+                  </Col>
+                ))}
+
+                {faqItems.length === 0 && (
+                  <Col xs={24}>
+                    <div
+                      style={{
+                        textAlign: "center",
+                        padding: "40px",
+                        border: "2px dashed #d9d9d9",
+                        borderRadius: "6px",
+                      }}
+                    >
+                      <p style={{ color: "#999", marginBottom: "16px" }}>
+                        No FAQ items added yet
+                      </p>
+                      <Button
+                        type="dashed"
+                        icon={<PlusOutlined />}
+                        onClick={addFaqItem}
+                      >
+                        Add First FAQ Item
+                      </Button>
+                    </div>
+                  </Col>
+                )}
+              </Row>
+            </Card>
           </Col>
 
           {/* SEO Settings */}

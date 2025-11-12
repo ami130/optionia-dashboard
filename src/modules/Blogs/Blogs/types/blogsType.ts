@@ -67,3 +67,9 @@ export interface IBlog {
     description: string;
   };
 }
+
+export const blogTypeOptions = [
+  { value: "Article", label: "ARTICLE" },
+  { value: "NewsArticle", label: "NEWS ARTICLE" },
+  { value: "BlogPosting", label: "BLOG POSTING" },
+];
