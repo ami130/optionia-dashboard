@@ -316,95 +316,133 @@ abbr[title] {
     font-size: 20px;
   }
 }
+.admission-view-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-title {
+  color: #1890ff;
+  margin-top: 16px !important;
+}
+
+.summary-cards {
+  margin-bottom: 24px;
+}
+
+.summary-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  border: none;
+}
+
+.detail-card {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  border: none;
+}
+
+.profile-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  border: none;
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.profile-avatar {
+  margin-bottom: 16px;
+  background-color: #1890ff;
+}
+
+.profile-name {
+  margin-bottom: 4px !important;
+}
+
+.profile-role {
+  font-size: 14px;
+}
+
+.section-title {
+  color: #595959;
+  margin-bottom: 16px !important;
+}
+
+.detail-tabs .ant-tabs-nav {
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
   .admission-view-container {
-          max-width: 1400px;
-          margin: 0 auto;
-          padding: 20px;
-        }
+    padding: 12px;
+  }
 
-        .page-header {
-          margin-bottom: 24px;
-        }
+  .page-title {
+    font-size: 20px;
+  }
 
-        .page-title {
-          color: #1890ff;
-          margin-top: 16px !important;
-        }
+  .summary-card,
+  .detail-card,
+  .profile-card {
+    border-radius: 6px;
+  }
+}
 
-        .summary-cards {
-          margin-bottom: 24px;
-        }
+@media (max-width: 576px) {
+  .page-title {
+    font-size: 18px;
+  }
+}
 
-        .summary-card {
-          border-radius: 8px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
-          border: none;
-        }
+/* ✅ Base styling for unordered lists */
+.jodit-wysiwyg ul {
+  padding-left: 24px !important;
+  margin-left: 0 !important;
+  list-style-position: outside !important;
+}
 
-        .detail-card {
-          margin-bottom: 16px;
-          border-radius: 8px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
-          border: none;
-        }
+/* ✅ Force solid bullet if user chose circle */
+.jodit-wysiwyg ul[style*="list-style-type: circle"] {
+  list-style-type: disc !important; /* map circle → solid circle */
+}
 
-        .profile-card {
-          border-radius: 8px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
-          border: none;
-        }
+/* ✅ Base styling for ordered lists */
+.jodit-wysiwyg ol {
+  padding-left: 24px !important;
+  margin-left: 0 !important;
+  list-style-position: outside !important;
+}
 
-        .profile-header {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          margin-bottom: 16px;
-        }
+/* ✅ Force decimal only if user didn't select a style */
+.jodit-wysiwyg ol:not([style*="list-style-type"]) {
+  list-style-type: decimal !important; /* default → 1,2,3 */
+}
 
-        .profile-avatar {
-          margin-bottom: 16px;
-          background-color: #1890ff;
-        }
+/* ✅ Nested lists – indent properly */
+.jodit-wysiwyg ul ul,
+.jodit-wysiwyg ul ol,
+.jodit-wysiwyg ol ol,
+.jodit-wysiwyg ol ul {
+  margin-left: 24px !important;
+  padding-left: 20px !important;
+}
 
-        .profile-name {
-          margin-bottom: 4px !important;
-        }
-
-        .profile-role {
-          font-size: 14px;
-        }
-
-        .section-title {
-          color: #595959;
-          margin-bottom: 16px !important;
-        }
-
-        .detail-tabs .ant-tabs-nav {
-          margin-bottom: 16px;
-        }
-
-        @media (max-width: 768px) {
-          .admission-view-container {
-            padding: 12px;
-          }
-
-          .page-title {
-            font-size: 20px;
-          }
-
-          .summary-card,
-          .detail-card,
-          .profile-card {
-            border-radius: 6px;
-          }
-        }
-
-        @media (max-width: 576px) {
-          .page-title {
-            font-size: 18px;
-          }
-        }
+/* ✅ Clean spacing for list items */
+.jodit-wysiwyg li {
+  margin-bottom: 4px;
+}
 
 /* .custom-tabs .ant-tabs-tab {
   @apply h-14 px-4 rounded-lg text-sm font-medium text-gray-700 transition;

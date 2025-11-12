@@ -227,7 +227,7 @@ const CreateBlog = () => {
       toolbarAdaptive: false,
 
       // Editor behavior
-      enter: "p", // Creates paragraphs for better SEO
+      enter: "div", // Creates paragraphs for better SEO
       allowTabNavigation: true,
       saveSelectionOnBlur: true,
       preserveSelection: true,
@@ -318,10 +318,6 @@ const CreateBlog = () => {
 
   const onFinish = async (values: any) => {
     const formData = new FormData();
-
-    console.log("🔍 DEBUG - Before FormData:");
-    console.log("isFeatured:", isFeatured, "type:", typeof isFeatured);
-    console.log("isPublished:", isPublished, "type:", typeof isPublished);
 
     // Enhanced content validation
     const textContent = editorContent?.replace(/<[^>]*>/g, "").trim();
