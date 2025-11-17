@@ -1,7 +1,15 @@
-  export const slugify = (text: string) =>
-    text
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9\s-]/g, "") // remove invalid chars
-      .replace(/\s+/g, "-") // replace spaces with -
-      .replace(/-+/g, "-"); // collapse multiple -
+// AutoGenerateSlug.tsx
+export const slugify = (text: string | null | undefined): string => {
+  if (!text) {
+    return ""; // Return empty string if text is null/undefined
+  }
+
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, "-") // Replace spaces with -
+    .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+    .replace(/\-\-+/g, "-") // Replace multiple - with single -
+    .replace(/^-+/, "") // Trim - from start of text
+    .replace(/-+$/, ""); // Trim - from end of text
+};

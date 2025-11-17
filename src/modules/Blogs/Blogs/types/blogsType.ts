@@ -43,6 +43,14 @@ export interface IBlog {
   categoryId: number;
   authorIds?: number[];
   tagIds?: number[];
+  keyTakeWays: string;
+
+  promotional_content: {
+    promotional_image: File;
+    title: string;
+    keywords: string[];
+    promotional_url: string;
+  };
 
   // Populated relationships
   page?: IPages;

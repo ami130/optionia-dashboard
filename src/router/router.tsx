@@ -28,6 +28,7 @@ import TagsPage from "../modules/Blogs/Tag/pages/TagsPage";
 import { moduleNames } from "../utilities/permissionConstant";
 import BlogsPage from "../modules/Blogs/Blogs/pages/BlogsPage";
 import ViewBlogs from "../modules/Blogs/Blogs/components/ViewBlogs";
+import CreateBlog from "../modules/Blogs/Blogs/components/CreateBlog";
 
 const router = createBrowserRouter([
   {
@@ -121,6 +122,10 @@ const router = createBrowserRouter([
             <BlogsPage />
           </WithPermission>
         ),
+      },
+      {
+        path: "/blog/create",
+        element: <CreateBlog />,
       },
       {
         path: "/blog/:slug",

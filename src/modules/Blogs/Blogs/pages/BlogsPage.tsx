@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { useGetTagsQuery } from "../../Tag/api/tagsEndPoints";
 import { useGetUsersQuery } from "../../../User/api/userEndPoints";
 import CreateBlog from "../components/CreateBlog";
+import { Link } from "react-router-dom";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -68,19 +69,20 @@ const BlogsPage = () => {
           <Row gutter={[16, 16]} align="middle" justify="space-between">
             <Col>
               {canCreate && (
-                <Button
-                  type="primary"
-                  onClick={() =>
-                    dispatch(
-                      showModal({
-                        title: "Create Blog",
-                        content: <CreateBlog />,
-                      })
-                    )
-                  }
-                >
-                  Create Blog
-                </Button>
+                <Link to="/blog/create" className="border px-5 py-2 rounded">Create Blog</Link>
+                // <Button
+                //   type="primary"
+                //   onClick={() =>
+                //     dispatch(
+                //       showModal({
+                //         title: "Create Blog",
+                //         content: <CreateBlog />,
+                //       })
+                //     )
+                //   }
+                // >
+                //   Create Blog
+                // </Button>
               )}
             </Col>
             <Col>

@@ -557,6 +557,7 @@ export default function ViewBlogs() {
                 {/* Blog Content */}
                 <div style={styles.blogContent}>
                   <div
+                    className="blog-content"
                     dangerouslySetInnerHTML={{
                       __html: blog.content || "<p>No content available.</p>",
                     }}

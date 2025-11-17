@@ -1,6 +1,6 @@
 import { JoditConfig } from "../common/types/jodit.types";
 
-export const defaultJoditConfig: JoditConfig = {
+export const defaultJoditConfig: any = {
   height: 600,
   minHeight: 400,
   maxHeight: 800,
@@ -9,6 +9,8 @@ export const defaultJoditConfig: JoditConfig = {
   readonly: false,
   toolbar: true,
   toolbarButtonSize: "middle",
+
+  // Fixed toolbar buttons with proper list functionality
   buttons: [
     "bold",
     "italic",
@@ -65,38 +67,159 @@ export const defaultJoditConfig: JoditConfig = {
     "print",
     "eraser",
   ],
+
   toolbarAdaptive: false,
   enter: "div",
   allowTabNavigation: true,
   saveSelectionOnBlur: true,
   preserveSelection: true,
+
+  // UI elements
   showXPathInStatusbar: false,
   showCharsCounter: true,
   showWordsCounter: true,
   showPlaceholder: true,
+
+  // Functionality
   useSearch: true,
   spellcheck: true,
   iframe: false,
   autofocus: false,
   direction: "ltr",
+
+  // Performance optimization
   disablePlugins: ["mobile", "speechRecognize"],
+
+  // Styling - FIX for bullet points
   style: {
     fontSize: "16px",
     lineHeight: "1.6",
     fontFamily: "Arial, sans-serif",
   },
+
+  // List configuration for proper bullets
+  list: {
+    defaultWrapList: true,
+  },
+
+  // Upload configuration for WEBP support
   uploader: {
     insertImageAsBase64URI: true,
+    imagesExtensions: ["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg"],
+    fileSize: 10485760, // 10MB
   },
+
+  // Image processing configuration
+  image: {
+    editSrc: true,
+    useImageEditor: true,
+    openOnDblClick: true,
+  },
+
+  // Link configuration
   link: {
     noFollowCheckbox: true,
     openInNewTabCheckbox: true,
   },
-  image: {
-    editSrc: true,
-    useImageEditor: true,
-  },
 };
+
+// export const defaultJoditConfig: JoditConfig = {
+//   height: 600,
+//   minHeight: 400,
+//   maxHeight: 800,
+//   placeholder:
+//     "Write your amazing blog content here... Start with a captivating introduction!",
+//   readonly: false,
+//   toolbar: true,
+//   toolbarButtonSize: "middle",
+//   buttons: [
+//     "bold",
+//     "italic",
+//     "underline",
+//     "strikethrough",
+//     "|",
+//     "ul",
+//     "ol",
+//     "|",
+//     "outdent",
+//     "indent",
+//     "|",
+//     "font",
+//     "fontsize",
+//     "brush",
+//     "paragraph",
+//     "|",
+//     "left",
+//     "center",
+//     "right",
+//     "justify",
+//     "|",
+//     "image",
+//     "video",
+//     "file",
+//     "|",
+//     "table",
+//     "|",
+//     "link",
+//     "|",
+//     "hr",
+//     "blockquote",
+//     "|",
+//     "source",
+//     "preview",
+//     "|",
+//     "cut",
+//     "copy",
+//     "paste",
+//     "copyformat",
+//     "|",
+//     "superscript",
+//     "subscript",
+//     "|",
+//     "symbols",
+//     "|",
+//     "undo",
+//     "redo",
+//     "|",
+//     "fullsize",
+//     "about",
+//     "find",
+//     "selectall",
+//     "print",
+//     "eraser",
+//   ],
+//   toolbarAdaptive: false,
+//   enter: "div",
+//   allowTabNavigation: true,
+//   saveSelectionOnBlur: true,
+//   preserveSelection: true,
+//   showXPathInStatusbar: false,
+//   showCharsCounter: true,
+//   showWordsCounter: true,
+//   showPlaceholder: true,
+//   useSearch: true,
+//   spellcheck: true,
+//   iframe: false,
+//   autofocus: false,
+//   direction: "ltr",
+//   disablePlugins: ["mobile", "speechRecognize"],
+//   style: {
+//     fontSize: "16px",
+//     lineHeight: "1.6",
+//     fontFamily: "Arial, sans-serif",
+//   },
+//   uploader: {
+//     insertImageAsBase64URI: true,
+//   },
+//   link: {
+//     noFollowCheckbox: true,
+//     openInNewTabCheckbox: true,
+//   },
+//   image: {
+//     editSrc: true,
+//     useImageEditor: true,
+//   },
+// };
 
 export const faqJoditConfig: JoditConfig = {
   height: 300,
@@ -131,7 +254,7 @@ export const faqJoditConfig: JoditConfig = {
     "|",
     "hr",
     "blockquote",
-  
+
     "|",
     "cut",
     "copy",
