@@ -50,6 +50,23 @@ const MenuData: React.FC = () => {
       icon: <LiaProductHunt />,
     },
     {
+      key: "settings",
+      label: "Settings",
+      icon: <HiOutlineDocumentReport style={iconStyle} />,
+      children: [
+        hasPermissionForModule(permissions, "users") && {
+          key: "/settings/terms-condition",
+          label: <Link to="/settings/terms-condition">Terms & Condition</Link>,
+          icon: <LiaProductHunt style={iconStyle} />,
+        },
+        hasPermissionForModule(permissions, "users") && {
+          key: "/settings/privacy-policy",
+          label: <Link to="/settings/privacy-policy">Privacy Policy</Link>,
+          icon: <LiaProductHunt style={iconStyle} />,
+        },
+      ].filter(Boolean),
+    },
+    {
       key: "blog",
       label: "Blog",
       icon: <HiOutlineDocumentReport style={iconStyle} />,

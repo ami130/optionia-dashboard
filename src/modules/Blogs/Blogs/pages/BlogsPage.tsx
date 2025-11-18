@@ -1,9 +1,7 @@
-import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../../../app/store";
 import { FilterState } from "../../../../app/features/filterSlice";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
-import { Button, Card, Col, Input, Row, Select, Space } from "antd";
-import { showModal } from "../../../../app/features/modalSlice";
+import { Card, Col, Input, Row, Select, Space } from "antd";
 import { Table } from "../../../../common/CommonAnt";
 import { usePermission } from "../../../../app/utils/usePermissions";
 import { moduleNames } from "../../../../utilities/permissionConstant";
@@ -13,14 +11,13 @@ import { useGetCategoriesQuery } from "../../Categories/api/categoriesEndPoints"
 import { useEffect, useState } from "react";
 import { useGetTagsQuery } from "../../Tag/api/tagsEndPoints";
 import { useGetUsersQuery } from "../../../User/api/userEndPoints";
-import CreateBlog from "../components/CreateBlog";
 import { Link } from "react-router-dom";
 
 const { Search } = Input;
 const { Option } = Select;
 
 const BlogsPage = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const { page } = useAppSelector(FilterState);
   const { canView, canCreate } = usePermission(moduleNames.blog);
   const columns = useBlogColumns();

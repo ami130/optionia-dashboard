@@ -29,6 +29,8 @@ import { moduleNames } from "../utilities/permissionConstant";
 import BlogsPage from "../modules/Blogs/Blogs/pages/BlogsPage";
 import ViewBlogs from "../modules/Blogs/Blogs/components/ViewBlogs";
 import CreateBlog from "../modules/Blogs/Blogs/components/CreateBlog";
+import EditTermCondition from "../modules/settings/termsConditions/components/EditTermCondition";
+import EditPrivacyPolicy from "../modules/settings/privacy policy/components/EditPrivacyPolicy";
 
 const router = createBrowserRouter([
   {
@@ -131,6 +133,27 @@ const router = createBrowserRouter([
         path: "/blog/:slug",
         element: <ViewBlogs />,
       },
+      // terms & conditions
+      {
+        path: "/settings",
+        element: (
+          <WithPermission requiredPermission={moduleNames.blog}>
+            <Accounts />
+          </WithPermission>
+        ),
+      },
+      {
+        path: "/settings/terms-condition",
+        element: <EditTermCondition />,
+      },
+      {
+        path: "/settings/privacy-policy",
+        element: <EditPrivacyPolicy />,
+      },
+      // {
+      //   path: "/blog/:slug",
+      //   element: <ViewBlogs />,
+      // },
       // {
       //   path: "/blog",
       //   element: <Accounts />,

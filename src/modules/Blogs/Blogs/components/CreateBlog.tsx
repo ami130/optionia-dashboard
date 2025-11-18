@@ -12,9 +12,7 @@ import {
   Alert,
   Button,
   Card,
-  Space,
   Steps,
-  Divider,
   Typography,
 } from "antd";
 import {
@@ -51,10 +49,43 @@ const CreateBlog = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+  const [basicInfo, setBasicInfo] = useState({
+    title: "",
+    slug: "",
+    subtitle: "",
+  });
+
+  const [settings, setSettings] = useState({
+    readingTime: 5,
+    wordCount: 0,
+    blogType: "Article",
+    categoryId: undefined,
+    tagIds: [] as number[],
+    authorIds: [] as number[],
+    featured: true,
+    status: true,
+  });
+
+  const [seoData, setSeoData] = useState({
+    metaTitle: "",
+    metaDescription: "",
+    metaKeywords: [] as string[],
+    canonicalUrl: "",
+    promo: {
+      title: "",
+      url: "",
+      keywords: [] as string[],
+      imageFileList: [] as any[],
+    },
+    faq: {
+      sectionTitle: "",
+      items: [] as BlogFAQItem[],
+    },
+  });
 
   // Blog settings
-  const [isPublished, setIsPublished] = useState(true);
-  const [isFeatured, setIsFeatured] = useState(true);
+  // const [isPublished, setIsPublished] = useState(true);
+  // const [isFeatured, setIsFeatured] = useState(true);
   const [isMetaTitleTouched, setIsMetaTitleTouched] = useState(false);
   const [isMetaDescriptionTouched, setIsMetaDescriptionTouched] =
     useState(false);
@@ -65,16 +96,16 @@ const CreateBlog = () => {
   const [keyTakeaways, setKeyTakeaways] = useState("");
 
   // Promotional content
-  const [promoData, setPromoData] = useState({
-    imageFileList: [] as any[],
-    title: "",
-    keywords: [] as string[],
-    url: "",
-  });
+  // const [promoData, setPromoData] = useState({
+  //   imageFileList: [] as any[],
+  //   title: "",
+  //   keywords: [] as string[],
+  //   url: "",
+  // });
 
   // FAQ State
-  const [faqSectionTitle, setFaqSectionTitle] = useState("");
-  const [faqItems, setFaqItems] = useState<BlogFAQItem[]>([]);
+  // const [faqSectionTitle, setFaqSectionTitle] = useState("");
+  // const [faqItems, setFaqItems] = useState<BlogFAQItem[]>([]);
 
   // Refs
   const editorRef = useRef<any>(null);
@@ -138,65 +169,64 @@ const CreateBlog = () => {
       form.resetFields();
       setThumbnailFileList([]);
       setGalleryFileList([]);
-      setPromoData({
-        imageFileList: [],
-        title: "",
-        keywords: [],
-        url: "",
-      });
-      setIsPublished(true);
-      setIsFeatured(true);
+      // setPromoData({
+      //   imageFileList: [],
+      //   title: "",
+      //   keywords: [],
+      //   url: "",
+      // });
+      // setIsPublished(true);
+      // setIsFeatured(true);
       setIsMetaTitleTouched(false);
       setIsMetaDescriptionTouched(false);
       setEditorContent("");
       setKeyTakeaways("");
       setEditorError(null);
-      setFaqSectionTitle("");
-      setFaqItems([]);
-      setCurrentStep(0);
+      // setFaqSectionTitle("");
+      // setFaqItems([]);
     }
-    if (blogPage) form.setFieldsValue({ pageId: blogPage.id });
   }, [isSuccess, form, blogPage]);
 
-  // FAQ Functions
-  const addFaqItem = () => {
-    const newFaqItem: BlogFAQItem = {
-      id: Date.now().toString(),
-      question: "",
-      answer: "",
-    };
-    setFaqItems([...faqItems, newFaqItem]);
-  };
-
-  const removeFaqItem = (id: string) => {
-    setFaqItems(faqItems.filter((item) => item.id !== id));
-    if (faqEditorRefs.current[id]) {
-      delete faqEditorRefs.current[id];
+  useEffect(() => {
+    if (currentStep === 4) {
+      setSeoData((prev) => ({
+        ...prev,
+        metaTitle: prev.metaTitle || basicInfo.title,
+        metaDescription: prev.metaDescription || basicInfo.subtitle,
+      }));
     }
-  };
+  }, [currentStep, basicInfo]);
 
-  const updateFaqItem = (
-    id: string,
-    field: keyof BlogFAQItem,
-    value: string
-  ) => {
-    setFaqItems(
-      faqItems.map((item) =>
-        item.id === id ? { ...item, [field]: value } : item
-      )
-    );
-  };
+  // // FAQ Functions
+  // const addFaqItem = () => {
+  //   const newFaqItem: BlogFAQItem = {
+  //     id: Date.now().toString(),
+  //     question: "",
+  //     answer: "",
+  //   };
+  //   setFaqItems([...faqItems, newFaqItem]);
+  // };
 
-  // FAQ Editor Handlers
-  const handleFaqAnswerChange = (id: string, newContent: string) => {
-    updateFaqItem(id, "answer", newContent);
-  };
+  // const removeFaqItem = (id: string) => {
+  //   setFaqItems(faqItems.filter((item) => item.id !== id));
+  //   if (faqEditorRefs.current[id]) {
+  //     delete faqEditorRefs.current[id];
+  //   }
+  // };
 
-  const handleFaqAnswerBlur = (id: string, newContent: string) => {
-    updateFaqItem(id, "answer", newContent);
-  };
+  // const updateFaqItem = (
+  //   id: string,
+  //   field: keyof BlogFAQItem,
+  //   value: string
+  // ) => {
+  //   setFaqItems(
+  //     faqItems.map((item) =>
+  //       item.id === id ? { ...item, [field]: value } : item
+  //     )
+  //   );
+  // };
 
-  // Editor handlers - FIXED VERSION
+  // Editor handlers
   const handleEditorChange = (newContent: string) => {
     setEditorContent(newContent);
     setEditorError(null);
@@ -205,9 +235,16 @@ const CreateBlog = () => {
     const wordCount = textContent ? textContent.split(/\s+/).length : 0;
     const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
-    // Force update form fields with calculated values
+    // Update state
+    setSettings((prev) => ({
+      ...prev,
+      wordCount,
+      readingTime,
+    }));
+
+    // Update form fields as well
     form.setFieldsValue({
-      wordCount: wordCount,
+      word_count: wordCount,
       readingTime: readingTime,
     });
 
@@ -228,133 +265,190 @@ const CreateBlog = () => {
     setPreviewOpen(true);
   };
 
-  // Navigation
-  const nextStep = () => {
-    setCurrentStep(currentStep + 1);
+  // Step Navigation with Validation (Option 2)
+  const nextStepWithValidation = async () => {
+    try {
+      // Only validate fields relevant to current step
+      let fieldsToValidate: string[] = [];
+
+      switch (currentStep) {
+        case 0:
+          fieldsToValidate = ["title", "slug"];
+          break;
+        case 1:
+          // fieldsToValidate = ["content"];
+          break;
+        case 3:
+          fieldsToValidate = ["categoryId", "authorIds"];
+          break;
+        case 4:
+          fieldsToValidate = ["metaTitle", "metaDescription"];
+          break;
+      }
+
+      if (fieldsToValidate.length > 0) {
+        await form.validateFields(fieldsToValidate);
+      }
+
+      // Special validation for editor content
+      if (currentStep === 1) {
+        const textContent = editorContent.replace(/<[^>]*>/g, "").trim();
+        if (!textContent) {
+          setEditorError("Please enter blog content");
+          return;
+        }
+      }
+
+      if (currentStep < steps.length - 1) {
+        setCurrentStep(currentStep + 1);
+      }
+    } catch (err) {
+      console.log("Validation failed:", err);
+    }
   };
 
   const prevStep = () => {
-    setCurrentStep(currentStep - 1);
+    if (currentStep > 0) setCurrentStep(currentStep - 1);
   };
 
-  // Form submission - COMPLETELY FIXED VERSION
+  // Form submission
   const onFinish = async (values: any) => {
-    console.log("Form values:", values);
-
-    // Validate required fields
-    if (!values.title?.trim()) {
-      form.setFields([{ name: "title", errors: ["Blog title is required"] }]);
-      setCurrentStep(0);
-      return;
-    }
-
+    console.log("first", values);
     const formData = new FormData();
 
-    // Content validation
-    const textContent = editorContent?.replace(/<[^>]*>/g, "").trim();
-    if (!textContent) {
-      form.setFields([
-        { name: "content", errors: ["Please enter blog content"] },
-      ]);
-      setEditorError("Blog content is required");
-      setCurrentStep(1);
-      return;
-    }
-
-    // Basic info - FIXED: Ensure values are properly captured
-    formData.append("title", values.title);
-    formData.append("slug", values.slug || slugify(values.title));
-    formData.append("subtitle", values.subtitle || "");
+    // Basic info
+    formData.append("title", basicInfo.title);
+    formData.append("slug", basicInfo.slug || slugify(basicInfo.title));
+    formData.append("subtitle", basicInfo.subtitle || "");
     formData.append("content", editorContent);
+    formData.append("keyTakeaways", keyTakeaways);
 
-    // FIXED: Use actual values from form with proper validation
-    const readingTimeValue = values.readingTime && values.readingTime > 0 ? values.readingTime : 5;
-    const wordCountValue = values.wordCount && values.wordCount > 0 ? values.wordCount : 0;
-    
-    formData.append("reading_time", readingTimeValue.toString());
-    formData.append("word_count", wordCountValue.toString());
-    formData.append("key_takeaways", keyTakeaways);
-
-    // Blog settings
-    formData.append("featured", isFeatured ? "1" : "0");
-    formData.append("status", isPublished ? "published" : "draft");
-    formData.append("blog_type", values.blogType || "Article");
-
-    // Promotional content - FIXED STRUCTURE
-    const promoImage = promoData.imageFileList[0]?.originFileObj;
-    if (promoImage) {
-      formData.append("promotional_image", promoImage);
+    // Settings
+    formData.append("reading_time", settings.readingTime.toString());
+    formData.append("word_count", settings.wordCount.toString());
+    formData.append("blogType", settings.blogType);
+    if (settings.categoryId !== undefined && settings.categoryId !== null) {
+      formData.append("categoryId", settings.categoryId);
     }
+    settings.authorIds.forEach((id) =>
+      formData.append("authorIds[]", id.toString())
+    );
+    settings.tagIds.forEach((id) => formData.append("tagIds[]", id.toString()));
+    formData.append("featured", settings.featured ? "1" : "0");
+    formData.append("status", settings.status ? "published" : "draft");
 
-    // Create promotional_content as JSON object
-    const promotionalContent = {
-      title: promoData.title || "",
-      keywords: promoData.keywords || [],
-      promotional_url: promoData.url || "",
-    };
-    formData.append("promotional_content", JSON.stringify(promotionalContent));
+    // SEO
+    formData.append(
+      "metaData",
+      JSON.stringify({
+        metaTitle: seoData.metaTitle,
+        metaDescription: seoData.metaDescription,
+        metaKeywords: seoData.metaKeywords,
+        canonicalUrl: seoData.canonicalUrl,
+      })
+    );
 
-    // IDs with null checks
-    if (values.categoryId) {
-      formData.append("categoryId", values.categoryId.toString());
-    }
+    // Promotional
+    const promoImage = seoData.promo.imageFileList[0]?.originFileObj;
+    if (promoImage) formData.append("promotional_image", promoImage);
+    formData.append(
+      "promotional_content",
+      JSON.stringify({
+        title: seoData.promo.title,
+        keywords: seoData.promo.keywords,
+        promotional_url: seoData.promo.url,
+      })
+    );
 
-    if (values.authorIds && Array.isArray(values.authorIds)) {
-      values.authorIds.forEach((id: number) =>
-        formData.append("authorIds[]", id.toString())
-      );
-    }
-
-    if (values.tagIds && Array.isArray(values.tagIds)) {
-      values.tagIds.forEach((id: number) =>
-        formData.append("tagIds[]", id.toString())
-      );
-    }
-
-    if (blogPage) formData.append("pageId", blogPage.id.toString());
+    // FAQ
+    const validFaqItems = seoData.faq.items.filter(
+      (item) => item.question.trim() && item.answer.trim()
+    );
+    formData.append(
+      "faqData",
+      JSON.stringify({
+        faqTitle: seoData.faq.sectionTitle,
+        items: validFaqItems,
+      })
+    );
 
     // Images
     const thumbnailFile = thumbnailFileList[0]?.originFileObj;
     if (thumbnailFile) formData.append("thumbnail", thumbnailFile);
-
     galleryFileList.forEach(
       (file) =>
         file.originFileObj &&
-        formData.append(`gallery_images[]`, file.originFileObj)
+        formData.append("gallery_images[]", file.originFileObj)
     );
 
-    // FAQ Data - FIXED: Create as JSON object
-    if (faqSectionTitle || faqItems.length > 0) {
-      const validFaqItems = faqItems.filter(
-        (item) => item.question.trim() && item.answer.trim()
-      );
-
-      const faqData = {
-        faqTitle: faqSectionTitle || "",
-        items: validFaqItems.map((item, index) => ({
-          id: index + 1,
-          question: item.question,
-          answer: item.answer
-        }))
-      };
-      formData.append("faqData", JSON.stringify(faqData));
-    }
-
-    // Meta data - FIXED: Create as JSON object
-    const metaData = {
-      metaTitle: values.metaTitle || "",
-      metaDescription: values.metaDescription || "",
-      metaKeywords: values.metaKeywords || [],
-      canonicalUrl: values.canonicalUrl || "",
-    };
-    formData.append("metaData", JSON.stringify(metaData));
-
-    console.log("FormData contents:");
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
+    if (blogPage) formData.append("pageId", blogPage?.id);
 
     await createBlog(formData);
+
+    // // Promotional content
+    // const promoImage = promoData.imageFileList[0]?.originFileObj;
+    // if (promoImage) formData.append("promotional_image", promoImage);
+
+    // const promotionalContent = {
+    //   title: promoData.title || "",
+    //   keywords: promoData.keywords || [],
+    //   promotional_url: promoData.url || "",
+    // };
+    // formData.append("promotional_content", JSON.stringify(promotionalContent));
+
+    // if (values.categoryId) formData.append("categoryId", values.categoryId);
+
+    // if (values.authorIds && Array.isArray(values.authorIds)) {
+    //   values.authorIds.forEach((id: number) =>
+    //     formData.append("authorIds[]", id.toString())
+    //   );
+    // }
+
+    // if (values.tagIds && Array.isArray(values.tagIds)) {
+    //   values.tagIds.forEach((id: number) =>
+    //     formData.append("tagIds[]", id.toString())
+    //   );
+    // }
+
+    // if (blogPage) formData.append("pageId", blogPage.id.toString());
+
+    // // Images
+    // const thumbnailFile = thumbnailFileList[0]?.originFileObj;
+    // if (thumbnailFile) formData.append("thumbnail", thumbnailFile);
+
+    // galleryFileList.forEach(
+    //   (file) =>
+    //     file.originFileObj &&
+    //     formData.append(`gallery_images[]`, file.originFileObj)
+    // );
+
+    // // FAQ
+    // if (faqSectionTitle || faqItems.length > 0) {
+    //   const validFaqItems = faqItems.filter(
+    //     (item) => item.question.trim() && item.answer.trim()
+    //   );
+
+    //   const faqData = {
+    //     faqTitle: faqSectionTitle || "",
+    //     items: validFaqItems.map((item, index) => ({
+    //       id: index + 1,
+    //       question: item.question,
+    //       answer: item.answer,
+    //     })),
+    //   };
+    //   formData.append("faqData", JSON.stringify(faqData));
+    // }
+
+    // // Meta data
+    // const metaData = {
+    //   metaTitle: values.metaTitle || "",
+    //   metaDescription: values.metaDescription || "",
+    //   metaKeywords: values.metaKeywords || [],
+    //   canonicalUrl: values.canonicalUrl || "",
+    // };
+    // formData.append("metaData", JSON.stringify(metaData));
+
+    // await createBlog(formData);
   };
 
   // Transform API data
@@ -372,7 +466,16 @@ const CreateBlog = () => {
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
-        return <BasicInfoStep />;
+        return (
+          <BasicInfoStep
+            basicInfo={basicInfo}
+            setBasicInfo={setBasicInfo}
+            form={form}
+            isMetaTitleTouched={isMetaTitleTouched}
+            isMetaDescriptionTouched={isMetaDescriptionTouched}
+            setSeoData={setSeoData}
+          />
+        );
       case 1:
         return (
           <ContentStep
@@ -400,37 +503,57 @@ const CreateBlog = () => {
       case 3:
         return (
           <SettingsStep
-            isFeatured={isFeatured}
-            isPublished={isPublished}
-            setIsFeatured={setIsFeatured}
-            setIsPublished={setIsPublished}
+            settings={settings}
+            setSettings={setSettings}
             categoryOptions={categoryOptions}
             tagsOptions={tagsOptions}
             authorOptions={authorOptions}
             blogTypeOptions={blogTypeOptions}
           />
+          // <SettingsStep
+          //   isFeatured={isFeatured}
+          //   isPublished={isPublished}
+          //   setIsFeatured={setIsFeatured}
+          //   setIsPublished={setIsPublished}
+          //   categoryOptions={categoryOptions}
+          //   tagsOptions={tagsOptions}
+          //   authorOptions={authorOptions}
+          //   blogTypeOptions={blogTypeOptions}
+          // />
         );
       case 4:
         return (
           <SEOStep
-            promoData={promoData}
-            setPromoData={setPromoData}
-            faqSectionTitle={faqSectionTitle}
-            setFaqSectionTitle={setFaqSectionTitle}
-            faqItems={faqItems}
-            addFaqItem={addFaqItem}
-            removeFaqItem={removeFaqItem}
-            updateFaqItem={updateFaqItem}
+            seoData={seoData}
+            setSeoData={setSeoData} // <-- pass this
             faqEditorRefs={faqEditorRefs}
             faqEditorConfig={faqEditorConfig}
-            handleFaqAnswerChange={handleFaqAnswerChange}
-            handleFaqAnswerBlur={handleFaqAnswerBlur}
             handlePreview={handlePreview}
-            isMetaTitleTouched={isMetaTitleTouched}
-            isMetaDescriptionTouched={isMetaDescriptionTouched}
             setIsMetaTitleTouched={setIsMetaTitleTouched}
             setIsMetaDescriptionTouched={setIsMetaDescriptionTouched}
           />
+
+          // <SEOStep
+          //   promoData={promoData}
+          //   setPromoData={setPromoData}
+          //   faqSectionTitle={faqSectionTitle}
+          //   setFaqSectionTitle={setFaqSectionTitle}
+          //   faqItems={faqItems}
+          //   addFaqItem={addFaqItem}
+          //   removeFaqItem={removeFaqItem}
+          //   updateFaqItem={updateFaqItem}
+          //   faqEditorRefs={faqEditorRefs}
+          //   faqEditorConfig={faqEditorConfig}
+          //   handlePreview={handlePreview}
+          //   handleFaqAnswerChange={(id: any, content: any) =>
+          //     updateFaqItem(id, "answer", content)
+          //   }
+          //   handleFaqAnswerBlur={(id: any, content: any) =>
+          //     updateFaqItem(id, "answer", content)
+          //   }
+          //   setIsMetaTitleTouched={setIsMetaTitleTouched}
+          //   setIsMetaDescriptionTouched={setIsMetaDescriptionTouched}
+          // />
         );
       default:
         return null;
@@ -438,9 +561,8 @@ const CreateBlog = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
         <div className="mb-8">
           <Title level={2}>Create New Blog Post</Title>
           <Text type="secondary">
@@ -448,7 +570,6 @@ const CreateBlog = () => {
           </Text>
         </div>
 
-        {/* Progress Steps */}
         <Card className="mb-6">
           <Steps current={currentStep} className="custom-steps">
             {steps.map((step, index) => (
@@ -465,30 +586,57 @@ const CreateBlog = () => {
           form={form}
           onFinish={onFinish}
           isLoading={isLoading}
-          isSuccess={isSuccess}
           initialValues={{
             featured: true,
             status: true,
             blogType: "Article",
             readingTime: 5,
             wordCount: 0,
+            title: "",
+            slug: "",
+            subtitle: "",
+            metaTitle: "",
+            metaDescription: "",
+            metaKeywords: [],
+            canonicalUrl: "",
+            categoryId: undefined, // <-- explicitly undefined
+            authorIds: [], // <-- empty array for multiple select
+            tagIds: [],
           }}
           onValuesChange={(changedValues) => {
             if (changedValues.title) {
               form.setFieldsValue({ slug: slugify(changedValues.title) });
+              setBasicInfo((prev) => ({ ...prev, title: changedValues.title }));
             }
-            if (changedValues.title && !isMetaTitleTouched) {
-              form.setFieldsValue({ metaTitle: changedValues.title });
+
+            if (changedValues.slug) {
+              setBasicInfo((prev) => ({ ...prev, slug: changedValues.slug }));
             }
-            if (changedValues.subtitle && !isMetaDescriptionTouched) {
-              form.setFieldsValue({ metaDescription: changedValues.subtitle });
+
+            if (changedValues.subtitle) {
+              setBasicInfo((prev) => ({
+                ...prev,
+                subtitle: changedValues.subtitle,
+              }));
             }
           }}
+
+          // onValuesChange={(changedValues) => {
+          //   console.log("first", changedValues);
+
+          //   if (changedValues.title) {
+          //     form.setFieldsValue({ slug: slugify(changedValues.title) });
+          //     if (!isMetaTitleTouched) {
+          //       form.setFieldsValue({ metaTitle: changedValues.title });
+          //     }
+          //   }
+          //   if (changedValues.subtitle && !isMetaDescriptionTouched) {
+          //     form.setFieldsValue({ metaDescription: changedValues.subtitle });
+          //   }
+          // }}
         >
-          {/* Step Content */}
           <Card className="mb-6">{renderStepContent()}</Card>
 
-          {/* Navigation Buttons */}
           <div className="flex justify-between">
             <Button
               icon={<ArrowLeftOutlined />}
@@ -498,24 +646,27 @@ const CreateBlog = () => {
               Previous
             </Button>
 
-            {currentStep < steps.length - 1 ? (
-              <Button
-                type="primary"
-                icon={<ArrowRightOutlined />}
-                onClick={nextStep}
-              >
-                Next
-              </Button>
-            ) : (
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={isLoading}
-                size="large"
-              >
-                Publish Blog
-              </Button>
-            )}
+            {
+              currentStep < steps.length - 1 && (
+                <Button
+                  type="primary"
+                  icon={<ArrowRightOutlined />}
+                  onClick={nextStepWithValidation}
+                >
+                  Next
+                </Button>
+              )
+              // : (
+              //   <Button
+              //     type="primary"
+              //     htmlType="submit"
+              //     loading={isLoading}
+              //     size="large"
+              //   >
+              //     Publish Blog
+              //   </Button>
+              // )
+            }
           </div>
         </Form>
       </div>
@@ -532,8 +683,15 @@ const CreateBlog = () => {
   );
 };
 
-// Step Components
-const BasicInfoStep = () => (
+// --- Step Components (unchanged) ---
+const BasicInfoStep = ({
+  basicInfo,
+  setBasicInfo,
+  form,
+  isMetaTitleTouched,
+  isMetaDescriptionTouched,
+  setSeoData,
+}: any) => (
   <div>
     <Title level={4} className="mb-6">
       Basic Information
@@ -545,18 +703,42 @@ const BasicInfoStep = () => (
           label="Blog Title"
           rules={[{ required: true, message: "Please enter a blog title" }]}
         >
-          <Input size="large" placeholder="Enter an engaging blog title" />
+          <Input
+            size="large"
+            placeholder="Enter an engaging blog title"
+            value={basicInfo?.title}
+            onChange={(e) => {
+              setBasicInfo({ ...basicInfo, title: e.target.value });
+              // Auto-populate meta title if not touched
+              if (!isMetaTitleTouched) {
+                form.setFieldsValue({ metaTitle: e.target.value });
+                setSeoData((prev: any) => ({
+                  ...prev,
+                  metaTitle: e.target.value,
+                }));
+              }
+            }}
+          />
         </Form.Item>
       </Col>
+
       <Col xs={24} sm={12}>
         <Form.Item
           name="slug"
           label="URL Slug"
           rules={[{ required: true, message: "Please enter a URL slug" }]}
         >
-          <Input size="large" placeholder="Auto-generated from title" />
+          <Input
+            size="large"
+            placeholder="Auto-generated from title"
+            value={basicInfo.slug}
+            onChange={(e) =>
+              setBasicInfo({ ...basicInfo, slug: e.target.value })
+            }
+          />
         </Form.Item>
       </Col>
+
       <Col xs={24}>
         <Form.Item name="subtitle" label="Subtitle">
           <Input.TextArea
@@ -564,6 +746,18 @@ const BasicInfoStep = () => (
             placeholder="Brief description of your blog post"
             showCount
             maxLength={200}
+            value={basicInfo.subtitle}
+            onChange={(e) => {
+              setBasicInfo({ ...basicInfo, subtitle: e.target.value });
+              // Auto-populate meta description if not touched
+              if (!isMetaDescriptionTouched) {
+                form.setFieldsValue({ metaDescription: e.target.value });
+                setSeoData((prev: any) => ({
+                  ...prev,
+                  metaDescription: e.target.value,
+                }));
+              }
+            }}
           />
         </Form.Item>
       </Col>
@@ -587,55 +781,32 @@ const ContentStep = ({
       Blog Content
     </Title>
 
-    <div className="mb-6">
-      <Form.Item
-        name="content"
-        label="Main Content"
-        rules={[{ required: true, message: "Please enter blog content" }]}
-      >
-        <div>
-          {editorError && (
-            <Alert
-              message={editorError}
-              type="warning"
-              showIcon
-              className="mb-4"
-            />
-          )}
-          <div className="border border-gray-300 rounded-lg overflow-hidden">
-            <JoditEditor
-              ref={editorRef}
-              value={editorContent}
-              config={editorConfig}
-              onChange={handleEditorChange}
-            />
-          </div>
-          <div className="mt-2 text-sm text-gray-500">
-            💡 Write engaging content with proper formatting. Minimum 50
-            characters required.
-          </div>
-        </div>
-      </Form.Item>
-    </div>
+    <Form.Item
+      name="content"
+      label="Main Content"
+      rules={[{ required: true, message: "Please enter blog content" }]}
+    >
+      {editorError && (
+        <Alert message={editorError} type="error" className="mb-4" />
+      )}
+      <JoditEditor
+        ref={editorRef}
+        value={editorContent}
+        config={editorConfig}
+        onBlur={handleEditorChange}
+        onChange={handleEditorChange}
+      />
+    </Form.Item>
 
-    <Divider />
-
-    <div>
-      <Form.Item
-        name="keyTakeaways"
-        label="Key Takeaways"
-        help="Summarize the main points for readers"
-      >
-        <div className="border border-gray-300 rounded-lg overflow-hidden">
-          <JoditEditor
-            ref={keyTakeawaysRef}
-            value={keyTakeaways}
-            config={keyTakeawaysConfig}
-            onChange={setKeyTakeaways}
-          />
-        </div>
-      </Form.Item>
-    </div>
+    <Form.Item name="keyTakeaways" label="Key Takeaways">
+      <JoditEditor
+        ref={keyTakeawaysRef}
+        value={keyTakeaways}
+        config={keyTakeawaysConfig}
+        onBlur={(content) => setKeyTakeaways(content)}
+        onChange={(content) => setKeyTakeaways(content)}
+      />
+    </Form.Item>
   </div>
 );
 
@@ -706,10 +877,8 @@ const MediaStep = ({
 );
 
 const SettingsStep = ({
-  isFeatured,
-  isPublished,
-  setIsFeatured,
-  setIsPublished,
+  settings,
+  setSettings,
   categoryOptions,
   tagsOptions,
   authorOptions,
@@ -719,325 +888,609 @@ const SettingsStep = ({
     <Title level={4} className="mb-6">
       Blog Settings
     </Title>
-
     <Row gutter={[24, 16]}>
       <Col xs={24} sm={8}>
-        <Form.Item
-          name="readingTime"
-          label="Reading Time (minutes)"
-          rules={[{ required: true, message: "Please enter reading time" }]}
-        >
+        <Form.Item label="Reading Time (minutes)" name="readingTime">
           <InputNumber
             min={1}
             max={120}
-            placeholder="5"
             style={{ width: "100%" }}
+            value={settings.readingTime}
+            onChange={(value) =>
+              setSettings({ ...settings, readingTime: value })
+            }
           />
         </Form.Item>
       </Col>
 
       <Col xs={24} sm={8}>
-        <Form.Item 
-          name="wordCount" 
-          label="Word Count"
-          rules={[{ required: true, message: "Word count is required" }]}
-        >
+        <Form.Item label="Word Count" name="word_count">
           <InputNumber
             min={0}
-            placeholder="0"
             style={{ width: "100%" }}
-            type="number"
+            value={settings.wordCount}
+            onChange={(value) => setSettings({ ...settings, wordCount: value })}
           />
         </Form.Item>
       </Col>
 
       <Col xs={24} sm={8}>
-        <Form.Item name="blogType" label="Blog Type">
-          <Select options={blogTypeOptions} />
-        </Form.Item>
-      </Col>
-
-      <Col xs={24} sm={12}>
-        <Form.Item
-          name="categoryId"
-          label="Category"
-          rules={[{ required: true, message: "Please select a category" }]}
-        >
-          <Select placeholder="Select category" options={categoryOptions} />
-        </Form.Item>
-      </Col>
-
-      <Col xs={24} sm={12}>
-        <Form.Item name="tagIds" label="Tags">
+        <Form.Item label="Blog Type" name="blogType">
           <Select
-            mode="multiple"
-            placeholder="Select tags"
-            options={tagsOptions}
+            value={settings.blogType}
+            options={blogTypeOptions}
+            onChange={(value) => setSettings({ ...settings, blogType: value })}
           />
         </Form.Item>
       </Col>
 
       <Col xs={24} sm={12}>
-        <Form.Item
-          name="authorIds"
-          label="Authors"
-          rules={[{ required: true, message: "Please select authors" }]}
-        >
+        <Form.Item label="Category" name="categoryId">
+          <Select
+            value={settings.categoryId}
+            options={categoryOptions}
+            onChange={(value) =>
+              setSettings({ ...settings, categoryId: value })
+            }
+          />
+        </Form.Item>
+      </Col>
+
+      <Col xs={24} sm={12}>
+        <Form.Item label="Tags" name="tagIds">
           <Select
             mode="multiple"
-            placeholder="Select authors"
+            value={settings.tagIds}
+            options={tagsOptions}
+            onChange={(value) => setSettings({ ...settings, tagIds: value })}
+          />
+        </Form.Item>
+      </Col>
+
+      <Col xs={24} sm={12}>
+        <Form.Item label="Authors" name="authorsId">
+          <Select
+            mode="multiple"
+            value={settings.authorIds}
             options={authorOptions}
+            onChange={(value) => setSettings({ ...settings, authorIds: value })}
           />
         </Form.Item>
       </Col>
 
       <Col xs={24} sm={6}>
         <Form.Item label="Featured Post" name="featured">
-          <div className="flex items-center gap-2">
-            <Switch checked={isFeatured} onChange={setIsFeatured} />
-            <span>{isFeatured ? "Featured" : "Regular"}</span>
-          </div>
+          <Switch
+            checked={settings.featured}
+            onChange={(checked) =>
+              setSettings({ ...settings, featured: checked })
+            }
+          />
         </Form.Item>
       </Col>
 
       <Col xs={24} sm={6}>
         <Form.Item label="Publication Status" name="status">
-          <div className="flex items-center gap-2">
-            <Switch checked={isPublished} onChange={setIsPublished} />
-            <span>{isPublished ? "Published" : "Draft"}</span>
-          </div>
+          <Switch
+            checked={settings.status}
+            onChange={(checked) =>
+              setSettings({ ...settings, status: checked })
+            }
+          />
         </Form.Item>
       </Col>
     </Row>
   </div>
 );
 
+// FIXED SEOStep component - removed Form.Item to prevent auto-submission
 const SEOStep = ({
-  promoData,
-  setPromoData,
-  faqSectionTitle,
-  setFaqSectionTitle,
-  faqItems,
-  addFaqItem,
-  removeFaqItem,
-  updateFaqItem,
+  seoData,
+  setSeoData,
   faqEditorRefs,
   faqEditorConfig,
-  handleFaqAnswerChange,
-  handleFaqAnswerBlur,
   handlePreview,
-  isMetaTitleTouched,
-  isMetaDescriptionTouched,
   setIsMetaTitleTouched,
   setIsMetaDescriptionTouched,
-}: any) => (
-  <div>
-    <Title level={4} className="mb-6">
-      SEO & Additional Content
-    </Title>
+}: any) => {
+  const addFaqItem = () => {
+    const newFaqItem = {
+      id: Date.now().toString(),
+      question: "",
+      answer: "",
+    };
+    setSeoData((prev: any) => ({
+      ...prev,
+      faq: { ...prev.faq, items: [...prev.faq.items, newFaqItem] },
+    }));
+  };
 
-    {/* SEO Settings */}
-    <Card title="SEO Settings" className="mb-6" size="small">
-      <Row gutter={[16, 16]}>
-        <Col xs={24}>
-          <Form.Item name="metaTitle" label="Meta Title">
-            <Input
-              placeholder="Meta title for search engines"
-              onFocus={() => setIsMetaTitleTouched(true)}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24}>
-          <Form.Item name="metaDescription" label="Meta Description">
-            <Input.TextArea
-              rows={3}
-              placeholder="Meta description for search results"
-              onFocus={() => setIsMetaDescriptionTouched(true)}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24}>
-          <Form.Item name="metaKeywords" label="Meta Keywords">
-            <Select
-              mode="tags"
-              placeholder="Add relevant keywords"
-              tokenSeparators={[",", " "]}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24}>
-          <Form.Item name="canonicalUrl" label="Canonical URL">
-            <Input placeholder="Original URL if this is duplicate content" />
-          </Form.Item>
-        </Col>
-      </Row>
-    </Card>
+  const removeFaqItem = (id: string) => {
+    setSeoData((prev: any) => ({
+      ...prev,
+      faq: {
+        ...prev.faq,
+        items: prev.faq.items.filter((item: any) => item.id !== id),
+      },
+    }));
+    if (faqEditorRefs.current[id]) delete faqEditorRefs.current[id];
+  };
 
-    {/* Promotional Content */}
-    <Card title="Promotional Content" className="mb-6" size="small">
-      <Row gutter={[16, 16]}>
-        <Col xs={24} sm={12}>
-          <div className="ant-form-item">
-            <label className="ant-form-item-label">Promotional Title</label>
-            <Input
-              placeholder="Promotional title"
-              value={promoData.title}
-              onChange={(e) =>
-                setPromoData((prev: any) => ({
-                  ...prev,
-                  title: e.target.value,
-                }))
-              }
-            />
-          </div>
-        </Col>
-        <Col xs={24} sm={12}>
-          <div className="ant-form-item">
-            <label className="ant-form-item-label">Promotional URL</label>
-            <Input
-              placeholder="Promotional URL"
-              value={promoData.url}
-              onChange={(e) =>
-                setPromoData((prev: any) => ({ ...prev, url: e.target.value }))
-              }
-            />
-          </div>
-        </Col>
-        <Col xs={24}>
-          <div className="ant-form-item">
-            <label className="ant-form-item-label">Promotional Keywords</label>
-            <Select
-              mode="tags"
-              placeholder="Promotional keywords"
-              value={promoData.keywords}
-              onChange={(value) =>
-                setPromoData((prev: any) => ({ ...prev, keywords: value }))
-              }
-            />
-          </div>
-        </Col>
-        <Col xs={24}>
-          <div className="ant-form-item">
-            <label className="ant-form-item-label">Promotional Image</label>
-            <Upload
-              listType="picture-card"
-              fileList={promoData.imageFileList}
-              beforeUpload={() => false}
-              onPreview={handlePreview}
-              onChange={({ fileList }) =>
-                setPromoData((prev: any) => ({
-                  ...prev,
-                  imageFileList: fileList,
-                }))
-              }
-              maxCount={1}
-            >
-              {promoData.imageFileList.length >= 1 ? null : (
-                <div className="text-center">
-                  <PlusOutlined />
-                  <div className="mt-2">Upload Image</div>
-                </div>
-              )}
-            </Upload>
-          </div>
-        </Col>
-      </Row>
-    </Card>
+  const updateFaqItem = (
+    id: string,
+    field: "question" | "answer",
+    value: string
+  ) => {
+    setSeoData((prev: any) => ({
+      ...prev,
+      faq: {
+        ...prev.faq,
+        items: prev.faq.items.map((item: any) =>
+          item.id === id ? { ...item, [field]: value } : item
+        ),
+      },
+    }));
+  };
 
-    {/* FAQ Section */}
-    <Card
-      title="FAQ Section"
-      size="small"
-      extra={
-        <Button type="primary" icon={<PlusOutlined />} onClick={addFaqItem}>
-          Add FAQ
-        </Button>
-      }
-    >
-      <Row gutter={[16, 16]}>
-        <Col xs={24}>
-          <div className="ant-form-item">
-            <label className="ant-form-item-label">FAQ Section Title</label>
-            <Input
-              placeholder="Frequently Asked Questions"
-              value={faqSectionTitle}
-              onChange={(e) => setFaqSectionTitle(e.target.value)}
-            />
-          </div>
-        </Col>
+  return (
+    <div>
+      <Title level={4} className="mb-6">
+        SEO & Additional Content
+      </Title>
 
-        {faqItems.map((faq: any, index: number) => (
-          <Col xs={24} key={faq.id}>
-            <Card
-              size="small"
-              title={`FAQ Item ${index + 1}`}
-              extra={
-                <Button
-                  type="text"
-                  danger
-                  icon={<DeleteOutlined />}
-                  onClick={() => removeFaqItem(faq.id)}
-                  disabled={faqItems.length === 1}
-                >
-                  Remove
-                </Button>
-              }
-            >
-              <Space
-                direction="vertical"
-                style={{ width: "100%" }}
-                size="middle"
+      {/* SEO Settings */}
+      <Card title="SEO Settings" className="mb-6" size="small">
+        <Row gutter={[16, 16]}>
+          <Col xs={24}>
+            <div className="ant-form-item">
+              <label className="ant-form-item-label">Meta Title</label>
+              <Input
+                placeholder="Meta title for search engines"
+                value={seoData.metaTitle}
+                onChange={(e) =>
+                  setSeoData({ ...seoData, metaTitle: e.target.value })
+                }
+                onFocus={() => setIsMetaTitleTouched(true)}
+              />
+            </div>
+          </Col>
+
+          <Col xs={24}>
+            <div className="ant-form-item">
+              <label className="ant-form-item-label">Meta Description</label>
+              <Input.TextArea
+                rows={3}
+                placeholder="Meta description for search results"
+                value={seoData.metaDescription}
+                onChange={(e) =>
+                  setSeoData({ ...seoData, metaDescription: e.target.value })
+                }
+                onFocus={() => setIsMetaDescriptionTouched(true)}
+              />
+            </div>
+          </Col>
+
+          <Col xs={24}>
+            <div className="ant-form-item">
+              <label className="ant-form-item-label">Meta Keywords</label>
+              <Select
+                mode="tags"
+                placeholder="Add relevant keywords"
+                value={seoData.metaKeywords}
+                onChange={(value) =>
+                  setSeoData({ ...seoData, metaKeywords: value })
+                }
+                tokenSeparators={[",", " "]}
+              />
+            </div>
+          </Col>
+
+          <Col xs={24}>
+            <div className="ant-form-item">
+              <label className="ant-form-item-label">Canonical URL</label>
+              <Input
+                placeholder="Original URL if this is duplicate content"
+                value={seoData.canonicalUrl}
+                onChange={(e) =>
+                  setSeoData({ ...seoData, canonicalUrl: e.target.value })
+                }
+              />
+            </div>
+          </Col>
+        </Row>
+      </Card>
+
+      {/* Promotional Content */}
+      <Card title="Promotional Content" className="mb-6" size="small">
+        <Row gutter={[16, 16]}>
+          <Col xs={24}>
+            <div className="ant-form-item">
+              <label className="ant-form-item-label">Promotional Title</label>
+              <Input
+                placeholder="Promotional title"
+                value={seoData.promo.title}
+                onChange={(e) =>
+                  setSeoData({
+                    ...seoData,
+                    promo: { ...seoData.promo, title: e.target.value },
+                  })
+                }
+              />
+            </div>
+          </Col>
+
+          <Col xs={24}>
+            <div className="ant-form-item">
+              <label className="ant-form-item-label">Promotional URL</label>
+              <Input
+                placeholder="Promotional URL"
+                value={seoData.promo.url}
+                onChange={(e) =>
+                  setSeoData({
+                    ...seoData,
+                    promo: { ...seoData.promo, url: e.target.value },
+                  })
+                }
+              />
+            </div>
+          </Col>
+
+          <Col xs={24}>
+            <div className="ant-form-item">
+              <label className="ant-form-item-label">
+                Promotional Keywords
+              </label>
+              <Select
+                mode="tags"
+                placeholder="Promotional keywords"
+                value={seoData.promo.keywords}
+                onChange={(value) =>
+                  setSeoData({
+                    ...seoData,
+                    promo: { ...seoData.promo, keywords: value },
+                  })
+                }
+              />
+            </div>
+          </Col>
+
+          <Col xs={24}>
+            <div className="ant-form-item">
+              <label className="ant-form-item-label">Promotional Image</label>
+              <Upload
+                listType="picture-card"
+                fileList={seoData.promo.imageFileList}
+                beforeUpload={() => false}
+                onPreview={handlePreview}
+                onChange={({ fileList }) =>
+                  setSeoData({
+                    ...seoData,
+                    promo: { ...seoData.promo, imageFileList: fileList },
+                  })
+                }
+                maxCount={1}
               >
-                <div className="ant-form-item">
-                  <label className="ant-form-item-label">Question</label>
-                  <Input
-                    placeholder="Enter question"
-                    value={faq.question}
-                    onChange={(e) =>
-                      updateFaqItem(faq.id, "question", e.target.value)
-                    }
-                  />
-                </div>
-                <div className="ant-form-item">
-                  <label className="ant-form-item-label">Answer</label>
-                  <div className="border border-gray-300 rounded-lg overflow-hidden">
-                    <JoditEditor
-                      ref={(el) => {
-                        if (el) faqEditorRefs.current[faq.id] = el;
-                      }}
-                      value={faq.answer}
-                      config={faqEditorConfig}
-                      onBlur={(newContent) =>
-                        handleFaqAnswerBlur(faq.id, newContent)
-                      }
-                      onChange={(newContent) =>
-                        handleFaqAnswerChange(faq.id, newContent)
+                {seoData.promo.imageFileList.length >= 1 ? null : (
+                  <div className="text-center">
+                    <PlusOutlined />
+                    <div className="mt-2">Upload Image</div>
+                  </div>
+                )}
+              </Upload>
+            </div>
+          </Col>
+        </Row>
+      </Card>
+
+      {/* FAQ Section */}
+      <Card
+        title="FAQ Section"
+        size="small"
+        extra={
+          <Button type="primary" icon={<PlusOutlined />} onClick={addFaqItem}>
+            Add FAQ
+          </Button>
+        }
+      >
+        <Row gutter={[16, 16]}>
+          <Col xs={24}>
+            <div className="ant-form-item">
+              <label className="ant-form-item-label">FAQ Section Title</label>
+              <Input
+                placeholder="Frequently Asked Questions"
+                value={seoData.faq.sectionTitle}
+                onChange={(e) =>
+                  setSeoData({
+                    ...seoData,
+                    faq: { ...seoData.faq, sectionTitle: e.target.value },
+                  })
+                }
+              />
+            </div>
+          </Col>
+
+          {seoData.faq.items.map((faq: any, index: number) => (
+            <Col xs={24} key={faq.id}>
+              <Card
+                size="small"
+                title={`FAQ Item ${index + 1}`}
+                extra={
+                  <Button
+                    type="text"
+                    danger
+                    icon={<DeleteOutlined />}
+                    onClick={() => removeFaqItem(faq.id)}
+                  >
+                    Remove
+                  </Button>
+                }
+              >
+                <Col xs={24}>
+                  <div className="ant-form-item">
+                    <label className="ant-form-item-label">Question</label>
+                    <Input
+                      placeholder="Enter question"
+                      value={faq.question}
+                      onChange={(e) =>
+                        updateFaqItem(faq.id, "question", e.target.value)
                       }
                     />
                   </div>
-                </div>
-              </Space>
-            </Card>
-          </Col>
-        ))}
+                </Col>
 
-        {faqItems.length === 0 && (
-          <Col xs={24}>
-            <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
-              <p className="text-gray-500 mb-4">No FAQ items added yet</p>
-              <Button
-                type="dashed"
-                icon={<PlusOutlined />}
-                onClick={addFaqItem}
-              >
-                Add First FAQ Item
-              </Button>
-            </div>
-          </Col>
-        )}
-      </Row>
-    </Card>
-  </div>
-);
+                <Col xs={24}>
+                  <div className="ant-form-item">
+                    <label className="ant-form-item-label">Answer</label>
+                    <div className="border border-gray-300 rounded-lg overflow-hidden">
+                      <JoditEditor
+                        ref={(el) => {
+                          if (el) faqEditorRefs.current[faq.id] = el;
+                        }}
+                        value={faq.answer}
+                        config={faqEditorConfig}
+                        onBlur={(newContent) =>
+                          updateFaqItem(faq.id, "answer", newContent)
+                        }
+                        onChange={(newContent) =>
+                          updateFaqItem(faq.id, "answer", newContent)
+                        }
+                      />
+                    </div>
+                  </div>
+                </Col>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Card>
+    </div>
+  );
+};
+
+// const SEOStep = ({
+//   promoData,
+//   setPromoData,
+//   faqSectionTitle,
+//   setFaqSectionTitle,
+//   faqItems,
+//   addFaqItem,
+//   removeFaqItem,
+//   updateFaqItem,
+//   faqEditorRefs,
+//   faqEditorConfig,
+//   handleFaqAnswerChange,
+//   handleFaqAnswerBlur,
+//   handlePreview,
+//   setIsMetaTitleTouched,
+//   setIsMetaDescriptionTouched,
+// }: any) => (
+//   <div>
+//     <Title level={4} className="mb-6">
+//       SEO & Additional Content
+//     </Title>
+
+//     {/* SEO Settings */}
+//     <Card title="SEO Settings" className="mb-6" size="small">
+//       <Row gutter={[16, 16]}>
+//         <Col xs={24}>
+//           <Form.Item name="metaTitle" label="Meta Title">
+//             <Input
+//               placeholder="Meta title for search engines"
+//               onFocus={() => setIsMetaTitleTouched(true)}
+//             />
+//           </Form.Item>
+//         </Col>
+//         <Col xs={24}>
+//           <Form.Item name="metaDescription" label="Meta Description">
+//             <Input.TextArea
+//               rows={3}
+//               placeholder="Meta description for search results"
+//               onFocus={() => setIsMetaDescriptionTouched(true)}
+//             />
+//           </Form.Item>
+//         </Col>
+//         <Col xs={24}>
+//           <Form.Item name="metaKeywords" label="Meta Keywords">
+//             <Select
+//               mode="tags"
+//               placeholder="Add relevant keywords"
+//               tokenSeparators={[",", " "]}
+//             />
+//           </Form.Item>
+//         </Col>
+//         <Col xs={24}>
+//           <Form.Item name="canonicalUrl" label="Canonical URL">
+//             <Input placeholder="Original URL if this is duplicate content" />
+//           </Form.Item>
+//         </Col>
+//       </Row>
+//     </Card>
+
+//     {/* Promotional Content */}
+//     <Card title="Promotional Content" className="mb-6" size="small">
+//       <Row gutter={[16, 16]}>
+//         <Col xs={24} sm={12}>
+//           <div className="ant-form-item">
+//             <label className="ant-form-item-label">Promotional Title</label>
+//             <Input
+//               placeholder="Promotional title"
+//               value={promoData.title}
+//               onChange={(e) =>
+//                 setPromoData((prev: any) => ({
+//                   ...prev,
+//                   title: e.target.value,
+//                 }))
+//               }
+//             />
+//           </div>
+//         </Col>
+//         <Col xs={24} sm={12}>
+//           <div className="ant-form-item">
+//             <label className="ant-form-item-label">Promotional URL</label>
+//             <Input
+//               placeholder="Promotional URL"
+//               value={promoData.url}
+//               onChange={(e) =>
+//                 setPromoData((prev: any) => ({ ...prev, url: e.target.value }))
+//               }
+//             />
+//           </div>
+//         </Col>
+//         <Col xs={24}>
+//           <div className="ant-form-item">
+//             <label className="ant-form-item-label">Promotional Keywords</label>
+//             <Select
+//               mode="tags"
+//               placeholder="Promotional keywords"
+//               value={promoData.keywords}
+//               onChange={(value) =>
+//                 setPromoData((prev: any) => ({ ...prev, keywords: value }))
+//               }
+//             />
+//           </div>
+//         </Col>
+//         <Col xs={24}>
+//           <div className="ant-form-item">
+//             <label className="ant-form-item-label">Promotional Image</label>
+//             <Upload
+//               listType="picture-card"
+//               fileList={promoData.imageFileList}
+//               beforeUpload={() => false}
+//               onPreview={handlePreview}
+//               onChange={({ fileList }) =>
+//                 setPromoData((prev: any) => ({
+//                   ...prev,
+//                   imageFileList: fileList,
+//                 }))
+//               }
+//               maxCount={1}
+//             >
+//               {promoData.imageFileList.length >= 1 ? null : (
+//                 <div className="text-center">
+//                   <PlusOutlined />
+//                   <div className="mt-2">Upload Image</div>
+//                 </div>
+//               )}
+//             </Upload>
+//           </div>
+//         </Col>
+//       </Row>
+//     </Card>
+
+//     {/* FAQ Section */}
+//     <Card
+//       title="FAQ Section"
+//       size="small"
+//       extra={
+//         <Button type="primary" icon={<PlusOutlined />} onClick={addFaqItem}>
+//           Add FAQ
+//         </Button>
+//       }
+//     >
+//       <Row gutter={[16, 16]}>
+//         <Col xs={24}>
+//           <div className="ant-form-item">
+//             <label className="ant-form-item-label">FAQ Section Title</label>
+//             <Input
+//               placeholder="Frequently Asked Questions"
+//               value={faqSectionTitle}
+//               onChange={(e) => setFaqSectionTitle(e.target.value)}
+//             />
+//           </div>
+//         </Col>
+
+//         {faqItems.map((faq: any, index: number) => (
+//           <Col xs={24} key={faq.id}>
+//             <Card
+//               size="small"
+//               title={`FAQ Item ${index + 1}`}
+//               extra={
+//                 <Button
+//                   type="text"
+//                   danger
+//                   icon={<DeleteOutlined />}
+//                   onClick={() => removeFaqItem(faq.id)}
+//                   disabled={faqItems.length === 1}
+//                 >
+//                   Remove
+//                 </Button>
+//               }
+//             >
+//               <Space
+//                 direction="vertical"
+//                 style={{ width: "100%" }}
+//                 size="middle"
+//               >
+//                 <div className="ant-form-item">
+//                   <label className="ant-form-item-label">Question</label>
+//                   <Input
+//                     placeholder="Enter question"
+//                     value={faq.question}
+//                     onChange={(e) =>
+//                       updateFaqItem(faq.id, "question", e.target.value)
+//                     }
+//                   />
+//                 </div>
+//                 <div className="ant-form-item">
+//                   <label className="ant-form-item-label">Answer</label>
+//                   <div className="border border-gray-300 rounded-lg overflow-hidden">
+//                     <JoditEditor
+//                       ref={(el) => {
+//                         if (el) faqEditorRefs.current[faq.id] = el;
+//                       }}
+//                       value={faq.answer}
+//                       config={faqEditorConfig}
+//                       onBlur={(newContent) =>
+//                         handleFaqAnswerBlur(faq.id, newContent)
+//                       }
+//                       onChange={(newContent) =>
+//                         handleFaqAnswerChange(faq.id, newContent)
+//                       }
+//                     />
+//                   </div>
+//                 </div>
+//               </Space>
+//             </Card>
+//           </Col>
+//         ))}
+
+//         {faqItems.length === 0 && (
+//           <Col xs={24}>
+//             <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
+//               <p className="text-gray-500 mb-4">No FAQ items added yet</p>
+//               <Button
+//                 type="dashed"
+//                 icon={<PlusOutlined />}
+//                 onClick={addFaqItem}
+//               >
+//                 Add First FAQ Item
+//               </Button>
+//             </div>
+//           </Col>
+//         )}
+//       </Row>
+//     </Card>
+//   </div>
+// );
 
 export default CreateBlog;
