@@ -15,8 +15,7 @@ const EditPrivacyPolicy: React.FC<any> = ({ record }) => {
 
   const [update] = useUpdatePrivacyPolicyMutation();
   const { data: termData } = useGetSinglePrivacyPolicyQuery<any>(1);
-    console.log("first",termData)
-
+  console.log("first", termData);
 
   // Load initial content into form
   useEffect(() => {
@@ -32,11 +31,7 @@ const EditPrivacyPolicy: React.FC<any> = ({ record }) => {
   };
 
   return (
-    <AntForm
-      form={form}
-      layout="vertical"
-      onFinish={onFinish}
-    >
+    <AntForm form={form} layout="vertical" onFinish={onFinish}>
       <Card>
         <Row gutter={16}>
           <Col span={24}>

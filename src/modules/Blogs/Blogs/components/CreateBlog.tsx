@@ -481,12 +481,12 @@ const CreateBlog = () => {
           <ContentStep
             editorContent={editorContent}
             editorError={editorError}
-            keyTakeaways={keyTakeaways}
             editorRef={editorRef}
-            keyTakeawaysRef={keyTakeawaysRef}
-            handleEditorChange={handleEditorChange}
-            setKeyTakeaways={setKeyTakeaways}
             editorConfig={editorConfig}
+            handleEditorChange={handleEditorChange}
+            keyTakeaways={keyTakeaways}
+            keyTakeawaysRef={keyTakeawaysRef}
+            setKeyTakeaways={setKeyTakeaways}
             keyTakeawaysConfig={keyTakeawaysConfig}
           />
         );
