@@ -324,8 +324,8 @@ const CreateBlog = () => {
     formData.append("keyTakeaways", keyTakeaways);
 
     // Settings
-    formData.append("reading_time", settings.readingTime.toString());
-    formData.append("word_count", settings.wordCount.toString());
+    formData.append("readingTime", settings.readingTime.toString());
+    formData.append("wordCount", settings.wordCount.toString());
     formData.append("blogType", settings.blogType);
     if (settings.categoryId !== undefined && settings.categoryId !== null) {
       formData.append("categoryId", settings.categoryId);
