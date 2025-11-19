@@ -420,6 +420,8 @@ abbr[title] {
   opacity: 1 !important;
 }
 
+
+
 /* Fix for leftbottom popup */
 .jodit-popup.jodit_theme_default.jodit-popup_strategy_leftbottom {
   position: fixed !important;
@@ -476,7 +478,10 @@ abbr[title] {
 }
 
 .jodit-wysiwyg {
-  overflow: visible !important;
+  max-height: 400px !important;
+  overflow-y: auto !important;
+
+  /* overflow: visible !important; */
 }
 
 /* ✅ Base styling for unordered lists */

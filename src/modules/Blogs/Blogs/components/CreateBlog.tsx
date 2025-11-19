@@ -562,7 +562,7 @@ const CreateBlog = () => {
 
   return (
     <div className="">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <Title level={2}>Create New Blog Post</Title>
           <Text type="secondary">
@@ -781,32 +781,46 @@ const ContentStep = ({
       Blog Content
     </Title>
 
-    <Form.Item
-      name="content"
-      label="Main Content"
-      rules={[{ required: true, message: "Please enter blog content" }]}
-    >
+    {/* Remove Form.Item for JoditEditor and use regular div with validation */}
+    <div className="ant-form-item">
+      <label className="ant-form-item-label">
+        Main Content <span className="text-red-500">*</span>
+      </label>
       {editorError && (
         <Alert message={editorError} type="error" className="mb-4" />
       )}
-      <JoditEditor
-        ref={editorRef}
-        value={editorContent}
-        config={editorConfig}
-        onBlur={handleEditorChange}
-        onChange={handleEditorChange}
-      />
-    </Form.Item>
+      <div
+        style={{ maxHeight: 500, overflowY: "auto" }}
+        // className="border border-gray-300 rounded-lg overflow-hidden"
+      >
+        <JoditEditor
+          ref={editorRef}
+          value={editorContent}
+          config={editorConfig}
+          onBlur={handleEditorChange}
+          onChange={handleEditorChange}
+        />
+      </div>
+      {!editorContent && (
+        <div className="ant-form-item-explain-error">
+          Please enter blog content
+        </div>
+      )}
+    </div>
 
-    <Form.Item name="keyTakeaways" label="Key Takeaways">
-      <JoditEditor
-        ref={keyTakeawaysRef}
-        value={keyTakeaways}
-        config={keyTakeawaysConfig}
-        onBlur={(content) => setKeyTakeaways(content)}
-        onChange={(content) => setKeyTakeaways(content)}
-      />
-    </Form.Item>
+    {/* Remove Form.Item for Key Takeaways as well */}
+    <div className="ant-form-item">
+      <label className="ant-form-item-label">Key Takeaways</label>
+      <div className="border border-gray-300 rounded-lg overflow-hidden">
+        <JoditEditor
+          ref={keyTakeawaysRef}
+          value={keyTakeaways}
+          config={keyTakeawaysConfig}
+          onBlur={(content) => setKeyTakeaways(content)}
+          onChange={(content) => setKeyTakeaways(content)}
+        />
+      </div>
+    </div>
   </div>
 );
 
@@ -925,7 +939,11 @@ const SettingsStep = ({
       </Col>
 
       <Col xs={24} sm={12}>
-        <Form.Item label="Category" name="categoryId">
+        <Form.Item
+          label="Category"
+          name="categoryId"
+          rules={[{ required: true, message: "Please select a category" }]}
+        >
           <Select
             value={settings.categoryId}
             options={categoryOptions}
@@ -948,7 +966,11 @@ const SettingsStep = ({
       </Col>
 
       <Col xs={24} sm={12}>
-        <Form.Item label="Authors" name="authorsId">
+        <Form.Item
+          label="Authors"
+          name="authorsId"
+          rules={[{ required: true, message: "Please enter a author" }]}
+        >
           <Select
             mode="multiple"
             value={settings.authorIds}
@@ -1075,6 +1097,7 @@ const SEOStep = ({
               <label className="ant-form-item-label">Meta Keywords</label>
               <Select
                 mode="tags"
+                className="w-full"
                 placeholder="Add relevant keywords"
                 value={seoData.metaKeywords}
                 onChange={(value) =>
@@ -1141,6 +1164,7 @@ const SEOStep = ({
                 Promotional Keywords
               </label>
               <Select
+                className="w-full"
                 mode="tags"
                 placeholder="Promotional keywords"
                 value={seoData.promo.keywords}
