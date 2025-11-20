@@ -331,11 +331,12 @@ const CreateBlog = () => {
       formData.append("categoryId", settings.categoryId);
     }
     settings.authorIds.forEach((id) =>
-      formData.append("authorIds[]", id.toString())
+      formData.append("authorIds", id.toString())
     );
-    settings.tagIds.forEach((id) => formData.append("tagIds[]", id.toString()));
-    formData.append("featured", settings.featured ? "1" : "0");
-    formData.append("status", settings.status ? "published" : "draft");
+    settings.tagIds.forEach((id) => formData.append("tagIds", id.toString()));
+    // Change these lines in your onFinish function
+    formData.append("featured", settings.featured ? "true" : "false");
+    formData.append("status", settings.status ? "true" : "false");
 
     // SEO
     formData.append(
@@ -350,14 +351,25 @@ const CreateBlog = () => {
 
     // Promotional
     const promoImage = seoData.promo.imageFileList[0]?.originFileObj;
-    if (promoImage) formData.append("promotional_image", promoImage);
+    if (promoImage) {
+      formData.append("promotional_image", promoImage); // Send file separately
+    }
     formData.append(
-      "promotional_content",
+      "promotionalData",
       JSON.stringify({
         title: seoData.promo.title,
         keywords: seoData.promo.keywords,
         promotional_url: seoData.promo.url,
       })
+    );
+
+    // Images - FIXED: Use correct field names
+    const thumbnailFile = thumbnailFileList[0]?.originFileObj;
+    if (thumbnailFile) formData.append("thumbnail", thumbnailFile); // Changed from "thumbnailUrl"
+
+    galleryFileList.forEach(
+      (file) =>
+        file.originFileObj && formData.append("image", file.originFileObj)
     );
 
     // FAQ
@@ -373,13 +385,6 @@ const CreateBlog = () => {
     );
 
     // Images
-    const thumbnailFile = thumbnailFileList[0]?.originFileObj;
-    if (thumbnailFile) formData.append("thumbnail", thumbnailFile);
-    galleryFileList.forEach(
-      (file) =>
-        file.originFileObj &&
-        formData.append("gallery_images[]", file.originFileObj)
-    );
 
     if (blogPage) formData.append("pageId", blogPage?.id);
 

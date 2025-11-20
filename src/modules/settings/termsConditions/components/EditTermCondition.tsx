@@ -4,27 +4,26 @@ import { Col, Form as AntForm, Row, Card, Button } from "antd";
 import JoditEditor from "jodit-react";
 
 import {
-  useGetSingleTermQuery,
+  useGetTermConditionQuery,
   useUpdateTermConditionMutation,
 } from "../api/termConditionEndPoints";
 import { defaultJoditConfig } from "../../../../config/joditConfig";
 
-const EditTermCondition: React.FC<any> = ({ record }) => {
+const EditTermCondition: React.FC<any> = () => {
   const [form] = AntForm.useForm();
   const editorRef = useRef(null);
 
   const [update] = useUpdateTermConditionMutation();
-  const { data: termData } = useGetSingleTermQuery<any>(1);
-  console.log("first",termData)
+  const { data: termData } = useGetTermConditionQuery<any>({});
 
   // Load initial content
   useEffect(() => {
-    if (record) {
+    if (termData?.data) {
       form.setFieldsValue({
-        content: record.content || "",
+        content: termData?.data?.content || "",
       });
     }
-  }, [record, form]);
+  }, [termData?.data, form]);
 
   // Submit handler
   const onFinish = async (values: any): Promise<void> => {

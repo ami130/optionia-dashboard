@@ -12,7 +12,7 @@ const termConditionEndPoints = api.injectEndpoints({
       FilterTypes
     >({
       query: (params) => ({
-        url: "/api/v1.0/term/",
+        url: "/terms-of-service",
         params,
       }),
       providesTags: [
@@ -25,7 +25,7 @@ const termConditionEndPoints = api.injectEndpoints({
 
     createTermCondition: builder.mutation<ApiResponse<any>, FormData>({
       query: (data) => ({
-        url: "api/v1.0/term/",
+        url: "/terms-of-service",
         method: "POST",
         body: data,
       }),
@@ -42,7 +42,7 @@ const termConditionEndPoints = api.injectEndpoints({
 
     getSingleTerm: builder.query<ApiResponse<IGetTermCondition>, number>({
       query: (roleId) => ({
-        url: `/api/v1.0/institutions/roles/${roleId}/`,
+        url: `/terms-of-service/${roleId}`,
       }),
 
       providesTags: [
@@ -58,8 +58,8 @@ const termConditionEndPoints = api.injectEndpoints({
       { id: number | undefined; data: FormData }
     >({
       query: ({ id, data }) => ({
-        url: `/api/v1.0/term/${id}/`,
-        method: "PATCH",
+        url: `/terms-of-service/${id}`,
+        method: "PUT",
         body: data,
       }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {

@@ -12,7 +12,7 @@ const privacyPolicyEndPoints = api.injectEndpoints({
       FilterTypes
     >({
       query: (params) => ({
-        url: "/api/v1.0/term/",
+        url: "/privacy-policy",
         params,
       }),
       providesTags: [
@@ -27,8 +27,8 @@ const privacyPolicyEndPoints = api.injectEndpoints({
       ApiResponse<IGetPrivacyPolicy>,
       number
     >({
-      query: (roleId) => ({
-        url: `/api/v1.0/institutions/roles/${roleId}/`,
+      query: (id) => ({
+        url: `/privacy-policy/${id}`,
       }),
 
       providesTags: [
@@ -44,8 +44,8 @@ const privacyPolicyEndPoints = api.injectEndpoints({
       { id: number | undefined; data: FormData }
     >({
       query: ({ id, data }) => ({
-        url: `/api/v1.0/term/${id}/`,
-        method: "PATCH",
+        url: `/privacy-policy/${id}`,
+        method: "PUT",
         body: data,
       }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {

@@ -5,26 +5,26 @@ import JoditEditor from "jodit-react";
 import { defaultJoditConfig } from "../../../../config/joditConfig";
 
 import {
-  useGetSinglePrivacyPolicyQuery,
+  useGetPrivacyPolicyQuery,
   useUpdatePrivacyPolicyMutation,
 } from "../api/privacyPolicyEndPoints";
 
-const EditPrivacyPolicy: React.FC<any> = ({ record }) => {
+const EditPrivacyPolicy: React.FC<any> = () => {
   const [form] = AntForm.useForm();
   const editorRef = useRef(null);
 
   const [update] = useUpdatePrivacyPolicyMutation();
-  const { data: termData } = useGetSinglePrivacyPolicyQuery<any>(1);
-  console.log("first", termData);
+  const { data: policy } = useGetPrivacyPolicyQuery<any>({});
+  console.log("first", policy?.data);
 
   // Load initial content into form
   useEffect(() => {
-    if (record) {
+    if (policy?.data) {
       form.setFieldsValue({
-        content: record.content || "",
+        content: policy?.data?.content || "",
       });
     }
-  }, [record, form]);
+  }, [policy?.data, form]);
 
   const onFinish = async (values: any): Promise<void> => {
     await update({ id: 1, data: values });
