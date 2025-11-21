@@ -1,4 +1,4 @@
-import { Space, Image, Tooltip } from "antd";
+import { Space, Image, Tooltip, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useDispatch } from "react-redux";
 import EditButton from "../../../common/CommonAnt/Button/EditButton";
@@ -54,11 +54,53 @@ const useUserColumns = (): ColumnsType<any> => {
       title: "Role",
       dataIndex: "role",
       align: "center",
-      render: (role) => role?.name,
+      render: (role) => role?.name || "-",
     },
-
     {
       key: "5",
+      title: "Designation",
+      dataIndex: "designation",
+      align: "center",
+      render: (designation: string) => designation || "-",
+    },
+    {
+      key: "6",
+      title: "Expertise",
+      dataIndex: "expertise",
+      align: "center",
+      render: (expertise: string[]) => {
+        if (!expertise || expertise.length === 0) return "-";
+
+        // Show first 2 items, rest in tooltip
+        const visibleItems = expertise.slice(0, 2);
+        const hiddenItems = expertise.slice(2);
+
+        return (
+          <Tooltip
+            title={
+              <div>
+                {expertise.map((item, index) => (
+                  <div key={index}>• {item}</div>
+                ))}
+              </div>
+            }
+          >
+            <Space wrap size={[4, 4]}>
+              {visibleItems.map((item, index) => (
+                <Tag key={index} color="blue" style={{ margin: 0 }}>
+                  {item}
+                </Tag>
+              ))}
+              {hiddenItems.length > 0 && (
+                <Tag color="default">+{hiddenItems.length} more</Tag>
+              )}
+            </Space>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      key: "7",
       title: "Bio",
       dataIndex: "bio",
       align: "center",
@@ -69,14 +111,24 @@ const useUserColumns = (): ColumnsType<any> => {
       },
     },
     {
-      key: "6",
-      title: "linkedin",
+      key: "8",
+      title: "LinkedIn",
       dataIndex: "linkedinProfile",
       align: "center",
+      render: (linkedin: string) =>
+        linkedin ? (
+          <a href={linkedin} target="_blank" rel="noopener noreferrer">
+            Profile
+          </a>
+        ) : (
+          "-"
+        ),
     },
     {
       title: "Actions",
       align: "center",
+      fixed: "right",
+      width: 100,
       render: (record) => (
         <Space>
           {canUpdate && (

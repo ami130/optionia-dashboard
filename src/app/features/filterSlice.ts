@@ -10,7 +10,7 @@ export type FilterTypes = {
 
 const initialState: FilterTypes = {
   page_size: 15, // Renamed from `page_size`
-  page: 0, // Renamed from `currentPage`
+  page: 1, // Renamed from `currentPage`
   key: undefined,
 };
 

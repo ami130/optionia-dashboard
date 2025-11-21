@@ -29,6 +29,8 @@ const BlogsPage = () => {
     author: undefined as number | undefined,
   });
 
+  console.log("page", page);
+
   const { data: categoryData } = useGetCategoriesQuery<any>({});
   const { data: tagsData } = useGetTagsQuery<any>({});
   const { data: userData } = useGetUsersQuery<any>({});
@@ -38,7 +40,7 @@ const BlogsPage = () => {
     refetch,
     isLoading,
   } = useGetBlogQuery<any>({
-    page: Number(page) || 1,
+    page: Number(page),
     search: filters.search || undefined,
     category: filters.categoryId || undefined,
     tagIds: filters.tagId || undefined,
@@ -49,11 +51,12 @@ const BlogsPage = () => {
     refetch();
   }, [filters, page, refetch]);
 
-  const total = Array.isArray(blogData?.data)
-    ? blogData.data.length
-    : Array.isArray((blogData as any)?.data?.data)
-    ? (blogData as any).data.data.length
-    : 0;
+  // const total = Array.isArray(blogData?.data?.blogs)
+  //   ? blogData?.data?.blogs?.length
+  //   : Array.isArray((blogData as any)?.data?.data)
+  //   ? (blogData as any).data.data.length
+  //   : 0;
+
 
   return (
     <div className="space-y-5">
@@ -66,7 +69,9 @@ const BlogsPage = () => {
           <Row gutter={[16, 16]} align="middle" justify="space-between">
             <Col>
               {canCreate && (
-                <Link to="/blog/create" className="border px-5 py-2 rounded">Create Blog</Link>
+                <Link to="/blog/create" className="border px-5 py-2 rounded">
+                  Create Blog
+                </Link>
                 // <Button
                 //   type="primary"
                 //   onClick={() =>
@@ -159,7 +164,7 @@ const BlogsPage = () => {
             rowKey={"id"}
             loading={isLoading || isFetching}
             refetch={refetch}
-            total={total}
+            total={50}
             dataSource={
               Array.isArray(blogData?.data?.blogs)
                 ? blogData.data?.blogs

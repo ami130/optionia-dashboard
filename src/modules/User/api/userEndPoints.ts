@@ -73,7 +73,7 @@ const userEndpoint = api.injectEndpoints({
     >({
       query: ({ id, data }) => ({
         url: `/users/${id}`,
-        method: "PUT",
+        method: "PATCH",
         body: data,
       }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {

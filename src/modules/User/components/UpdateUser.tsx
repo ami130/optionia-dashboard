@@ -1,5 +1,15 @@
 import { useState, useEffect } from "react";
-import { Col, Input, Row, Form as AntForm, Select, Upload, Modal } from "antd";
+import {
+  Col,
+  Input,
+  Row,
+  Form as AntForm,
+  Select,
+  Upload,
+  Modal,
+  Tag,
+  message,
+} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Form } from "../../../common/CommonAnt";
 import { useUpdateUserMutation } from "../api/userEndPoints";
@@ -16,11 +26,11 @@ const UpdateUser = ({ record }: { record: any }) => {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
 
+  const [expertiseInput, setExpertiseInput] = useState("");
+  const [expertiseTags, setExpertiseTags] = useState<string[]>([]);
+
   const [updateUser, { isLoading, isSuccess }] = useUpdateUserMutation();
   const { data: roleData, isLoading: isRoleLoading } = useGetRoleQuery({});
-
-  // Prefill form and fileList for profile image
-  console.log("first", record?.role?.slug);
 
   useEffect(() => {
     if (record) {
@@ -29,9 +39,14 @@ const UpdateUser = ({ record }: { record: any }) => {
         email: record.email || "",
         bio: record.bio || "",
         linkedinProfile: record.linkedinProfile || "",
+        designation: record.designation || "",
         roleId: record.role?.id || "",
-        password: "", // leave empty
+        password: "",
       });
+
+      // Set expertise tags
+      setExpertiseTags(record.expertise || []);
+      form.setFieldValue("expertise", record.expertise || []);
 
       if (record.profileImage) {
         setFileList([
@@ -54,35 +69,70 @@ const UpdateUser = ({ record }: { record: any }) => {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
-
   const handleCancel = () => setPreviewOpen(false);
+  const handleChange = ({ fileList }: any) => setFileList(fileList);
+  const getFileFromList = (fileList: any[]) =>
+    fileList && fileList[0]?.originFileObj ? fileList[0].originFileObj : null;
 
-  const handleChange = ({ fileList }: any) => {
-    setFileList(fileList);
+  // Expertise handlers
+  const handleExpertiseInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setExpertiseInput(e.target.value);
+
+  const handleExpertiseInputConfirm = () => {
+    if (
+      expertiseInput &&
+      expertiseInput.trim() !== "" &&
+      !expertiseTags.includes(expertiseInput.trim())
+    ) {
+      const newTags = [...expertiseTags, expertiseInput.trim()];
+      setExpertiseTags(newTags);
+      form.setFieldValue("expertise", newTags);
+    }
+    setExpertiseInput("");
   };
 
-  const getFileFromList = (fileList: any[]) => {
-    return fileList && fileList[0]?.originFileObj
-      ? fileList[0].originFileObj
-      : null;
+  const handleExpertiseRemove = (removedTag: string) => {
+    const newTags = expertiseTags.filter((tag) => tag !== removedTag);
+    setExpertiseTags(newTags);
+    form.setFieldValue("expertise", newTags);
   };
 
-  // Submit handler
-  const onFinish = async (values: any): Promise<void> => {
-    const formData = new FormData();
-    formData.append("username", values.username);
-    formData.append("email", values.email);
-    if (values.password) formData.append("password", values.password);
-    formData.append("roleId", values.roleId);
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleExpertiseInputConfirm();
+    }
+  };
 
-    if (values.bio) formData.append("bio", values.bio);
-    if (values.linkedinProfile)
-      formData.append("linkedinProfile", values.linkedinProfile);
+  const onFinish = async (values: any) => {
+    try {
+      const formData = new FormData();
+      formData.append("username", values.username);
+      formData.append("email", values.email);
+      if (values.password) formData.append("password", values.password);
+      formData.append("roleId", values.roleId);
 
-    const profileImageFile = getFileFromList(fileList);
-    if (profileImageFile) formData.append("profileImage", profileImageFile);
+      if (values.bio) formData.append("bio", values.bio);
+      if (values.linkedinProfile)
+        formData.append("linkedinProfile", values.linkedinProfile);
+      if (values.designation)
+        formData.append("designation", values.designation);
 
-    await updateUser({ id: record?.id, data: formData });
+      // Expertise: send as JSON string
+      formData.append("expertise", JSON.stringify(values.expertise || []));
+
+      // Profile image
+      const profileImageFile = getFileFromList(fileList);
+      if (profileImageFile) formData.append("profileImage", profileImageFile);
+
+      await updateUser({ id: record.id, data: formData }).unwrap();
+      message.success("User updated successfully!");
+    } catch (error: any) {
+      console.error("❌ Update error:", error);
+      message.error(
+        error?.data?.message || "Failed to update user. Please try again."
+      );
+    }
   };
 
   return (
@@ -115,26 +165,24 @@ const UpdateUser = ({ record }: { record: any }) => {
                 { type: "email", message: "Enter a valid email" },
               ]}
             >
-              <Input placeholder="Enter email" />
+              <Input placeholder="Enter email address" />
             </Form.Item>
           </Col>
 
           {/* Password */}
-          {record?.role?.slug !== "admin" && (
-            <Col xs={24} sm={12}>
-              <Form.Item
-                name="password"
-                label="Password"
-                rules={[
-                  { min: 6, message: "Password must be at least 6 characters" },
-                ]}
-              >
-                <Input.Password placeholder="Enter new password (optional)" />
-              </Form.Item>
-            </Col>
-          )}
+          <Col xs={24} sm={12}>
+            <Form.Item
+              name="password"
+              label="Password"
+              rules={[
+                { min: 6, message: "Password must be at least 6 characters" },
+              ]}
+            >
+              <Input.Password placeholder="Enter new password (optional)" />
+            </Form.Item>
+          </Col>
 
-          {/* Role Dropdown */}
+          {/* Role */}
           <Col xs={24} sm={12}>
             <Form.Item
               name="roleId"
@@ -156,30 +204,81 @@ const UpdateUser = ({ record }: { record: any }) => {
             </Form.Item>
           </Col>
 
-          {/* Bio */}
+          {/* Designation */}
           <Col xs={24} sm={12}>
-            <Form.Item
-              name="bio"
-              label="Bio"
-              rules={[
-                { max: 120, message: "Bio cannot exceed 120 characters" },
-              ]}
-            >
-              <Input.TextArea
-                placeholder="Enter short bio"
-                rows={3}
-                maxLength={120}
-              />
+            <Form.Item name="designation" label="Designation">
+              <Input placeholder="Enter designation" />
             </Form.Item>
           </Col>
 
-          {/* LinkedIn Profile */}
+          {/* Expertise */}
           <Col xs={24} sm={12}>
-            <Form.Item
-              name="linkedinProfile"
-              label="LinkedIn Profile"
-              rules={[{ type: "url", message: "Enter a valid URL" }]}
-            >
+            <Form.Item name="expertise" label="Expertise">
+              <div
+                style={{
+                  border: "1px solid #d9d9d9",
+                  borderRadius: "6px",
+                  padding: "4px 11px",
+                  minHeight: "32px",
+                  background: "white",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "4px",
+                    marginBottom: expertiseTags.length > 0 ? "8px" : "0",
+                  }}
+                >
+                  {expertiseTags.map((tag) => (
+                    <Tag
+                      key={tag}
+                      closable
+                      onClose={() => handleExpertiseRemove(tag)}
+                      style={{
+                        background: "#f0f8ff",
+                        border: "1px solid #1890ff",
+                        borderRadius: "6px",
+                        padding: "2px 8px",
+                        fontSize: "12px",
+                        color: "#1890ff",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {tag}
+                    </Tag>
+                  ))}
+                </div>
+                <Input
+                  type="text"
+                  size="small"
+                  value={expertiseInput}
+                  onChange={handleExpertiseInputChange}
+                  onBlur={handleExpertiseInputConfirm}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Add expertise (press Enter to add)"
+                  style={{
+                    border: "none",
+                    boxShadow: "none",
+                    padding: "4px 0",
+                    background: "transparent",
+                  }}
+                />
+              </div>
+            </Form.Item>
+          </Col>
+
+          {/* Bio */}
+          <Col xs={24} sm={12}>
+            <Form.Item name="bio" label="Bio">
+              <Input.TextArea rows={3} maxLength={120} showCount />
+            </Form.Item>
+          </Col>
+
+          {/* LinkedIn */}
+          <Col xs={24} sm={12}>
+            <Form.Item name="linkedinProfile" label="LinkedIn Profile">
               <Input placeholder="https://www.linkedin.com/in/yourprofile" />
             </Form.Item>
           </Col>
@@ -194,7 +293,6 @@ const UpdateUser = ({ record }: { record: any }) => {
                 onPreview={handlePreview}
                 onChange={handleChange}
                 maxCount={1}
-                accept=".jpg,.jpeg,.png,.gif,.bmp,.svg,.webp"
               >
                 {fileList.length >= 1 ? null : (
                   <div>
@@ -203,7 +301,6 @@ const UpdateUser = ({ record }: { record: any }) => {
                   </div>
                 )}
               </Upload>
-
               <Modal
                 open={previewOpen}
                 title={previewTitle}

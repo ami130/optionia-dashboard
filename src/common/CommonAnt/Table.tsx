@@ -46,7 +46,6 @@ const Table = <T extends object>({
         x: "max-content",
         y: total && total * 13 >= 650 ? 650 : undefined,
       }}
-      
       pagination={{
         total,
         showSizeChanger: true,
@@ -55,14 +54,14 @@ const Table = <T extends object>({
             Showing {page_size} of {total} entries
           </Typography.Text>
         ),
-        current: page || 1,
+        current: page,
         pageSize: page_size,
         onChange: (page: number, pageSize: number) => {
           dispatch(addFilter({ name: "PAGE_SIZE", value: pageSize }));
           dispatch(addFilter({ name: "PAGE", value: page }));
         },
       }}
-      footer={() => <Typography.Text>Total Data: {total || 0}</Typography.Text>}
+      // footer={() => <Typography.Text>Total Data: {total || 0}</Typography.Text>}
     />
   );
 };

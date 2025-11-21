@@ -103,21 +103,18 @@ const CreateUser = () => {
       if (values.designation)
         formData.append("designation", values.designation);
 
-      // Handle expertise - send as JSON string (recommended format)
+      // Handle expertise - send as JSON string exactly like '["hello","react"]'
       if (
         values.expertise &&
         Array.isArray(values.expertise) &&
         values.expertise.length > 0
       ) {
-        // Send as JSON string - this will work with your backend's handleExpertiseField
+        // Create the exact string format: '["hello","react"]'
         formData.append("expertise", JSON.stringify(values.expertise));
-        console.log(
-          "📤 Sending expertise as JSON:",
-          JSON.stringify(values.expertise)
-        );
+
       } else {
         // Send empty array if no expertise
-        formData.append("expertise", JSON.stringify([]));
+        formData.append("expertise", "[]");
       }
 
       // Handle profile image
